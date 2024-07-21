@@ -1,0 +1,61 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* For ultra wide screens */
+@media (min-width: 1800px) {
+  .container {
+    max-width: 1560px;
+  }
+}
+
+/* For very large screens */
+@media (min-width: 1600px) and (max-width: 1799px) {
+  .container {
+    max-width: 1440px;
+  }
+}
+
+/* For extra large screens */
+@media (min-width: 1400px) and (max-width: 1599px) {
+  .container {
+    max-width: 1320px;
+  }
+}
+
+/* For large screens */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+/* For medium screens */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+/* For small screens */
+@media (min-width: 768px) and (max-width: 991px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+/* For extra small screens */
+@media (max-width: 767px) {
+  .container {
+    max-width: 100%;
+  }
+}
