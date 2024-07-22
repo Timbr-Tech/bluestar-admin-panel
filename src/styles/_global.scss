@@ -4,11 +4,21 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
 .container {
+  position: relative;
   margin: 0 auto;
   padding: 0 15px;
   width: 100%;
   box-sizing: border-box;
+  height: 100vh;
 }
 
 /* For ultra wide screens */

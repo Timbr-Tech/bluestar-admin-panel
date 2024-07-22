@@ -1,0 +1,27 @@
+.container {
+  padding: 0 40px;
+
+  .tableHeader {
+    display: flex;
+    justify-content: space-between;
+
+    .headerText {
+      display: flex;
+      flex-direction: column;
+
+      .headerPrimary {
+        color: #101828;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 38px;
+      }
+
+      .headerSecondary {
+        color: #667085;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+      }
+    }
+  }
+}
