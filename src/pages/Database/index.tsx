@@ -1,5 +1,5 @@
 const Database = () => {
-  return <div>Database</div>;
+  return <div className="container">Database</div>;
 };
 
 export default Database;
