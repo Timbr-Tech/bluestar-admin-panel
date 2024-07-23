@@ -1,5 +1,9 @@
 export const RouteName = {
   HOME: "/",
+  DASHBOARD: "/dashboard",
+  BOOKINGS: "/bookings",
   DATABASE: "/database",
-  BILLINGS: "/billings",
+  DRIVERS: "/drivers-attendance",
+  VEHICLE_EXPENSE: "/vehicle-expense",
+  AVAILABILITY: "/availability",
 };

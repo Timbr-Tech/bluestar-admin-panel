@@ -1,20 +1,27 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+/* eslint-disable */
+import { Route, Routes } from "react-router-dom";
 import { RouteName } from "../constants/routes";
 
 //Page Components
+import Availability from "../pages/Availability";
+import Dashboard from "../pages/Dashboard";
+import DriversAttendancePayroll from "../pages/DriversAttendancePayroll";
 import Home from "../pages/Home";
 import Database from "../pages/Database";
 import Bookings from "../pages/Bookings";
+import VehicleExpense from "../pages/VehicleExpense";
 
 const AppRoutes = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path={RouteName.HOME} Component={Home} />
-        <Route path={RouteName.DATABASE} Component={Database} />
-        <Route path={RouteName.BILLINGS} Component={Bookings} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path={RouteName.HOME} element={<Home />} />
+      <Route path={RouteName.DATABASE} element={<Database />} />
+      <Route path={RouteName.BOOKINGS} element={<Bookings />} />
+      <Route path={RouteName.AVAILABILITY} element={<Availability />} />
+      <Route path={RouteName.VEHICLE_EXPENSE} element={<VehicleExpense />} />
+      <Route path={RouteName.DRIVERS} element={<DriversAttendancePayroll />} />
+      <Route path={RouteName.DASHBOARD} element={<Dashboard />} />
+    </Routes>
   );
 };
 
