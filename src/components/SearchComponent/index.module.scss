@@ -1,0 +1,29 @@
+.container {
+  width: 400px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #d0d5dd;
+  background: #fff;
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+
+  .inputContainer {
+    font-size: 16px;
+    height: 24px;
+    width: 100%;
+    outline: none;
+    border: none;
+
+    &::placeholder {
+      overflow: hidden;
+      color: #667085;
+      text-overflow: ellipsis;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+    }
+  }
+}
