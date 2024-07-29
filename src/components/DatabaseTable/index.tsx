@@ -36,6 +36,9 @@ const DatabaseTable = ({ item }: IDatabaseTable) => {
           placeholder={"Search by duty type"}
         />
       </div>
+      <div className={styles.tableContainer}>
+        
+      </div>
     </div>
   );
 };
