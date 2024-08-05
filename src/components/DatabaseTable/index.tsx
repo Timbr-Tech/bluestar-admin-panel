@@ -2,6 +2,7 @@
 import { useState, ChangeEvent } from "react";
 import SearchComponent from "../SearchComponent";
 import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
+import DutyTypeTable from "./DutyTypeTable";
 import styles from "./index.module.scss";
 
 interface IDatabaseItem {
@@ -37,7 +38,7 @@ const DatabaseTable = ({ item }: IDatabaseTable) => {
         />
       </div>
       <div className={styles.tableContainer}>
-        
+        <DutyTypeTable />
       </div>
     </div>
   );
