@@ -8,6 +8,7 @@ import styles from "./index.module.scss";
 interface IDatabaseItem {
   id: number;
   name: string;
+  type: string;
   text: string;
 }
 
@@ -15,6 +16,7 @@ const Database = () => {
   const [item, selectedItem] = useState<IDatabaseItem>({
     id: 1,
     name: "Duty types",
+    type: "duty_types",
     text: "Create and manage your duty types here",
   });
 
