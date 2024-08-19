@@ -25,6 +25,15 @@
         line-height: 24px;
       }
     }
+
+    .searchContainer {
+      display: flex;
+      gap: 16px;
+
+      .search {
+        width: 400px;
+      }
+    }
   }
 
   .tableContainer {

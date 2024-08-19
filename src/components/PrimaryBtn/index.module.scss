@@ -1,4 +1,9 @@
 .container {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  gap: 4px;
+  height: 40px;
   border-radius: 8px;
   border: 2px solid rgba(255, 255, 255, 0.12);
   background: #7f56d9;
@@ -6,4 +11,9 @@
     0px 0px 0px 1px rgba(16, 24, 40, 0.18) inset,
     0px -2px 0px 0px rgba(16, 24, 40, 0.05) inset,
     0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
 }

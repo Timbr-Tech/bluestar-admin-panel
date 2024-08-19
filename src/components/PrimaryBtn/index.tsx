@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import styles from "./index.module.scss";
 interface IPrimaryBtn {
   LeadingIcon: any;

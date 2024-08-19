@@ -43,12 +43,6 @@ export const DATABASE_ITEMS = [
   },
   {
     id: 8,
-    name: "Companies",
-    type: "companies",
-    text: "Create and manage your companies here",
-  },
-  {
-    id: 9,
     name: "Allowances",
     type: "allowances",
     text: "Create and manage driver allowance here",

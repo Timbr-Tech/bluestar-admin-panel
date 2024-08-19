@@ -2,15 +2,16 @@
 import { useState, ChangeEvent } from "react";
 import SearchComponent from "../SearchComponent";
 import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
+import { ReactComponent as PlusIcon } from "../../icons/plus.svg";
 import DutyTypeTable from "./DutyTypeTable";
 import AllowancesTable from "./AllowancesTable";
 import BankAccountsTable from "./BankAccountsTable";
-import CompaniesTable from "./CompaniesTable";
 import TaxesTable from "./TaxesTable";
 import VehicleGroupTable from "./VehicleGroupTable";
 import CustomerTable from "./CustomerTable";
 import DriversTable from "./DriversTable";
 import VehicleTable from "./VehicleTable";
+import PrimaryBtn from "../PrimaryBtn";
 import styles from "./index.module.scss";
 
 interface IDatabaseItem {
@@ -50,10 +51,50 @@ const DatabaseTable = ({ item }: IDatabaseTable) => {
         return <BankAccountsTable />;
       case "taxes":
         return <TaxesTable />;
-      case "companies":
-        return <CompaniesTable />;
       case "allowances":
         return <AllowancesTable />;
+    }
+  };
+
+  const renderSearchText = () => {
+    switch (item.type) {
+      case "duty_types":
+        return "duty type";
+      case "vehicle_groups":
+        return "vehicle group name";
+      case "customers":
+        return "name, GST number, phone number";
+      case "drivers":
+        return "name or phone";
+      case "vehicles":
+        return "model name, number";
+      case "bank_accounts":
+        return "name, account number, bank name";
+      case "taxes":
+        return "tax name or percentage";
+      case "allowances":
+        return "allowances";
+    }
+  };
+
+  const renderBtnText = () => {
+    switch (item.type) {
+      case "duty_types":
+        return "duty type";
+      case "vehicle_groups":
+        return "vehicle group";
+      case "customers":
+        return "customer";
+      case "drivers":
+        return "driver";
+      case "vehicles":
+        return "vehicle";
+      case "bank_accounts":
+        return "bank account";
+      case "taxes":
+        return "tax type";
+      case "allowances":
+        return "allowance";
     }
   };
 
@@ -64,12 +105,20 @@ const DatabaseTable = ({ item }: IDatabaseTable) => {
           <div className={styles.headerPrimary}>{item.name}</div>
           <div className={styles.headerSecondary}>{item.text}</div>
         </div>
-        <SearchComponent
-          value={searchTerm}
-          onChange={searchHandler}
-          LeadingIcon={SearchIcon}
-          placeholder={"Search by duty type"}
-        />
+        <div className={styles.searchContainer}>
+          <div className={styles.search}>
+            <SearchComponent
+              value={searchTerm}
+              onChange={searchHandler}
+              LeadingIcon={SearchIcon}
+              placeholder={`Search by ${renderSearchText()}`}
+            />
+          </div>
+          <PrimaryBtn
+            LeadingIcon={PlusIcon}
+            btnText={`Add ${renderBtnText()}`}
+          />
+        </div>
       </div>
       <div className={styles.tableContainer}>{renderComponent()}</div>
     </div>
