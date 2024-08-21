@@ -2,7 +2,9 @@
 import DatabaseTable from "../../components/DatabaseTable";
 import { DATABASE_ITEMS } from "../../constants/database";
 import cn from "classnames";
+import DutyTypeForm from "../../components/DatabaseTable/DutyTypeTable/DutyTypeForm";
 import { useState } from "react";
+import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import styles from "./index.module.scss";
 
 interface IDatabaseItem {
@@ -19,10 +21,20 @@ const Database = () => {
     type: "duty_types",
     text: "Create and manage your duty types here",
   });
+  const [openSidePanel, setOpenSidePanel] = useState(false);
 
   const handleNavClick = (data: IDatabaseItem) => {
     selectedItem(data);
   };
+
+  const handleCloseSidePanel = () => {
+    setOpenSidePanel(false);
+  };
+
+  const handleOpenSidePanel = () => {
+    setOpenSidePanel(true);
+  };
+
   return (
     <div className={cn("container", styles.container)}>
       <div className={styles.headingContainer}>
@@ -44,7 +56,15 @@ const Database = () => {
           </li>
         ))}
       </ul>
-      <DatabaseTable item={item} />
+      <DatabaseTable item={item} handleOpenSidePanel={handleOpenSidePanel} />
+      <div
+        className={cn(styles.formContainer, { [styles.open]: openSidePanel })}
+      >
+        <button className={styles.closeBtn} onClick={handleCloseSidePanel}>
+          <CrossIcon />
+        </button>
+        <DutyTypeForm />
+      </div>
     </div>
   );
 };

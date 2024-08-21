@@ -1,8 +1,12 @@
 /* eslint-disable */
 import { useState, ChangeEvent } from "react";
 import SearchComponent from "../SearchComponent";
+import { Dropdown } from "antd";
 import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
 import { ReactComponent as PlusIcon } from "../../icons/plus.svg";
+import { ReactComponent as DotsIcon } from "../../icons/dots.svg";
+import { ReactComponent as FileDownloadIcon } from "../../icons/fileDownload.svg";
+import { ReactComponent as UploadCloud } from "../../icons/uploadCloud.svg";
 import DutyTypeTable from "./DutyTypeTable";
 import AllowancesTable from "./AllowancesTable";
 import BankAccountsTable from "./BankAccountsTable";
@@ -23,9 +27,10 @@ interface IDatabaseItem {
 
 interface IDatabaseTable {
   item: IDatabaseItem;
+  handleOpenSidePanel: () => void;
 }
 
-const DatabaseTable = ({ item }: IDatabaseTable) => {
+const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +38,26 @@ const DatabaseTable = ({ item }: IDatabaseTable) => {
     setSearchTerm(value);
   };
 
-  console.log(item, "item");
+  const vehicleItems = [
+    {
+      key: "0",
+      label: (
+        <div className={styles.item}>
+          <UploadCloud />
+          Import vehicles
+        </div>
+      ),
+    },
+    {
+      key: "1",
+      label: (
+        <div className={styles.item}>
+          <FileDownloadIcon />
+          Export vehicles
+        </div>
+      ),
+    },
+  ];
 
   const renderComponent = () => {
     switch (item.type) {
@@ -117,7 +141,11 @@ const DatabaseTable = ({ item }: IDatabaseTable) => {
           <PrimaryBtn
             LeadingIcon={PlusIcon}
             btnText={`Add ${renderBtnText()}`}
+            onClick={handleOpenSidePanel}
           />
+          <Dropdown menu={{ items: vehicleItems }} trigger={["click"]}>
+            <DotsIcon />
+          </Dropdown>
         </div>
       </div>
       <div className={styles.tableContainer}>{renderComponent()}</div>

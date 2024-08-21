@@ -4,11 +4,12 @@ import styles from "./index.module.scss";
 interface IPrimaryBtn {
   LeadingIcon: any;
   btnText: string;
+  onClick: VoidFunction;
 }
 
-const PrimaryBtn = ({ btnText, LeadingIcon }: IPrimaryBtn) => {
+const PrimaryBtn = ({ btnText, LeadingIcon, onClick }: IPrimaryBtn) => {
   return (
-    <button type={"button"} className={styles.container}>
+    <button type={"button"} className={styles.container} onClick={onClick}>
       <LeadingIcon />
       <div className={styles.text}>{btnText}</div>
     </button>
