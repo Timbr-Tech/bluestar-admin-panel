@@ -9,6 +9,7 @@ import DriversForm from "../../components/DatabaseTable/DriversTable/DriversForm
 import VehicleForm from "../../components/DatabaseTable/VehicleTable/VehicleForm";
 import BankAccountForm from "../../components/DatabaseTable/BankAccountsTable/BankAccountForm";
 import TaxesForm from "../../components/DatabaseTable/TaxesTable/TaxesForm";
+import AllowancesForm from "../../components/DatabaseTable/AllowancesTable/AllowancesForm";
 import { useState } from "react";
 import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import styles from "./index.module.scss";
@@ -57,8 +58,8 @@ const Database = () => {
         return <BankAccountForm />;
       case "taxes":
         return <TaxesForm />;
-      // case "allowances":
-      //   return <AllowancesTable />;
+      case "allowances":
+        return <AllowancesForm />;
       default:
         <div></div>;
     }
