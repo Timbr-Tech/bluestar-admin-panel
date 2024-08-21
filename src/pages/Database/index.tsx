@@ -3,6 +3,12 @@ import DatabaseTable from "../../components/DatabaseTable";
 import { DATABASE_ITEMS } from "../../constants/database";
 import cn from "classnames";
 import DutyTypeForm from "../../components/DatabaseTable/DutyTypeTable/DutyTypeForm";
+import CustomerForm from "../../components/DatabaseTable/CustomerTable/CustomerForm";
+import VehicleGroupForm from "../../components/DatabaseTable/VehicleGroupTable/VehicleGroupForm";
+import DriversForm from "../../components/DatabaseTable/DriversTable/DriversForm";
+import VehicleForm from "../../components/DatabaseTable/VehicleTable/VehicleForm";
+import BankAccountForm from "../../components/DatabaseTable/BankAccountsTable/BankAccountForm";
+import TaxesForm from "../../components/DatabaseTable/TaxesTable/TaxesForm";
 import { useState } from "react";
 import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import styles from "./index.module.scss";
@@ -35,6 +41,29 @@ const Database = () => {
     setOpenSidePanel(true);
   };
 
+  const renderComponent = () => {
+    switch (item.type) {
+      case "duty_types":
+        return <DutyTypeForm />;
+      case "vehicle_groups":
+        return <VehicleGroupForm />;
+      case "customers":
+        return <CustomerForm />;
+      case "drivers":
+        return <DriversForm />;
+      case "vehicles":
+        return <VehicleForm />;
+      case "bank_accounts":
+        return <BankAccountForm />;
+      case "taxes":
+        return <TaxesForm />;
+      // case "allowances":
+      //   return <AllowancesTable />;
+      default:
+        <div></div>;
+    }
+  };
+
   return (
     <div className={cn("container", styles.container)}>
       <div className={styles.headingContainer}>
@@ -63,7 +92,7 @@ const Database = () => {
         <button className={styles.closeBtn} onClick={handleCloseSidePanel}>
           <CrossIcon />
         </button>
-        <DutyTypeForm />
+        {renderComponent()}
       </div>
     </div>
   );
