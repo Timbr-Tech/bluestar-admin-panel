@@ -30,7 +30,7 @@ const DutyTypeForm = () => {
             <HelpCircle />
           </div>
           <Select
-            style={{ width: 400 }}
+            style={{ width: "100%" }}
             placeholder="Select One"
             dropdownRender={(menu) => <>{menu}</>}
             options={items.map((item) => ({
