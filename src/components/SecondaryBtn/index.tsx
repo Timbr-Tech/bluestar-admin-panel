@@ -1,13 +1,13 @@
 /* eslint-disable */
-
 import styles from "./index.module.scss";
-interface IPrimaryBtn {
+
+interface ISecondaryBtn {
   LeadingIcon?: any;
   btnText: string;
   onClick: VoidFunction;
 }
 
-const PrimaryBtn = ({ btnText, LeadingIcon, onClick }: IPrimaryBtn) => {
+const SecondaryBtn = ({ btnText, LeadingIcon, onClick }: ISecondaryBtn) => {
   return (
     <button type={"button"} className={styles.container} onClick={onClick}>
       {LeadingIcon ? <LeadingIcon /> : null}
@@ -16,4 +16,4 @@ const PrimaryBtn = ({ btnText, LeadingIcon, onClick }: IPrimaryBtn) => {
   );
 };
 
-export default PrimaryBtn;
+export default SecondaryBtn;

@@ -166,3 +166,20 @@ export const BANK_ACCOUNTS = [
     dataIndex: "status",
   },
 ];
+
+export const DUTY_TYPES_TYPE = [
+  {
+    value: "1",
+    label: "Day - KM( Outstation)",
+  },
+  {
+    value: "2",
+    label: "HR - KM(Local)",
+  },
+  {
+    value: "3",
+    label: "Long Duration - Total KM Daily HR( Monthly Bookings)",
+  },
+  { value: "4", label: "Flat Rate" },
+  { value: "5", label: "Long Duration - Total KM & HR( Monthly Bookings)" },
+];
