@@ -69,3 +69,17 @@ body {
     max-width: 100%;
   }
 }
+
+.custom-upload {
+  font-family: "Inter", sans-serif;
+  border-radius: 12px;
+  border: 1px solid #e4e7ec;
+  background: #fff;
+
+  div {
+    border: none !important;
+    .ant-upload-btn {
+      padding: 0;
+    }
+  }
+}

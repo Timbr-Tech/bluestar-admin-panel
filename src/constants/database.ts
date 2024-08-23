@@ -183,3 +183,26 @@ export const DUTY_TYPES_TYPE = [
   { value: "4", label: "Flat Rate" },
   { value: "5", label: "Long Duration - Total KM & HR( Monthly Bookings)" },
 ];
+
+export const STATES = [
+  {
+    value: "tel",
+    label: "Telangana",
+  },
+  { value: "ncr", label: "NCR" },
+  { value: "pun", label: "Punjab" },
+  { value: "hp", label: "Himachal Pradesh" },
+  { value: "hr", label: "Haryana" },
+];
+
+export const CUSTOMER_TAX_TYPES = [
+  {
+    value: "business",
+    label: "Business",
+  },
+  {
+    value: "self-employed",
+    label: "Self Employed",
+  },
+  { value: "job", label: "Job" },
+];
