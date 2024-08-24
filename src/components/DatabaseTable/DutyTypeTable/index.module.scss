@@ -81,6 +81,29 @@
         /* For Firefox */
         input[type="number"] {
           -moz-appearance: textfield;
+
+          overflow: hidden;
+          color: #667085;
+          text-overflow: ellipsis;
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 24px;
+          background: #fff;
+        }
+
+        input[type="date"]::-webkit-inner-spin-button,
+        input[type="date"]::-webkit-calendar-picker-indicator {
+          display: none;
+          -webkit-appearance: none;
+        }
+
+        input[type="date"] {
+          padding: 10px;
+          font-size: 16px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          background-color: #f9f9f9;
+          color: #333;
         }
 
         .textarea {
@@ -156,6 +179,33 @@
           font-size: 16px;
           font-weight: 500;
           line-height: 24px;
+        }
+      }
+
+      .secondaryContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-radius: 12px;
+        border: 1px solid #e4e7ec;
+        background: #f9fafb;
+        width: 582px;
+        padding: 24px;
+
+        .headerText {
+          display: flex;
+          gap: 2px;
+          color: #344054;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 24px;
+
+          sup {
+            color: #7f56d9;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+          }
         }
       }
     }
