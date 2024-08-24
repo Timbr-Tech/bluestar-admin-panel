@@ -32,130 +32,38 @@ const CustomerForm = () => {
 
   return (
     <div className={styles.formContainer}>
-      <div className={styles.formHeader}>
-        <div className={styles.header}>New Customer</div>
-        <div className={styles.primaryText}>Redesign of untitledui.com</div>
-      </div>
-      <div className={styles.form}>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Customer Code</p>
-          </div>
-          <input
-            type="number"
-            className={styles.input}
-            placeholder="Enter Customer code..."
-            defaultValue={"132245"}
-          />
+      <div className={styles.container}>
+        <div className={styles.formHeader}>
+          <div className={styles.header}>New Customer</div>
+          <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Name</p>
-            <sup>*</sup>
-          </div>
-          <input
-            className={styles.input}
-            placeholder="Enter name..."
-            defaultValue={"John Doe"}
-          />
-        </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Address</p>
-            <sup>*</sup>
-          </div>
-          <textarea
-            className={styles.textarea}
-            placeholder="Enter address..."
-          />
-        </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Pincode</p>
-          </div>
-          <input
-            type="number"
-            className={styles.input}
-            placeholder="Enter pincode..."
-            defaultValue={"132245"}
-          />
-        </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>State</p>
-          </div>
-          <Select
-            style={{ width: "100%" }}
-            placeholder="Select One"
-            dropdownRender={(menu) => <>{menu}</>}
-            options={STATES.map((state) => ({
-              label: state.label,
-              value: state.value,
-            }))}
-          />
-        </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Phone Number</p>
-            <sup>*</sup>
-          </div>
-          <input
-            type="number"
-            className={styles.input}
-            placeholder="Enter phone number..."
-            defaultValue={"987654321"}
-          />
-        </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Email Address</p>
-          </div>
-          <input
-            type="email"
-            className={styles.input}
-            placeholder="Enter email address..."
-            defaultValue={"olivia@untitledui.com"}
-          />
-        </div>
-        <div className={styles.customerTaxDetails}>
-          <div className={styles.customerHeader}>Customer Tax Details</div>
+        <div className={styles.form}>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
-              <p>Type</p>
+              <p>Customer Code</p>
             </div>
-            <Select
-              style={{ width: "100%" }}
-              placeholder="Select One"
-              dropdownRender={(menu) => <>{menu}</>}
-              options={CUSTOMER_TAX_TYPES.map((state) => ({
-                label: state.label,
-                value: state.value,
-              }))}
+            <input
+              type="number"
+              className={styles.input}
+              placeholder="Enter Customer code..."
+              defaultValue={"132245"}
             />
           </div>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
-              <p>GSTIN Number</p>
+              <p>Name</p>
+              <sup>*</sup>
             </div>
             <input
               className={styles.input}
-              placeholder="Enter GSTIN ..."
-              defaultValue={"AXLPV7788X"}
+              placeholder="Enter name..."
+              defaultValue={"John Doe"}
             />
           </div>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
-              <p>Billing Name</p>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter Billing Name ..."
-              defaultValue={"Business Name"}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Billing Address</p>
+              <p>Address</p>
+              <sup>*</sup>
             </div>
             <textarea
               className={styles.textarea}
@@ -164,57 +72,154 @@ const CustomerForm = () => {
           </div>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
-              <p>Taxes</p>
+              <p>Pincode</p>
+            </div>
+            <input
+              type="number"
+              className={styles.input}
+              placeholder="Enter pincode..."
+              defaultValue={"132245"}
+            />
+          </div>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>State</p>
             </div>
             <Select
               style={{ width: "100%" }}
               placeholder="Select One"
               dropdownRender={(menu) => <>{menu}</>}
-              options={CUSTOMER_TAX_TYPES.map((state) => ({
+              options={STATES.map((state) => ({
                 label: state.label,
                 value: state.value,
               }))}
             />
           </div>
-        </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Default discount %</p>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Phone Number</p>
+              <sup>*</sup>
+            </div>
+            <input
+              type="number"
+              className={styles.input}
+              placeholder="Enter phone number..."
+              defaultValue={"987654321"}
+            />
           </div>
-          <input
-            type="number"
-            className={styles.input}
-            placeholder="Enter default discount..."
-            defaultValue={0}
-          />
-        </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Attach Files</p>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Email Address</p>
+            </div>
+            <input
+              type="email"
+              className={styles.input}
+              placeholder="Enter email address..."
+              defaultValue={"olivia@untitledui.com"}
+            />
           </div>
-          <Dragger {...props} className="custom-upload">
-            <div className={styles.uploadIconContainer}>
-              <div className={styles.uploadIcon}>
-                <UploadIcon />
+          <div className={styles.customerTaxDetails}>
+            <div className={styles.customerHeader}>Customer Tax Details</div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Type</p>
               </div>
+              <Select
+                style={{ width: "100%" }}
+                placeholder="Select One"
+                dropdownRender={(menu) => <>{menu}</>}
+                options={CUSTOMER_TAX_TYPES.map((state) => ({
+                  label: state.label,
+                  value: state.value,
+                }))}
+              />
             </div>
-            <div className={styles.uploadText}>
-              <p>Click to upload</p> or drag and drop
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>GSTIN Number</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter GSTIN ..."
+                defaultValue={"AXLPV7788X"}
+              />
             </div>
-            <p className={styles.uploadSubtext}>
-              JPG, PNG, DOC or PDF (max. 20MB)
-            </p>
-          </Dragger>
-        </div>
-        <div className={styles.typeContainer}>
-          <div className={styles.text}>
-            <p>Notes</p>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Billing Name</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter Billing Name ..."
+                defaultValue={"Business Name"}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Billing Address</p>
+              </div>
+              <textarea
+                className={styles.textarea}
+                placeholder="Enter address..."
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Taxes</p>
+              </div>
+              <Select
+                style={{ width: "100%" }}
+                placeholder="Select One"
+                dropdownRender={(menu) => <>{menu}</>}
+                options={CUSTOMER_TAX_TYPES.map((state) => ({
+                  label: state.label,
+                  value: state.value,
+                }))}
+              />
+            </div>
           </div>
-          <textarea className={styles.textarea} placeholder="Add a note...." />
-        </div>
-        <div className={styles.checkboxContainer}>
-          <input type="checkbox" id="auto" name="auto" value="auto" />
-          <label> Auto create invoice when duty is completed</label>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Default discount %</p>
+            </div>
+            <input
+              type="number"
+              className={styles.input}
+              placeholder="Enter default discount..."
+              defaultValue={0}
+            />
+          </div>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Attach Files</p>
+            </div>
+            <Dragger {...props} className="custom-upload">
+              <div className={styles.uploadIconContainer}>
+                <div className={styles.uploadIcon}>
+                  <UploadIcon />
+                </div>
+              </div>
+              <div className={styles.uploadText}>
+                <p>Click to upload</p> or drag and drop
+              </div>
+              <p className={styles.uploadSubtext}>
+                JPG, PNG, DOC or PDF (max. 20MB)
+              </p>
+            </Dragger>
+          </div>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Notes</p>
+            </div>
+            <textarea
+              className={styles.textarea}
+              placeholder="Add a note...."
+            />
+          </div>
+          <div className={styles.checkboxContainer}>
+            <input type="checkbox" id="auto" name="auto" value="auto" />
+            <label> Auto create invoice when duty is completed</label>
+          </div>
         </div>
       </div>
       <div className={styles.bottomContainer}>

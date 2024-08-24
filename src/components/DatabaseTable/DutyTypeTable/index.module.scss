@@ -2,160 +2,166 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  padding: 24px;
+  justify-content: space-between;
   height: 100%;
-  // max-height: 110%;
+  max-height: 100vh;
 
-  .formHeader {
+  .container {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 24px;
+    padding: 24px 24px 0 24px;
+    height: 90%;
 
-    .header {
-      color: #101828;
-      font-size: 20px;
-      font-weight: 600;
-      line-height: 30px;
-    }
-
-    .primaryText {
-      color: #475467;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 20px;
-    }
-  }
-
-  .form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    overflow-y: auto;
-
-    .typeContainer {
+    .formHeader {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
 
-      .text {
-        display: flex;
-        gap: 2px;
-        color: #344054;
+      .header {
+        color: #101828;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 30px;
+      }
+
+      .primaryText {
+        color: #475467;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 400;
         line-height: 20px;
-
-        sup {
-          color: #7f56d9;
-          font-size: 14px;
-          font-weight: 500;
-          line-height: 20px;
-        }
-      }
-
-      .input {
-        width: 100%;
-        padding: 8px;
-        border-radius: 8px;
-        border: 1px solid #d0d5dd;
-        background-color: #fff;
-        outline: none;
-        box-shadow: 0px 1px 2px 0px
-          var(--Colors-Effects-Shadows-shadow-xs, rgba(16, 24, 40, 0.05));
-      }
-
-      input[type="number"]::-webkit-outer-spin-button,
-      input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-
-      /* For Firefox */
-      input[type="number"] {
-        -moz-appearance: textfield;
-      }
-
-      .textarea {
-        width: 100% !important;
-        border-radius: 8px;
-        border: 1px solid #d0d5dd;
-        background: #fff;
-        box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-        padding: 12px;
-        resize: none;
-        outline: none;
-        height: 128px;
-        overflow-y: auto;
       }
     }
 
-    .checkboxContainer {
-      display: flex;
-      gap: 8px;
-      input[type="checkbox"] {
-        cursor: pointer;
-        border-radius: 4px;
-
-        &:checked {
-          background-color: #7f56d9;
-        }
-      }
-    }
-
-    .radio {
+    .form {
       display: flex;
       flex-direction: column;
+      gap: 16px;
+      height: 100%;
+      overflow-y: auto;
 
-      div {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 16px;
-      }
-
-      .radioContainer {
+      .typeContainer {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: 6px;
+
         .text {
+          display: flex;
+          gap: 2px;
           color: #344054;
           font-size: 14px;
           font-weight: 500;
           line-height: 20px;
+
+          sup {
+            color: #7f56d9;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+          }
         }
 
-        .secondary {
-          color: #475467;
-          font-size: 14px;
-          font-weight: 400;
-          line-height: 20px;
+        .input {
+          width: 100%;
+          padding: 8px;
+          border-radius: 8px;
+          border: 1px solid #d0d5dd;
+          background-color: #fff;
+          outline: none;
+          box-shadow: 0px 1px 2px 0px
+            var(--Colors-Effects-Shadows-shadow-xs, rgba(16, 24, 40, 0.05));
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        /* For Firefox */
+        input[type="number"] {
+          -moz-appearance: textfield;
+        }
+
+        .textarea {
+          width: 100% !important;
+          border-radius: 8px;
+          border: 1px solid #d0d5dd;
+          background: #fff;
+          box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+          padding: 12px;
+          resize: none;
+          outline: none;
+          height: 128px;
+          overflow-y: auto;
         }
       }
-    }
 
-    .customerTaxDetails {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      border-radius: 12px;
-      border: 1px solid #e4e7ec;
-      background: #f9fafb;
-      width: 582px;
-      padding: 24px;
+      .checkboxContainer {
+        display: flex;
+        gap: 8px;
+        padding-bottom: 10px;
+        input[type="checkbox"] {
+          cursor: pointer;
+          border-radius: 4px;
 
-      .customerHeader {
-        color: #101828;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 24px;
+          &:checked {
+            background-color: #7f56d9;
+          }
+        }
+      }
+
+      .radio {
+        display: flex;
+        flex-direction: column;
+
+        div {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 16px;
+        }
+
+        .radioContainer {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          .text {
+            color: #344054;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+          }
+
+          .secondary {
+            color: #475467;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+          }
+        }
+      }
+
+      .customerTaxDetails {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-radius: 12px;
+        border: 1px solid #e4e7ec;
+        background: #f9fafb;
+        width: 582px;
+        padding: 24px;
+
+        .customerHeader {
+          color: #101828;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 24px;
+        }
       }
     }
   }
 
   .bottomContainer {
-    position: absolute;
-    bottom: 0;
-    right: 1px;
     background-color: #fff;
     border-top: 1px solid #e4e7ec;
     padding: 16px 24px;
