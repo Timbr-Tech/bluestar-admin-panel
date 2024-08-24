@@ -195,6 +195,17 @@ export const STATES = [
   { value: "hr", label: "Haryana" },
 ];
 
+export const ADDRESS_TYPE = [
+  {
+    value: "permanent",
+    label: "Permanent Address",
+  },
+  {
+    value: "temporary",
+    label: "Temporary Address",
+  },
+];
+
 export const CUSTOMER_TAX_TYPES = [
   {
     value: "business",

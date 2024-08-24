@@ -1,6 +1,8 @@
 /* eslint-disable */
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
+import { Select } from "antd";
+import { ADDRESS_TYPE } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 
 const DriversForm = () => {
@@ -92,6 +94,40 @@ const DriversForm = () => {
               <p>Address</p>
               <sup>*</sup>
             </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Type</p>
+              </div>
+              <Select
+                style={{ width: "100%" }}
+                placeholder="Select One"
+                dropdownRender={(menu) => <>{menu}</>}
+                options={ADDRESS_TYPE.map((address) => ({
+                  label: address.label,
+                  value: address.value,
+                }))}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Address</p>
+              </div>
+              <textarea
+                className={styles.textarea}
+                placeholder="Enter address..."
+              />
+            </div>
+          </div>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Salary per month</p>
+            </div>
+            <input
+              type="number"
+              className={styles.input}
+              placeholder="Enter driver license..."
+              defaultValue={10000}
+            />
           </div>
         </div>
       </div>
