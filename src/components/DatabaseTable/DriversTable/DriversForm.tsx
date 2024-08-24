@@ -129,6 +129,17 @@ const DriversForm = () => {
               defaultValue={10000}
             />
           </div>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Daily Wages</p>
+            </div>
+            <input
+              type="number"
+              className={styles.input}
+              placeholder="Enter daily wage..."
+              defaultValue={10000}
+            />
+          </div>
         </div>
       </div>
       <div className={styles.bottomContainer}>
