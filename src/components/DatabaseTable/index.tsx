@@ -15,6 +15,7 @@ import VehicleGroupTable from "./VehicleGroupTable";
 import CustomerTable from "./CustomerTable";
 import DriversTable from "./DriversTable";
 import VehicleTable from "./VehicleTable";
+import FastTagTable from "./FastTagTable";
 import PrimaryBtn from "../PrimaryBtn";
 import styles from "./index.module.scss";
 
@@ -77,6 +78,8 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
         return <TaxesTable />;
       case "allowances":
         return <AllowancesTable />;
+      case "fastag":
+        return <FastTagTable />;
     }
   };
 
@@ -98,6 +101,8 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
         return "tax name or percentage";
       case "allowances":
         return "allowances";
+      case "fastag":
+        return "Tag account or License Plate no.";
     }
   };
 
@@ -138,11 +143,13 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
               placeholder={`Search by ${renderSearchText()}`}
             />
           </div>
-          <PrimaryBtn
-            LeadingIcon={PlusIcon}
-            btnText={`Add ${renderBtnText()}`}
-            onClick={handleOpenSidePanel}
-          />
+          {item.type !== "allowance" && (
+            <PrimaryBtn
+              LeadingIcon={PlusIcon}
+              btnText={`Add ${renderBtnText()}`}
+              onClick={handleOpenSidePanel}
+            />
+          )}
           <Dropdown menu={{ items: vehicleItems }} trigger={["click"]}>
             <DotsIcon />
           </Dropdown>

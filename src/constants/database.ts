@@ -47,6 +47,12 @@ export const DATABASE_ITEMS = [
     type: "allowances",
     text: "Create and manage driver allowance here",
   },
+  {
+    id: 9,
+    name: "FASTag",
+    type: "fastag",
+    text: "Repository of all your FASTag details",
+  },
 ];
 
 export const DUTY_TYPES = [
@@ -184,6 +190,25 @@ export const DUTY_TYPES_TYPE = [
   { value: "5", label: "Long Duration - Total KM & HR( Monthly Bookings)" },
 ];
 
+export const FASTTAG_TABLE = [
+  {
+    title: "Tag Account",
+    dataIndex: "tag_account",
+  },
+  {
+    title: "License Plate No.",
+    dataIndex: "license_plate",
+  },
+  {
+    title: "Total Trips till month",
+    dataIndex: "total_trips",
+  },
+  {
+    title: "Total Cost incurred this month",
+    dataIndex: "total_cost",
+  },
+];
+
 export const STATES = [
   {
     value: "tel",
@@ -281,3 +306,8 @@ export const Allowance = (value: string) => {
       return null;
   }
 };
+
+export const FuelType = [
+  { value: "Petrol", label: "Petrol" },
+  { value: "Diesel", label: "Diesel" },
+];

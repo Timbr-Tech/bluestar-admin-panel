@@ -61,6 +61,13 @@
           }
         }
 
+        .secondaryText {
+          color: #667085;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 20px;
+        }
+
         .input {
           width: 100%;
           padding: 8px;
@@ -285,5 +292,34 @@
 
   .allowanceText {
     font-weight: 400;
+  }
+}
+
+.twoSections {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  min-height: 92px;
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    .timeText {
+      color: #344054;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+    }
+  }
+
+  .totalText {
+    position: absolute;
+    bottom: 0;
+    color: #344054;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
   }
 }
