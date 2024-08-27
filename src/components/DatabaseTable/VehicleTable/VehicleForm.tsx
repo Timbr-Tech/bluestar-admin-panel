@@ -1,6 +1,8 @@
 /* eslint-disable */
 import { Select, Upload, message } from "antd";
 import type { UploadProps } from "antd";
+import SecondaryBtn from "../../SecondaryBtn";
+import PrimaryBtn from "../../PrimaryBtn";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { FuelType } from "../../../constants/database";
 
@@ -159,6 +161,10 @@ const VehicleForm = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className={styles.bottomContainer}>
+        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
+        <PrimaryBtn btnText="Save" onClick={() => {}} />
       </div>
     </div>
   );

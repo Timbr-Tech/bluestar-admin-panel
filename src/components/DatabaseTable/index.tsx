@@ -143,7 +143,7 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
               placeholder={`Search by ${renderSearchText()}`}
             />
           </div>
-          {item.type !== "allowance" && (
+          {item.type !== "allowance" && item.type !== "fastag" && (
             <PrimaryBtn
               LeadingIcon={PlusIcon}
               btnText={`Add ${renderBtnText()}`}
