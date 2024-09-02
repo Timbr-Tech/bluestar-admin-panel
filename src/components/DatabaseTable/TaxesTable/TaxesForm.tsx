@@ -1,11 +1,28 @@
 /* eslint-disable */
 import styles from "../DutyTypeTable/index.module.scss";
+import { notification } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 
-const TaxesForm = () => {
+interface ITaxesForm {
+  handleCloseSidePanel: () => void;
+}
+
+type NotificationType = "success" | "info" | "warning" | "error";
+
+const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Tax type added",
+      description: "Tax type added to the database",
+    });
+  };
+
   return (
     <div className={styles.formContainer}>
+      {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Tax Type</div>
@@ -43,8 +60,14 @@ const TaxesForm = () => {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
-        <PrimaryBtn btnText="Save" onClick={() => {}} />
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            handleCloseSidePanel();
+            openNotificationWithIcon("success");
+          }}
+        />
       </div>
     </div>
   );

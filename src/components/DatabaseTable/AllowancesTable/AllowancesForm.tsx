@@ -1,16 +1,30 @@
 /* eslint-disable */
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
-import { Select } from "antd";
+import { Select, notification } from "antd";
 import { useState, useMemo } from "react";
 import { ALLOWANCES_TYPES, Allowance } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 
-const AllowancesForm = () => {
+interface IAllowancesForm {
+  handleCloseSidePanel: () => void;
+}
+
+type NotificationType = "success" | "info" | "warning" | "error";
+
+const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
   const [allowanceType, setAllowanceType] = useState<string>("");
+  const [api, contextHolder] = notification.useNotification();
 
   const handleAllowanceType = (value: string) => {
     setAllowanceType(value);
+  };
+
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Allowance added",
+      description: "Allowance added to the database",
+    });
   };
 
   const allowanceLabel = useMemo(() => {
@@ -19,6 +33,7 @@ const AllowancesForm = () => {
 
   return (
     <div className={styles.formContainer}>
+      {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Allowance</div>
@@ -65,8 +80,14 @@ const AllowancesForm = () => {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
-        <PrimaryBtn btnText="Save" onClick={() => {}} />
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            openNotificationWithIcon("success");
+            handleCloseSidePanel();
+          }}
+        />
       </div>
     </div>
   );

@@ -1,11 +1,28 @@
 /* eslint-disable */
+import { notification } from "antd";
 import styles from "../DutyTypeTable/index.module.scss";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 
-const BankAccountForm = () => {
+interface IBankAccountForm {
+  handleCloseSidePanel: () => void;
+}
+
+type NotificationType = "success" | "info" | "warning" | "error";
+
+const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Bank account added",
+      description: "Bank account added to the database",
+    });
+  };
+
   return (
     <div className={styles.formContainer}>
+      {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Bank Account</div>
@@ -79,8 +96,14 @@ const BankAccountForm = () => {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
-        <PrimaryBtn btnText="Save" onClick={() => {}} />
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            openNotificationWithIcon("success");
+            handleCloseSidePanel();
+          }}
+        />
       </div>
     </div>
   );

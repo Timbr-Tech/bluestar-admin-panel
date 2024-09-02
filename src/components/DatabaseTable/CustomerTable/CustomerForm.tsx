@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Select, message, Upload } from "antd";
+import { Select, message, Upload, notification } from "antd";
 import type { UploadProps } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
@@ -7,8 +7,15 @@ import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { STATES, CUSTOMER_TAX_TYPES } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 
-const CustomerForm = () => {
+interface ICustomerForm {
+  handleCloseSidePanel: () => void;
+}
+
+type NotificationType = "success" | "info" | "warning" | "error";
+
+const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
   const { Dragger } = Upload;
+  const [api, contextHolder] = notification.useNotification();
 
   const props: UploadProps = {
     name: "file",
@@ -30,8 +37,16 @@ const CustomerForm = () => {
     },
   };
 
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Customer added",
+      description: "Customer added to the database",
+    });
+  };
+
   return (
     <div className={styles.formContainer}>
+      {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Customer</div>
@@ -223,8 +238,14 @@ const CustomerForm = () => {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
-        <PrimaryBtn btnText="Save" onClick={() => {}} />
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            openNotificationWithIcon("success");
+            handleCloseSidePanel();
+          }}
+        />
       </div>
     </div>
   );

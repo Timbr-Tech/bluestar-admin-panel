@@ -3,21 +3,37 @@ import { Select, Radio } from "antd";
 import type { RadioChangeEvent } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
+import { notification } from "antd";
 import { DUTY_TYPES_TYPE } from "../../../constants/database";
 import { ReactComponent as HelpCircle } from "../../../icons/help-circle.svg";
 import { useState } from "react";
 import styles from "./index.module.scss";
 
-const DutyTypeForm = () => {
+interface IDutyForm {
+  handleCloseSidePanel: () => void;
+}
+
+type NotificationType = "success" | "info" | "warning" | "error";
+
+const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   const [items, setItems] = useState(DUTY_TYPES_TYPE);
   const [value, setValue] = useState(1);
+  const [api, contextHolder] = notification.useNotification();
 
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
   };
 
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Duty type added",
+      description: "Duty type added to the database",
+    });
+  };
+
   return (
     <div className={styles.formContainer}>
+      {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Duty Type</div>
@@ -74,8 +90,14 @@ const DutyTypeForm = () => {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
-        <PrimaryBtn btnText="Save" onClick={() => {}} />
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            openNotificationWithIcon("success");
+            handleCloseSidePanel();
+          }}
+        />
       </div>
     </div>
   );

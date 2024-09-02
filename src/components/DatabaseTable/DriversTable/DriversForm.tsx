@@ -1,7 +1,7 @@
 /* eslint-disable */
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
-import { Select, TimePicker, Upload, message } from "antd";
+import { Select, TimePicker, Upload, message, notification } from "antd";
 import type { UploadProps } from "antd";
 import type { Dayjs } from "dayjs";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
@@ -9,9 +9,16 @@ import { useState } from "react";
 import { ADDRESS_TYPE } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 
-const DriversForm = () => {
+interface IDriverForm {
+  handleCloseSidePanel: () => void;
+}
+
+type NotificationType = "success" | "info" | "warning" | "error";
+
+const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
   const [value, setValue] = useState<Dayjs | null>(null);
   const { Dragger } = Upload;
+  const [api, contextHolder] = notification.useNotification();
 
   const props: UploadProps = {
     name: "file",
@@ -33,12 +40,20 @@ const DriversForm = () => {
     },
   };
 
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Driver added",
+      description: "Driver added to the database",
+    });
+  };
+
   const onChange = (time: Dayjs) => {
     setValue(time);
   };
 
   return (
     <div className={styles.formContainer}>
+      {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Driver</div>
@@ -229,8 +244,14 @@ const DriversForm = () => {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
-        <PrimaryBtn btnText="Save" onClick={() => {}} />
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            openNotificationWithIcon("success");
+            handleCloseSidePanel();
+          }}
+        />
       </div>
     </div>
   );

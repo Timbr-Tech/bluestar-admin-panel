@@ -1,11 +1,28 @@
 /* eslint-disable */
+import { notification } from "antd";
 import styles from "../DutyTypeTable/index.module.scss";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 
-const VehicleGroupForm = () => {
+type NotificationType = "success" | "info" | "warning" | "error";
+
+interface IVehicleGroupForm {
+  handleCloseSidePanel: () => void;
+}
+
+const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Vehicle group added",
+      description: "Vehicle group added to the database",
+    });
+  };
+
   return (
     <div className={styles.formContainer}>
+      {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>Vehicle Group</div>
@@ -57,8 +74,14 @@ const VehicleGroupForm = () => {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
-        <PrimaryBtn btnText="Save" onClick={() => {}} />
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            openNotificationWithIcon("success");
+            handleCloseSidePanel();
+          }}
+        />
       </div>
     </div>
   );

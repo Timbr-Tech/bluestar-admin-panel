@@ -45,21 +45,21 @@ const Database = () => {
   const renderComponent = () => {
     switch (item.type) {
       case "duty_types":
-        return <DutyTypeForm />;
+        return <DutyTypeForm handleCloseSidePanel={handleCloseSidePanel} />;
       case "vehicle_groups":
-        return <VehicleGroupForm />;
+        return <VehicleGroupForm handleCloseSidePanel={handleCloseSidePanel} />;
       case "customers":
-        return <CustomerForm />;
+        return <CustomerForm handleCloseSidePanel={handleCloseSidePanel} />;
       case "drivers":
-        return <DriversForm />;
+        return <DriversForm handleCloseSidePanel={handleCloseSidePanel} />;
       case "vehicles":
-        return <VehicleForm />;
+        return <VehicleForm handleCloseSidePanel={handleCloseSidePanel} />;
       case "bank_accounts":
-        return <BankAccountForm />;
+        return <BankAccountForm handleCloseSidePanel={handleCloseSidePanel} />;
       case "taxes":
-        return <TaxesForm />;
+        return <TaxesForm handleCloseSidePanel={handleCloseSidePanel} />;
       case "allowances":
-        return <AllowancesForm />;
+        return <AllowancesForm handleCloseSidePanel={handleCloseSidePanel} />;
       default:
         <div></div>;
     }

@@ -1,15 +1,27 @@
 /* eslint-disable */
-import { Select, Upload, message } from "antd";
+import { Select, Upload, message, notification } from "antd";
 import type { UploadProps } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { FuelType } from "../../../constants/database";
-
 import styles from "../DutyTypeTable/index.module.scss";
 
-const VehicleForm = () => {
+interface IVehicleForm {
+  handleCloseSidePanel: () => void;
+}
+type NotificationType = "success" | "info" | "warning" | "error";
+
+const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   const { Dragger } = Upload;
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: "Vehicle added",
+      description: "Vehicle added to the database",
+    });
+  };
 
   const props: UploadProps = {
     name: "file",
@@ -33,6 +45,7 @@ const VehicleForm = () => {
 
   return (
     <div className={styles.formContainer}>
+      {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Vehicle</div>
@@ -163,8 +176,14 @@ const VehicleForm = () => {
         </div>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={() => {}} />
-        <PrimaryBtn btnText="Save" onClick={() => {}} />
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            openNotificationWithIcon("success");
+            handleCloseSidePanel();
+          }}
+        />
       </div>
     </div>
   );
