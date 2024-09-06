@@ -2,6 +2,9 @@
 import { notification } from "antd";
 import styles from "../DutyTypeTable/index.module.scss";
 import SecondaryBtn from "../../SecondaryBtn";
+import { useState } from "react";
+import { useAppDispatch } from "../../../hooks/store";
+import { addVehicleGroup } from "../../../redux/slices/databaseSlice";
 import PrimaryBtn from "../../PrimaryBtn";
 
 type NotificationType = "success" | "info" | "warning" | "error";
@@ -12,12 +15,43 @@ interface IVehicleGroupForm {
 
 const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
   const [api, contextHolder] = notification.useNotification();
+  const [vehicleGroup, setVehicleGroup] = useState({
+    name: "",
+    seatingCapacity: 0,
+    description: "",
+    luggageCapacity: 0,
+  });
+  const dispatch = useAppDispatch();
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
       message: "Vehicle group added",
       description: "Vehicle group added to the database",
     });
+  };
+
+  const handleVehicleGroupChange = (e: any) => {
+    if (e.target.name === "name") {
+      setVehicleGroup({ ...vehicleGroup, name: e.target.value });
+    } else if (e.target.name === "seatingCapacity") {
+      setVehicleGroup({
+        ...vehicleGroup,
+        seatingCapacity: Number(e.target.value),
+      });
+    } else if (e.target.name === "description") {
+      setVehicleGroup({ ...vehicleGroup, description: e.target.value });
+    } else if (e.target.name === "luggageCapacity") {
+      setVehicleGroup({
+        ...vehicleGroup,
+        luggageCapacity: Number(e.target.value),
+      });
+    }
+  };
+
+  const handleSubmitForm = () => {
+    dispatch(addVehicleGroup(vehicleGroup));
+    openNotificationWithIcon("success");
+    handleCloseSidePanel();
   };
 
   return (
@@ -36,8 +70,10 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
             </div>
             <input
               className={styles.input}
+              name="name"
               placeholder="Enter Vehicle Group"
-              defaultValue={"Toyota Innova"}
+              value={vehicleGroup.name}
+              onChange={handleVehicleGroupChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -45,8 +81,11 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               <p>Description</p>
             </div>
             <textarea
+              name="description"
               className={styles.textarea}
               placeholder="Enter a description..."
+              value={vehicleGroup.description}
+              onChange={handleVehicleGroupChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -54,10 +93,11 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               <p>Seating Capacity (excluding driver)</p>
             </div>
             <input
-              type="number"
+              name="seatingCapacity"
               className={styles.input}
               placeholder="Enter value ..."
-              defaultValue={4}
+              value={vehicleGroup.seatingCapacity}
+              onChange={handleVehicleGroupChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -65,23 +105,18 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               <p>Luggage count</p>
             </div>
             <input
-              type="number"
+              name="luggageCapacity"
               className={styles.input}
               placeholder="Enter value ..."
-              defaultValue={2}
+              value={vehicleGroup.luggageCapacity}
+              onChange={handleVehicleGroupChange}
             />
           </div>
         </div>
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
-          onClick={() => {
-            openNotificationWithIcon("success");
-            handleCloseSidePanel();
-          }}
-        />
+        <PrimaryBtn btnText="Save" onClick={handleSubmitForm} />
       </div>
     </div>
   );

@@ -81,7 +81,7 @@ export const VEHICLE_GROUPS = [
   },
   {
     title: "Total vehicles",
-    dataIndex: "total_vehicles",
+    dataIndex: "vehicleCount",
   },
 ];
 
