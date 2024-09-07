@@ -3,9 +3,10 @@ import { VEHICLE_GROUPS } from "../../../constants/database";
 import { Table } from "antd";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import DeleteModal from "../../Modals/DeleteModal";
+import Modal from "../../Modal";
 import { getVehicleGroup } from "../../../redux/slices/databaseSlice";
 import type { TableProps } from "antd";
+import styles from "./index.module.scss";
 import React, { useEffect, useState } from "react";
 
 interface IVehicleGroupTableData {
@@ -19,54 +20,30 @@ const VehicleGroupTable = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const { vehicleGroupData } = useAppSelector((state) => state.database);
 
+  const handleCloseModal = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const handleDeleteVehicleGroup = () => {};
+
   const columns: TableProps<IVehicleGroupTableData>["columns"] = [
     ...VEHICLE_GROUPS,
     {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <button onClick={() => setOpenDeleteModal(true)}>
+        <button
+          onClick={() => setOpenDeleteModal(true)}
+          className={styles.deleteBtn}
+        >
           <DeleteIcon />
         </button>
       ),
     },
   ];
 
-  const data: IVehicleGroupTableData[] = [
-    {
-      key: "1",
-      name: "Toyota Innova",
-      vehicleCount: 3,
-    },
-    {
-      key: "2",
-      name: "Nissan Hatchbacks",
-      vehicleCount: 4,
-    },
-    {
-      key: "3",
-      name: "MG Hector/MG Titan ",
-      vehicleCount: 9,
-    },
-    {
-      key: "4",
-      name: "Toyota Sedans",
-      vehicleCount: 3,
-    },
-    {
-      key: "5",
-      name: "Toyota Innova",
-      vehicleCount: 4,
-    },
-    {
-      key: "6",
-      name: "Toyota Innova",
-      vehicleCount: 9,
-    },
-  ];
-
   useEffect(() => {
-    dispatch(getVehicleGroup({ page: "1" }));
+    dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
   }, []);
 
   console.log(vehicleGroupData, "vehicleGroupData");
@@ -90,16 +67,30 @@ const VehicleGroupTable = () => {
           onChange: onChange,
         }}
         columns={columns}
-        dataSource={data}
+        dataSource={vehicleGroupData?.data}
       />
-      {openDeleteModal && (
-        <DeleteModal
-          primaryText={"Delete vehicle group"}
-          secondaryText={
-            "Are you sure you want to delete this vehicle group? This action cannot be undone."
-          }
-        />
-      )}
+      <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.modalContainer}>
+          <div className={styles.textContainer}>
+            <div className={styles.primaryText}>Delete vehicle group</div>
+            <div className={styles.secondaryText}>
+              Are you sure you want to delete this vehicle group? This action
+              cannot be undone.
+            </div>
+          </div>
+          <div className={styles.bottomBtns}>
+            <button className={styles.cancelBtn} onClick={handleCloseModal}>
+              Cancel
+            </button>
+            <button
+              className={styles.deleteBtn}
+              onClick={handleDeleteVehicleGroup}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

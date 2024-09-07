@@ -1,5 +1,6 @@
 /* eslint-disable */
-import { Select, Upload, message, notification } from "antd";
+import { Select, Upload, message, notification, Switch } from "antd";
+import { useState } from "react";
 import type { UploadProps } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
@@ -15,6 +16,11 @@ type NotificationType = "success" | "info" | "warning" | "error";
 const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
+  const [hasLoan, setHasLoan] = useState<boolean>(false);
+
+  const onChange = (checked: boolean) => {
+    setHasLoan(checked);
+  };
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
@@ -137,7 +143,10 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             />
           </div>
           <div className={styles.secondaryContainer}>
-            <div className={styles.headerText}>Registration</div>
+            <div className={styles.headerText}>
+              Registration
+              <sup>*</sup>
+            </div>
             <div className={styles.typeContainer}>
               <div className={styles.text}>
                 <p>Owner Name</p>
@@ -172,6 +181,204 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                 </p>
               </Dragger>
             </div>
+          </div>
+          <div className={styles.secondaryContainer}>
+            <div className={styles.headerText}>
+              Insurance
+              <sup>*</sup>
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Company Name</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter company name..."
+                defaultValue={""}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Policy Number</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter policy number..."
+                defaultValue={""}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Issue Date</p>
+              </div>
+              <input
+                type="date"
+                id="issueDate"
+                name="issueDate"
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Due Date</p>
+              </div>
+              <input
+                type="date"
+                id="dueDate"
+                name="dueDate"
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Premium Amount</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter premium amount..."
+                defaultValue={""}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Cover Amount</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter cover amount..."
+                defaultValue={""}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Insurance Document</p>
+              </div>
+              <Dragger {...props} className="custom-upload">
+                <div className={styles.uploadIconContainer}>
+                  <div className={styles.uploadIcon}>
+                    <UploadIcon />
+                  </div>
+                </div>
+                <div className={styles.uploadText}>
+                  <p>Click to upload</p> or drag and drop
+                </div>
+                <p className={styles.uploadSubtext}>
+                  JPG, PNG, DOC or PDF (max. 10MB)
+                </p>
+              </Dragger>
+            </div>
+          </div>
+          <div className={styles.secondaryContainer}>
+            <div className={styles.headerText}>
+              RTO
+              <sup>*</sup>
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Owner Name</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter owner name..."
+                defaultValue={""}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Registration Date</p>
+              </div>
+              <input
+                type="date"
+                id="registrationDate"
+                name="registrationDate"
+                className={styles.input}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Registration Documents</p>
+              </div>
+              <Dragger {...props} className="custom-upload">
+                <div className={styles.uploadIconContainer}>
+                  <div className={styles.uploadIcon}>
+                    <UploadIcon />
+                  </div>
+                </div>
+                <div className={styles.uploadText}>
+                  <p>Click to upload</p> or drag and drop
+                </div>
+                <p className={styles.uploadSubtext}>
+                  JPG, PNG, DOC or PDF (max. 10MB)
+                </p>
+              </Dragger>
+            </div>
+          </div>
+          <div className={styles.secondaryContainer}>
+            <div className={styles.headerText}>Parts</div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Chassis Number</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter chassis number..."
+                defaultValue={""}
+              />
+            </div>
+            <div className={styles.typeContainer}>
+              <div className={styles.text}>
+                <p>Engine Number</p>
+              </div>
+              <input
+                className={styles.input}
+                placeholder="Enter engine number..."
+                defaultValue={""}
+              />
+            </div>
+          </div>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Car expiry Date</p>
+            </div>
+            <input
+              type="date"
+              id="carExpiryDate"
+              name="carExpiryDate"
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.switchContainer}>
+            <div className={styles.text}>Loan</div>
+            <Switch onChange={onChange} checked={hasLoan} />
+          </div>
+
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Attach Files</p>
+            </div>
+            <Dragger {...props} className="custom-upload">
+              <div className={styles.uploadIconContainer}>
+                <div className={styles.uploadIcon}>
+                  <UploadIcon />
+                </div>
+              </div>
+              <div className={styles.uploadText}>
+                <p>Click to upload</p> or drag and drop
+              </div>
+              <p className={styles.uploadSubtext}>
+                JPG, PNG, DOC or PDF (max. 10MB)
+              </p>
+            </Dragger>
+          </div>
+          <div className={styles.typeContainer}>
+            <div className={styles.text}>
+              <p>Notes</p>
+            </div>
+            <textarea
+              className={styles.textarea}
+              placeholder="Add a note...."
+            />
           </div>
         </div>
       </div>

@@ -70,8 +70,10 @@ export const addNewDriver = createAsyncThunk(
 
 export const addVehicleGroup = createAsyncThunk(
   "database/addVehicleGroup",
-  async (body: any) => {
+  async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/vehicle-group", body);
+
+    dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
 
     return response.data;
   }
@@ -83,16 +85,43 @@ export const getVehicleGroup = createAsyncThunk(
   async (params: any) => {
     const { page, limit, search } = params;
 
-    console.log(page, "page");
+    const response = await apiClient.get(
+      `/database/vehicle-group?page=${page}&limit=${limit}&search=${search}`
+    );
 
-    const response = await apiClient.get(`database/vehicle-group/page=${page}`);
+    return response.data;
+  }
+);
+
+export const deleteVehicleGroup = createAsyncThunk(
+  "database/deleteVehicleGroup",
+
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.delete(`/database/vehicle-group/${id}`);
+
+    return response.data;
+  }
+);
+
+export const getVehicleGroupOptions = createAsyncThunk(
+  "database/getVehicleGroupOptions",
+
+  async (params: any) => {
+    const { page, size } = params;
+
+    const response = await apiClient.get(
+      `database/vehicle-group/names?page=${page}&size=${size}`
+    );
 
     return response.data;
   }
 );
 
 const initialState: any = {
-  vehicleGroupData: [],
+  vehicleGroupData: {},
+  vehicleGroupOption: {},
   error: null,
   status: "idle",
 };
@@ -125,6 +154,27 @@ export const databaseSlice = createSlice({
         state.vehicleGroupData = action.payload;
       })
       .addCase(getVehicleGroup.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(getVehicleGroupOptions.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getVehicleGroupOptions.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.vehicleGroupOption = action.payload;
+      })
+      .addCase(getVehicleGroupOptions.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(deleteVehicleGroup.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteVehicleGroup.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      })
+      .addCase(deleteVehicleGroup.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
