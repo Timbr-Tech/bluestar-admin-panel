@@ -1,6 +1,9 @@
 /* eslint-disable */
 import { notification } from "antd";
+import { addBankAccount } from "../../../redux/slices/databaseSlice";
+import { useAppDispatch } from "../../../hooks/store";
 import styles from "../DutyTypeTable/index.module.scss";
+import { useState } from "react";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 
@@ -12,12 +15,34 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
   const [api, contextHolder] = notification.useNotification();
+  const [bankAccount, setBankAccount] = useState({
+    accountName: "",
+    accountNumber: "",
+    bankName: "",
+    ifsc: "",
+    branchName: "",
+    notes: "",
+  });
+  const dispatch = useAppDispatch()
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
       message: "Bank account added",
       description: "Bank account added to the database",
     });
+  };
+
+  const handleChange = (e: { target: { value: any; name: any } }) => {
+    const val = e.target.value;
+
+    setBankAccount({ ...bankAccount, [e.target.name]: val });
+  };
+
+  const onSubmit = () => {
+    openNotificationWithIcon("success");
+    handleCloseSidePanel();
+
+    dispatch(addBankAccount(bankAccount))
   };
 
   return (
@@ -35,9 +60,11 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
               <sup>*</sup>
             </div>
             <input
+              name="accountName"
               className={styles.input}
               placeholder="Enter account name..."
-              defaultValue={"John Doe"}
+              value={bankAccount.accountName}
+              onChange={handleChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -46,9 +73,11 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
               <sup>*</sup>
             </div>
             <input
+              name="accountNumber"
               className={styles.input}
               placeholder="Enter account number..."
-              defaultValue={"BLUDRIVER01"}
+              value={bankAccount.accountNumber}
+              onChange={handleChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -57,9 +86,11 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
               <sup>*</sup>
             </div>
             <input
+              name="ifsc"
               className={styles.input}
               placeholder="Enter IFSC Code..."
-              defaultValue={"987654321"}
+              value={bankAccount.ifsc}
+              onChange={handleChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -68,9 +99,11 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
               <sup>*</sup>
             </div>
             <input
+              name="bankName"
               className={styles.input}
               placeholder="Enter Bank Name..."
-              defaultValue={""}
+              value={bankAccount.bankName}
+              onChange={handleChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -79,9 +112,11 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
               <sup>*</sup>
             </div>
             <input
+              name="branchName"
               className={styles.input}
               placeholder="Enter Bank Branch..."
-              defaultValue={""}
+              value={bankAccount.branchName}
+              onChange={handleChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -89,6 +124,9 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
               <p>Notes</p>
             </div>
             <textarea
+              name="notes"
+              value={bankAccount.notes}
+              onChange={handleChange}
               className={styles.textarea}
               placeholder="Add a note...."
             />
@@ -97,13 +135,7 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
-          onClick={() => {
-            openNotificationWithIcon("success");
-            handleCloseSidePanel();
-          }}
-        />
+        <PrimaryBtn btnText="Save" onClick={onSubmit} />
       </div>
     </div>
   );

@@ -1,77 +1,60 @@
 /* eslint-disable */
 import { CUSTOMERS } from "../../../constants/database";
-import { Table } from "antd";
-import React from "react";
+import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
+import {
+  getCustomer,
+  deleteCustomer,
+} from "../../../redux/slices/databaseSlice";
+import Modal from "../../Modal";
+import { Table, TableProps } from "antd";
+import styles from "./index.module.scss";
+import React, { useState, useEffect } from "react";
 
 interface ICustomerTableData {
-  key: React.Key;
+  _id: string;
   name: string;
-  group_name: string;
-  phone: string;
-  gstin_number: string;
-  status: string;
+  email: string;
+  gstNumber: { taxDetails: { gstNumber: string } };
 }
 
-const data: ICustomerTableData[] = [
-  {
-    key: "1",
-    name: "Apple",
-    group_name: "Priority group",
-    phone: "(907) 248-8330",
-    gstin_number: "22ABBAA0000A1Z8",
-    status: "",
-  },
-  {
-    key: "2",
-    name: "Apple",
-    group_name: "Priority group",
-    phone: "(907) 248-8330",
-    gstin_number: "22ABBAA0000A1Z8",
-    status: "",
-  },
-  {
-    key: "3",
-    name: "Apple",
-    group_name: "Priority group",
-    phone: "(907) 248-8330",
-    gstin_number: "22ABBAA0000A1Z8",
-    status: "",
-  },
-  {
-    key: "4",
-    name: "Apple",
-    group_name: "Priority group",
-    phone: "(907) 248-8330",
-    gstin_number: "22ABBAA0000A1Z8",
-    status: "",
-  },
-  {
-    key: "5",
-    name: "Apple",
-    group_name: "Priority group",
-    phone: "(907) 248-8330",
-    gstin_number: "22ABBAA0000A1Z8",
-    status: "",
-  },
-  {
-    key: "6",
-    name: "Apple",
-    group_name: "Priority group",
-    phone: "(907) 248-8330",
-    gstin_number: "22ABBAA0000A1Z8",
-    status: "",
-  },
-  {
-    key: "7",
-    name: "Apple",
-    group_name: "Priority group",
-    phone: "(907) 248-8330",
-    gstin_number: "22ABBAA0000A1Z8",
-    status: "",
-  },
-];
-
 const CustomerTable = () => {
+  const dispatch = useAppDispatch();
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [customerId, setCustomerId] = useState("");
+
+  const { customers, customersStates } = useAppSelector(
+    (state) => state.database
+  );
+
+  const handleDeleteVehicleGroup = () => {
+    dispatch(deleteCustomer({ id: customerId }));
+    setOpenDeleteModal(false);
+  };
+
+  const handleCloseModal = () => {
+    setOpenDeleteModal(false);
+  };
+
+  const columns: TableProps<ICustomerTableData>["columns"] = [
+    ...CUSTOMERS,
+    {
+      title: "",
+      dataIndex: "action",
+      render: (_, record) => (
+        <button
+          onClick={() => {
+            setOpenDeleteModal(true);
+            setCustomerId(record._id);
+          }}
+          className={styles.deleteBtn}
+        >
+          <DeleteIcon />
+        </button>
+      ),
+    },
+  ];
+
   const onChange = (
     selectedRowKeys: React.Key[],
     selectedRows: ICustomerTableData[]
@@ -83,15 +66,44 @@ const CustomerTable = () => {
     );
   };
 
+  useEffect(() => {
+    dispatch(getCustomer({ page: "1", search: "", limit: "" }));
+  }, []);
+
   return (
-    <Table
-      rowSelection={{
-        type: "checkbox",
-        onChange: onChange,
-      }}
-      columns={CUSTOMERS}
-      dataSource={data}
-    />
+    <>
+      <Table
+        rowSelection={{
+          type: "checkbox",
+          onChange: onChange,
+        }}
+        columns={columns}
+        dataSource={customers?.data}
+        loading={customersStates?.loading}
+      />
+      <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.modalContainer}>
+          <div className={styles.textContainer}>
+            <div className={styles.primaryText}>Delete vehicle group</div>
+            <div className={styles.secondaryText}>
+              Are you sure you want to delete this vehicle group? This action
+              cannot be undone.
+            </div>
+          </div>
+          <div className={styles.bottomBtns}>
+            <button className={styles.cancelBtn} onClick={handleCloseModal}>
+              Cancel
+            </button>
+            <button
+              className={styles.deleteBtn}
+              onClick={handleDeleteVehicleGroup}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 };
 

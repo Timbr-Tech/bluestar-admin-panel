@@ -63,7 +63,7 @@ const VehicleGroupTable = () => {
       getVehicleGroup({
         page: pagination.current,
         search: "",
-        limit: pagination.pageSize,
+        limit: "",
       })
     );
   }, []);

@@ -3,8 +3,11 @@ import { Select, message, Upload, notification } from "antd";
 import type { UploadProps } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
+import { useAppDispatch } from "../../../hooks/store";
+import { addNewCustomer } from "../../../redux/slices/databaseSlice";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { STATES, CUSTOMER_TAX_TYPES } from "../../../constants/database";
+import { useState } from "react";
 import styles from "../DutyTypeTable/index.module.scss";
 
 interface ICustomerForm {
@@ -14,8 +17,39 @@ interface ICustomerForm {
 type NotificationType = "success" | "info" | "warning" | "error";
 
 const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
+  const dispatch = useAppDispatch();
   const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
+  const [customerPaylod, setCustomerPayload] = useState({
+    customerCode: "",
+    name: "",
+    address: "",
+    pinCode: "",
+    state: "",
+    email: "",
+    files: [],
+    autoCreateInvoice: false,
+    defaultDiscount: 0,
+    notes: "",
+    taxDetails: {
+      type: "",
+      billingName: "",
+      taxId: "66cb7ee1287de64cae6c6967",
+      gstNumber: "",
+      billingAddress: "",
+    },
+  });
+
+  const onChange = (e: { target: { name: string; value: any } }) => {
+    setCustomerPayload({
+      ...customerPaylod,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSelectChange = (value: string) => {
+    setCustomerPayload({ ...customerPaylod, state: value });
+  };
 
   const props: UploadProps = {
     name: "file",
@@ -44,6 +78,36 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
     });
   };
 
+  const handleCheckbox = (e: any) => {
+    setCustomerPayload({
+      ...customerPaylod,
+      autoCreateInvoice: e.target.checked,
+    });
+  };
+
+  const handleTaxesSelect = (value: string) => {
+    setCustomerPayload({
+      ...customerPaylod,
+      taxDetails: { ...customerPaylod.taxDetails, type: value },
+    });
+  };
+
+  const onChangeTaxDetails = (e: any) => {
+    setCustomerPayload({
+      ...customerPaylod,
+      taxDetails: {
+        ...customerPaylod.taxDetails,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
+  const handleSubmit = () => {
+    dispatch(addNewCustomer(customerPaylod));
+    openNotificationWithIcon("success");
+    handleCloseSidePanel();
+  };
+
   return (
     <div className={styles.formContainer}>
       {contextHolder}
@@ -58,10 +122,11 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               <p>Customer Code</p>
             </div>
             <input
-              type="number"
               className={styles.input}
               placeholder="Enter Customer code..."
-              defaultValue={"132245"}
+              value={customerPaylod.customerCode}
+              onChange={onChange}
+              name="customerCode"
             />
           </div>
           <div className={styles.typeContainer}>
@@ -72,7 +137,9 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             <input
               className={styles.input}
               placeholder="Enter name..."
-              defaultValue={"John Doe"}
+              value={customerPaylod.name}
+              onChange={onChange}
+              name="name"
             />
           </div>
           <div className={styles.typeContainer}>
@@ -83,6 +150,9 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             <textarea
               className={styles.textarea}
               placeholder="Enter address..."
+              value={customerPaylod.address}
+              onChange={onChange}
+              name="address"
             />
           </div>
           <div className={styles.typeContainer}>
@@ -90,10 +160,11 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               <p>Pincode</p>
             </div>
             <input
-              type="number"
               className={styles.input}
               placeholder="Enter pincode..."
-              defaultValue={"132245"}
+              value={customerPaylod.pinCode}
+              onChange={onChange}
+              name="pinCode"
             />
           </div>
           <div className={styles.typeContainer}>
@@ -104,6 +175,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               style={{ width: "100%" }}
               placeholder="Select One"
               dropdownRender={(menu) => <>{menu}</>}
+              onChange={handleSelectChange}
               options={STATES.map((state) => ({
                 label: state.label,
                 value: state.value,
@@ -116,10 +188,9 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               <sup>*</sup>
             </div>
             <input
-              type="number"
               className={styles.input}
               placeholder="Enter phone number..."
-              defaultValue={"987654321"}
+              defaultValue={""}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -128,9 +199,11 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             </div>
             <input
               type="email"
+              name="email"
               className={styles.input}
               placeholder="Enter email address..."
-              defaultValue={"olivia@untitledui.com"}
+              value={customerPaylod.email}
+              onChange={onChange}
             />
           </div>
           <div className={styles.customerTaxDetails}>
@@ -142,6 +215,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               <Select
                 style={{ width: "100%" }}
                 placeholder="Select One"
+                onChange={handleTaxesSelect}
                 dropdownRender={(menu) => <>{menu}</>}
                 options={CUSTOMER_TAX_TYPES.map((state) => ({
                   label: state.label,
@@ -155,8 +229,10 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               </div>
               <input
                 className={styles.input}
+                name={"gstNumber"}
                 placeholder="Enter GSTIN ..."
-                defaultValue={"AXLPV7788X"}
+                value={customerPaylod.taxDetails.gstNumber}
+                onChange={onChangeTaxDetails}
               />
             </div>
             <div className={styles.typeContainer}>
@@ -165,8 +241,10 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               </div>
               <input
                 className={styles.input}
+                name={"billingName"}
                 placeholder="Enter Billing Name ..."
-                defaultValue={"Business Name"}
+                value={customerPaylod.taxDetails.billingName}
+                onChange={onChangeTaxDetails}
               />
             </div>
             <div className={styles.typeContainer}>
@@ -175,10 +253,13 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               </div>
               <textarea
                 className={styles.textarea}
+                name="billingAddress"
                 placeholder="Enter address..."
+                value={customerPaylod.taxDetails.billingAddress}
+                onChange={onChangeTaxDetails}
               />
             </div>
-            <div className={styles.typeContainer}>
+            {/* <div className={styles.typeContainer}>
               <div className={styles.text}>
                 <p>Taxes</p>
               </div>
@@ -191,7 +272,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
                   value: state.value,
                 }))}
               />
-            </div>
+            </div> */}
           </div>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
@@ -200,8 +281,10 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             <input
               type="number"
               className={styles.input}
+              name="defaultDiscount"
               placeholder="Enter default discount..."
-              defaultValue={0}
+              value={customerPaylod.defaultDiscount}
+              onChange={onChange}
             />
           </div>
           <div className={styles.typeContainer}>
@@ -228,24 +311,27 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             </div>
             <textarea
               className={styles.textarea}
+              name="notes"
               placeholder="Add a note...."
+              value={customerPaylod.notes}
+              onChange={onChange}
             />
           </div>
           <div className={styles.checkboxContainer}>
-            <input type="checkbox" id="auto" name="auto" value="auto" />
+            <input
+              type="checkbox"
+              id="auto"
+              name="auto"
+              value="auto"
+              onChange={handleCheckbox}
+            />
             <label> Auto create invoice when duty is completed</label>
           </div>
         </div>
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
-          onClick={() => {
-            openNotificationWithIcon("success");
-            handleCloseSidePanel();
-          }}
-        />
+        <PrimaryBtn btnText="Save" onClick={handleSubmit} />
       </div>
     </div>
   );
