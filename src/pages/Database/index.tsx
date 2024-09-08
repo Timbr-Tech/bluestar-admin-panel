@@ -2,6 +2,8 @@
 import DatabaseTable from "../../components/DatabaseTable";
 import { DATABASE_ITEMS } from "../../constants/database";
 import cn from "classnames";
+import { RouteName } from "../../constants/routes";
+import { useNavigate, useParams } from "react-router-dom";
 import DutyTypeForm from "../../components/DatabaseTable/DutyTypeTable/DutyTypeForm";
 import CustomerForm from "../../components/DatabaseTable/CustomerTable/CustomerForm";
 import VehicleGroupForm from "../../components/DatabaseTable/VehicleGroupTable/VehicleGroupForm";
@@ -10,7 +12,7 @@ import VehicleForm from "../../components/DatabaseTable/VehicleTable/VehicleForm
 import BankAccountForm from "../../components/DatabaseTable/BankAccountsTable/BankAccountForm";
 import TaxesForm from "../../components/DatabaseTable/TaxesTable/TaxesForm";
 import AllowancesForm from "../../components/DatabaseTable/AllowancesTable/AllowancesForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import styles from "./index.module.scss";
 
@@ -29,8 +31,16 @@ const Database = () => {
     text: "Create and manage your duty types here",
   });
   const [openSidePanel, setOpenSidePanel] = useState(false);
+  const navigate = useNavigate();
+  const params = useParams();
+
+  useEffect(() => {
+    const tempItem = DATABASE_ITEMS.find((item) => item.type === params.tabId);
+    if (tempItem) selectedItem(tempItem);
+  }, [params.type]);
 
   const handleNavClick = (data: IDatabaseItem) => {
+    navigate(`${RouteName.DATABASE}/${data.type}`);
     selectedItem(data);
   };
 
@@ -43,7 +53,7 @@ const Database = () => {
   };
 
   const renderComponent = () => {
-    switch (item.type) {
+    switch (params.tabId) {
       case "duty_types":
         return <DutyTypeForm handleCloseSidePanel={handleCloseSidePanel} />;
       case "vehicle_groups":

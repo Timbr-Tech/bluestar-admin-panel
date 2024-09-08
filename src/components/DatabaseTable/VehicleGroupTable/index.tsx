@@ -4,13 +4,16 @@ import { Table } from "antd";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import Modal from "../../Modal";
-import { getVehicleGroup } from "../../../redux/slices/databaseSlice";
+import {
+  getVehicleGroup,
+  deleteVehicleGroup,
+} from "../../../redux/slices/databaseSlice";
 import type { TableProps } from "antd";
 import styles from "./index.module.scss";
 import React, { useEffect, useState } from "react";
 
 interface IVehicleGroupTableData {
-  key: React.Key;
+  _id: string;
   name: string;
   vehicleCount: number;
 }
@@ -18,13 +21,23 @@ interface IVehicleGroupTableData {
 const VehicleGroupTable = () => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { vehicleGroupData } = useAppSelector((state) => state.database);
+  const { vehicleGroupData, vehicleGroupStates } = useAppSelector(
+    (state) => state.database
+  );
+  const [deleteVehicleGroupId, setDeleteVehicleGroupId] = useState<string>("");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  });
 
   const handleCloseModal = () => {
     setOpenDeleteModal(false);
   };
 
-  const handleDeleteVehicleGroup = () => {};
+  const handleDeleteVehicleGroup = () => {
+    dispatch(deleteVehicleGroup({ id: deleteVehicleGroupId }));
+    setOpenDeleteModal(false);
+  };
 
   const columns: TableProps<IVehicleGroupTableData>["columns"] = [
     ...VEHICLE_GROUPS,
@@ -33,7 +46,10 @@ const VehicleGroupTable = () => {
       dataIndex: "action",
       render: (_, record) => (
         <button
-          onClick={() => setOpenDeleteModal(true)}
+          onClick={() => {
+            setOpenDeleteModal(true);
+            setDeleteVehicleGroupId(record._id);
+          }}
           className={styles.deleteBtn}
         >
           <DeleteIcon />
@@ -43,10 +59,32 @@ const VehicleGroupTable = () => {
   ];
 
   useEffect(() => {
-    dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
+    dispatch(
+      getVehicleGroup({
+        page: pagination.current,
+        search: "",
+        limit: pagination.pageSize,
+      })
+    );
   }, []);
 
-  console.log(vehicleGroupData, "vehicleGroupData");
+  useEffect(() => {
+    setPagination({
+      ...pagination,
+      pageSize: vehicleGroupData.limit,
+      current: vehicleGroupData.page,
+    });
+  }, [vehicleGroupData]);
+
+  const handleTableChange = (pagination: any) => {
+    dispatch(
+      getVehicleGroup({
+        page: pagination.current,
+        search: "",
+        limit: pagination.pageSize,
+      })
+    );
+  };
 
   const onChange = (
     selectedRowKeys: React.Key[],
@@ -67,7 +105,9 @@ const VehicleGroupTable = () => {
           onChange: onChange,
         }}
         columns={columns}
+        onChange={handleTableChange}
         dataSource={vehicleGroupData?.data}
+        loading={vehicleGroupStates?.loading}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

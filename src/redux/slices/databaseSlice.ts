@@ -66,7 +66,7 @@ export const addNewDriver = createAsyncThunk(
   }
 );
 
-// Vehicle Group
+// Vehicle Group CRUD
 
 export const addVehicleGroup = createAsyncThunk(
   "database/addVehicleGroup",
@@ -96,10 +96,12 @@ export const getVehicleGroup = createAsyncThunk(
 export const deleteVehicleGroup = createAsyncThunk(
   "database/deleteVehicleGroup",
 
-  async (params: any) => {
+  async (params: any, { dispatch }) => {
     const { id } = params;
 
     const response = await apiClient.delete(`/database/vehicle-group/${id}`);
+
+    dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
 
     return response.data;
   }
@@ -112,9 +114,23 @@ export const getVehicleGroupOptions = createAsyncThunk(
     const { page, size } = params;
 
     const response = await apiClient.get(
-      `database/vehicle-group/names?page=${page}&size=${size}`
+      `/database/vehicle-group/names?page=${page}&size=${size}`
     );
 
+    return response.data;
+  }
+);
+
+export const updateVehicleGroup = createAsyncThunk(
+  "database/updateVehicleGroup",
+
+  async (body: any) => {
+    const { payload, id } = body;
+
+    const response = await apiClient.patch(
+      `/database/vehicle-group/${id}`,
+      payload
+    );
     return response.data;
   }
 );
@@ -122,8 +138,26 @@ export const getVehicleGroupOptions = createAsyncThunk(
 const initialState: any = {
   vehicleGroupData: {},
   vehicleGroupOption: {},
-  error: null,
-  status: "idle",
+  vehicleGroupStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
+  vehicleGroupOptionStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
+  deleteVehicleGroupStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
+  updateVehicleGroupStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
 };
 
 export const databaseSlice = createSlice({
@@ -136,47 +170,90 @@ export const databaseSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Create a New Vehicle Group
       .addCase(addVehicleGroup.pending, (state) => {
         state.status = "loading";
+        state.vehicleGroupStates.loading = true;
       })
-      .addCase(addVehicleGroup.fulfilled, (state, action) => {
+      .addCase(addVehicleGroup.fulfilled, (state) => {
         state.status = "succeeded";
+        state.vehicleGroupStates.loading = false;
+        state.vehicleGroupStates.error = "";
       })
-      .addCase(addVehicleGroup.rejected, (state, action) => {
+      .addCase(addVehicleGroup.rejected, (state) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.vehicleGroupStates.loading = false;
+        state.vehicleGroupStates.error = "Error";
       })
+
+      // Get Vehicle Group
       .addCase(getVehicleGroup.pending, (state) => {
         state.status = "loading";
+        state.vehicleGroupStates.loading = true;
       })
       .addCase(getVehicleGroup.fulfilled, (state, action) => {
         state.status = "succeeded";
+        state.vehicleGroupStates.loading = false;
+        state.vehicleGroupStates.error = "";
         state.vehicleGroupData = action.payload;
       })
-      .addCase(getVehicleGroup.rejected, (state, action) => {
+      .addCase(getVehicleGroup.rejected, (state) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.vehicleGroupStates.loading = false;
+        state.vehicleGroupStates.error = "Error";
       })
+
+      // Get Vehicle Group Options
       .addCase(getVehicleGroupOptions.pending, (state) => {
         state.status = "loading";
+        state.vehicleGroupOptionStates.loading = true;
+        state.vehicleGroupOptionStates.error = "";
       })
       .addCase(getVehicleGroupOptions.fulfilled, (state, action) => {
         state.status = "succeeded";
+        state.vehicleGroupOptionStates.loading = false;
+        state.vehicleGroupOptionStates.error = "";
         state.vehicleGroupOption = action.payload;
       })
-      .addCase(getVehicleGroupOptions.rejected, (state, action) => {
+      .addCase(getVehicleGroupOptions.rejected, (state) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.vehicleGroupOptionStates.loading = false;
+        state.vehicleGroupOptionStates.error = "Error";
       })
+
+      // Delete the Vehicle Group
       .addCase(deleteVehicleGroup.pending, (state) => {
         state.status = "loading";
+        state.deleteVehicleGroupStates.loading = true;
+        state.deleteVehicleGroupStates.error = "";
       })
-      .addCase(deleteVehicleGroup.fulfilled, (state, action) => {
+      .addCase(deleteVehicleGroup.fulfilled, (state) => {
         state.status = "succeeded";
+        state.deleteVehicleGroupStates.loading = false;
+        state.deleteVehicleGroupStates.error = "";
       })
-      .addCase(deleteVehicleGroup.rejected, (state, action) => {
+      .addCase(deleteVehicleGroup.rejected, (state) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.deleteVehicleGroupStates.loading = false;
+        state.deleteVehicleGroupStates.error = "Error";
+      })
+
+      // Update the Vehicle Group
+
+      .addCase(updateVehicleGroup.pending, (state) => {
+        state.status = "loading";
+        state.updateVehicleGroupStates.loading = true;
+        state.updateVehicleGroupStates.error = "";
+      })
+      .addCase(updateVehicleGroup.fulfilled, (state) => {
+        state.status = "succeeded";
+        state.updateVehicleGroupStates.loading = false;
+        state.updateVehicleGroupStates.error = "";
+      })
+      .addCase(updateVehicleGroup.rejected, (state) => {
+        state.status = "failed";
+        state.updateVehicleGroupStates.loading = false;
+        state.updateVehicleGroupStates.error = "Error";
       });
   },
 });

@@ -35,7 +35,7 @@ const Sidebar = () => {
           </Link>
         </Tooltip>
         <Tooltip placement="right" title={"Database"}>
-          <Link to={RouteName.DATABASE}>
+          <Link to={`${RouteName.DATABASE}/duty_types`}>
             <div className={styles.icon}>
               <Database className={styles.svgIcon} />
             </div>
