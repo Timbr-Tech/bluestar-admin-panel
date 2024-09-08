@@ -140,9 +140,10 @@ export const addNewAllowance = createAsyncThunk(
 
 export const addNewVehicle = createAsyncThunk(
   "database/addNewVehicle",
-  async (body) => {
+  async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/vehicle", body);
 
+    dispatch(getVehicle({ page: "1", search: "", limit: "" }));
     return response.data;
   }
 );
@@ -174,10 +175,11 @@ export const updateVehicle = createAsyncThunk(
 export const deleteVehicle = createAsyncThunk(
   "database/deleteVehicle",
 
-  async (body: any) => {
+  async (body: any, { dispatch }) => {
     const { id } = body;
     const response = await apiClient.delete(`/database/vehicle/${id}`);
 
+    dispatch(getVehicle({ page: "1", search: "", limit: "" }));
     return response.data;
   }
 );

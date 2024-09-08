@@ -84,9 +84,9 @@ const CustomerTable = () => {
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
-            <div className={styles.primaryText}>Delete vehicle group</div>
+            <div className={styles.primaryText}>Delete customer</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this vehicle group? This action
+              Are you sure you want to delete this customer? This action
               cannot be undone.
             </div>
           </div>

@@ -122,7 +122,7 @@ export const DRIVERS = [
 export const VEHICLES = [
   {
     title: "Model name",
-    dataIndex: "model_name",
+    dataIndex: "modelName",
   },
   {
     title: "Group",
@@ -134,11 +134,7 @@ export const VEHICLES = [
   },
   {
     title: "Vehicle number",
-    dataIndex: "vehicle_number",
-  },
-  {
-    title: "Status",
-    dataIndex: "status",
+    dataIndex: "vehicleNumber",
   },
 ];
 
