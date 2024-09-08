@@ -3,6 +3,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../utils/configureAxios";
 
+// Bank Account APIs
+
 export const addBankAccount = createAsyncThunk(
   "database/addBankAccount",
   async (body) => {
@@ -11,6 +13,46 @@ export const addBankAccount = createAsyncThunk(
     return response.data;
   }
 );
+
+export const getBankAccount = createAsyncThunk(
+  "database/getBankAccount",
+  async (params: any) => {
+    const { page, limit, search } = params;
+    const response = await apiClient.get(
+      `/database/bank-accounts/?page=${page}&limit=${limit}&search=${search}`
+    );
+
+    return response.data;
+  }
+);
+
+export const deleteBankAccount = createAsyncThunk(
+  "database/deleteBankAccount",
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.delete(`/database/bank-accounts/${id}`);
+
+    return response.data;
+  }
+);
+
+export const updateBankAccount = createAsyncThunk(
+  "database/updateBankAccount",
+
+  async (body: any) => {
+    const { id, payload } = body;
+
+    const response = await apiClient.patch(
+      `/database/bank-accounts/${id}`,
+      payload
+    );
+
+    return response.data;
+  }
+);
+
+// Duty Type APIs
 
 export const addDutyType = createAsyncThunk(
   "database/addDutyType",
@@ -21,6 +63,8 @@ export const addDutyType = createAsyncThunk(
   }
 );
 
+// Tax APIs
+
 export const addNewTax = createAsyncThunk(
   "database/addNewTax",
   async (body) => {
@@ -30,14 +74,53 @@ export const addNewTax = createAsyncThunk(
   }
 );
 
+// Customer APIs
+
 export const addNewCustomer = createAsyncThunk(
   "database/addNewCustomer",
-  async (body) => {
+  async (body: any) => {
     const response = await apiClient.post("/database/customer", body);
 
     return response.data;
   }
 );
+
+export const getCustomer = createAsyncThunk(
+  "database/getCustomer",
+  async (params: any) => {
+    const { page, limit, search } = params;
+
+    const response = await apiClient.get(
+      `/database/customer?page=${page}&limit=${limit}&search=${search}`
+    );
+
+    return response.data;
+  }
+);
+
+export const updateCustomer = createAsyncThunk(
+  "database/updateCustomer",
+  async (body: any) => {
+    const { payload, id } = body;
+
+    const response = await apiClient.patch(`/database/customer/${id}`, payload);
+
+    return response.data;
+  }
+);
+
+export const deleteCustomer = createAsyncThunk(
+  "database/deleteCustomer",
+  async (body: any) => {
+    const { id } = body;
+
+    const response = await apiClient.delete(`/database/customer/${id}`);
+
+    return response.data;
+  }
+);
+
+// Allowance APIs
 
 export const addNewAllowance = createAsyncThunk(
   "database/addNewAllowance",
@@ -48,6 +131,8 @@ export const addNewAllowance = createAsyncThunk(
   }
 );
 
+// Vehicle APIs
+
 export const addNewVehicle = createAsyncThunk(
   "database/addNewVehicle",
   async (body) => {
@@ -56,6 +141,8 @@ export const addNewVehicle = createAsyncThunk(
     return response.data;
   }
 );
+
+// Driver APIs
 
 export const addNewDriver = createAsyncThunk(
   "database/addNewDriver",
