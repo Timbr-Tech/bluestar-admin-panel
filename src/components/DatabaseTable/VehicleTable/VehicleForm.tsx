@@ -2,6 +2,8 @@
 import { Select, Upload, message, notification, Switch } from "antd";
 import { useState } from "react";
 import type { UploadProps } from "antd";
+import { useAppDispatch } from "../../../hooks/store";
+import { addNewVehicle } from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
@@ -15,8 +17,79 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   const { Dragger } = Upload;
+  const [vehiclePayload, setVehiclePayload] = useState({
+    modelName: "",
+    vehicleNumber: "",
+    fuelType: "",
+    vehicleGroupId: "", //Always add an ID from the vehicle-group table, the data for vehicle group is fetched from that
+    driverId: "", //Driver ID from driver collection
+    fastTagId: "",
+    registration: {
+      ownerName: "Dogra",
+      date: "2024-09-02T10:30:00.000Z",
+      registrationDocument: {
+        fileUrl:
+          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
+        fileType: "application/pdf",
+        fileSize: 201818,
+      },
+    },
+    insurance: {
+      companyName: "Laxmi chit fund",
+      policyNumber: "420",
+      issueDate: "2024-09-02T10:30:00.000Z",
+      dueDate: "2024-09-02T10:30:00.000Z",
+      premiumAmount: 6000,
+      coverAmount: 1000000000,
+      insuranceDocument: {
+        fileUrl:
+          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
+        fileType: "application/pdf",
+        fileSize: 201818,
+      },
+    },
+    rto: {
+      ownerName: "Dogra",
+      date: "2024-09-02T10:30:00.000Z",
+      registrationDocument: {
+        fileUrl:
+          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
+        fileType: "application/pdf",
+        fileSize: 201818,
+      },
+    },
+    parts: {
+      chasisNumber: "696969",
+      engineNumber: "420420",
+    },
+    expiryDate: "2024-09-02T10:30:00.000Z",
+    vehicleDocuments: [
+      {
+        fileUrl:
+          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
+        fileType: "application/pdf",
+        fileSize: 201818,
+      },
+    ],
+    notes: "Hello world",
+    loan: {
+      isActive: true,
+      emiAmount: 6000,
+      startDate: "2024-09-02T10:30:00.000Z",
+      endDate: "2024-09-02T10:30:00.000Z",
+      bankName: "NM United Bank",
+      emiDate: "2024-09-02T10:30:00.000Z",
+      loanDocument: {
+        fileUrl:
+          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
+        fileType: "application/pdf",
+        fileSize: 201818,
+      },
+    },
+  });
   const [api, contextHolder] = notification.useNotification();
   const [hasLoan, setHasLoan] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   const onChange = (checked: boolean) => {
     setHasLoan(checked);
