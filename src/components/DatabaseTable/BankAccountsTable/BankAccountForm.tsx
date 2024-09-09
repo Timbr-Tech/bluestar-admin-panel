@@ -17,7 +17,7 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
   const [api, contextHolder] = notification.useNotification();
   const [bankAccount, setBankAccount] = useState({
     accountName: "",
-    accountNumber: "",
+    accountNumber: 1234,
     bankName: "",
     ifsc: "",
     branchName: "",
@@ -74,6 +74,7 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
             </div>
             <input
               name="accountNumber"
+              type="number"
               className={styles.input}
               placeholder="Enter account number..."
               value={bankAccount.accountNumber}
