@@ -35,7 +35,17 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
   const handleChange = (e: { target: { value: any; name: any } }) => {
     const val = e.target.value;
 
-    setBankAccount({ ...bankAccount, [e.target.name]: val });
+    console.log(Number(val))
+
+    if(e.target.name ==="accountNumber") {
+      const regex = /^[0-9]*\.?[0-9]*$/
+      if(regex.test(val)) {
+        setBankAccount({ ...bankAccount, accountNumber: parseInt(val) });
+      }
+    } else {
+      setBankAccount({ ...bankAccount, [e.target.name]: val });
+    }
+
   };
 
   const onSubmit = () => {
