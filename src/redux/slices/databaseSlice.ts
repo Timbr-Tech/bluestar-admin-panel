@@ -69,8 +69,103 @@ export const addDutyType = createAsyncThunk(
 
 export const addNewTax = createAsyncThunk(
   "database/addNewTax",
-  async (body) => {
+  async (body: any, { dispatch, getState }: any) => {
     const response = await apiClient.post("/database/tax", body);
+
+    const { database } = getState().database;
+    const { taxesStates } = database;
+    const { pagination } = taxesStates;
+
+    dispatch(
+      getTaxes({
+        page: pagination.page,
+        search: pagination.search,
+        limit: pagination.limit,
+      })
+    );
+    return response.data;
+  }
+);
+
+export const getTaxes = createAsyncThunk(
+  "database/getTaxes",
+
+  async (params: any) => {
+    const { page, limit, search } = params;
+    const response = await apiClient.get(
+      `/database/tax/?page=${page}&limit=${limit}&search=${search}`
+    );
+
+    return response.data;
+  }
+);
+
+export const getTaxesOptions = createAsyncThunk(
+  "database/getTaxesOptions",
+
+  async (params: any) => {
+    const { page, size } = params;
+
+    const response = await apiClient.get(
+      `/database/tax/names?page=${page}&size=${size}`
+    );
+
+    return response.data;
+  }
+);
+
+export const deleteTax = createAsyncThunk(
+  "database/deleteTax",
+
+  async (params: any, { dispatch, getState }: any) => {
+    const { id } = params;
+    const response = await apiClient.delete(`/database/tax/${id}`);
+
+    const { database } = getState().database;
+    const { taxesStates } = database;
+    const { pagination } = taxesStates;
+
+    dispatch(
+      getTaxes({
+        page: pagination.page,
+        search: pagination.search,
+        limit: pagination.limit,
+      })
+    );
+
+    return response.data;
+  }
+);
+
+export const updateTax = createAsyncThunk(
+  "database/updateTax",
+  async (body: any, { dispatch, getState }: any) => {
+    const { id, payload } = body;
+
+    const response = await apiClient.patch(`/database/tax/${id}`, payload);
+
+    const { database } = getState().database;
+    const { taxesStates } = database;
+    const { pagination } = taxesStates;
+
+    dispatch(
+      getTaxes({
+        page: pagination.page,
+        search: pagination.search,
+        limit: pagination.limit,
+      })
+    );
+
+    return response.data;
+  }
+);
+
+export const getTaxesById = createAsyncThunk(
+  "database/getTaxesById",
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.get(`/database/tax/${id}`);
 
     return response.data;
   }
@@ -269,6 +364,8 @@ const initialState: any = {
   vehicleGroupOption: {},
   customers: {},
   taxes: {},
+  selectedTax: {},
+  taxesOptions: {},
   bankAccounts: {},
   vehicleList: {},
 
@@ -283,6 +380,7 @@ const initialState: any = {
   taxesStates: {
     status: "idle",
     loading: false,
+    pagination: { page: 1, total: "", limit: 7 },
     error: "",
   },
   deleteTaxesState: {
@@ -486,7 +584,7 @@ export const databaseSlice = createSlice({
         state.updateCustomersStates.loading = true;
         state.updateCustomersStates.error = "";
       })
-      .addCase(updateCustomer.fulfilled, (state, action) => {
+      .addCase(updateCustomer.fulfilled, (state) => {
         state.updateCustomersStates.status = "succeeded";
         state.updateCustomersStates.loading = false;
         state.updateCustomersStates.error = "";
@@ -499,19 +597,117 @@ export const databaseSlice = createSlice({
 
       // Add Taxes
       .addCase(addNewTax.pending, (state) => {
-        state.taxesStates.status = "loading";
-        state.taxesStates.loading = true;
-        state.taxesStates.error = "";
+        state.updateTaxesState.status = "loading";
+        state.updateTaxesState.loading = true;
+        state.updateTaxesState.error = "";
       })
       .addCase(addNewTax.fulfilled, (state) => {
+        state.updateTaxesState.status = "succeeded";
+        state.updateTaxesState.loading = false;
+        state.updateTaxesState.error = "";
+      })
+      .addCase(addNewTax.rejected, (state) => {
+        state.updateTaxesState.status = "failed";
+        state.updateTaxesState.loading = false;
+        state.updateTaxesState.error = "Error";
+      })
+
+      // Get Taxes
+
+      .addCase(getTaxes.pending, (state) => {
+        state.taxesStates.status = "loading";
+        state.taxesStates.loading = true;
+        state.taxesStates.error = "Error";
+      })
+      .addCase(getTaxes.fulfilled, (state, action) => {
         state.taxesStates.status = "succeeded";
         state.taxesStates.loading = false;
         state.taxesStates.error = "";
+        state.taxes = action.payload;
+        state.taxesStates.pagination = {
+          page: action.payload.page,
+          limit: action.payload.limit,
+          total: action.payload.total,
+        };
       })
-      .addCase(addNewTax.rejected, (state) => {
+      .addCase(getTaxes.rejected, (state) => {
         state.taxesStates.status = "failed";
         state.taxesStates.loading = false;
         state.taxesStates.error = "Error";
+      })
+
+      // Get Taxes By Id
+
+      .addCase(getTaxesById.pending, (state) => {
+        state.taxesStates.status = "loading";
+        state.taxesStates.loading = true;
+        state.taxesStates.error = "Error";
+      })
+      .addCase(getTaxesById.fulfilled, (state, action) => {
+        state.taxesStates.status = "succeeded";
+        state.taxesStates.loading = false;
+        state.taxesStates.error = "";
+        state.selectedTax = action.payload;
+      })
+      .addCase(getTaxesById.rejected, (state) => {
+        state.taxesStates.status = "failed";
+        state.taxesStates.loading = false;
+        state.taxesStates.error = "Error";
+      })
+
+      // Get Taxes Options
+
+      .addCase(getTaxesOptions.pending, (state) => {
+        state.taxesStates.status = "loading";
+        state.taxesStates.loading = true;
+        state.taxesStates.error = "Error";
+      })
+      .addCase(getTaxesOptions.fulfilled, (state, action) => {
+        state.taxesStates.status = "succeeded";
+        state.taxesStates.loading = false;
+        state.taxesStates.error = "";
+        state.taxesOptions = action.payload;
+      })
+      .addCase(getTaxesOptions.rejected, (state) => {
+        state.taxesStates.status = "failed";
+        state.taxesStates.loading = false;
+        state.taxesStates.error = "Error";
+      })
+
+      // Update Taxes
+
+      .addCase(updateTax.pending, (state) => {
+        state.updateTaxesState.status = "loading";
+        state.updateTaxesState.loading = true;
+        state.updateTaxesState.error = "Error";
+      })
+      .addCase(updateTax.fulfilled, (state) => {
+        state.updateTaxesState.status = "succeeded";
+        state.updateTaxesState.loading = false;
+        state.updateTaxesState.error = "";
+      })
+      .addCase(updateTax.rejected, (state) => {
+        state.updateTaxesState.status = "failed";
+        state.updateTaxesState.loading = false;
+        state.updateTaxesState.error = "Error";
+      })
+
+      // Delete Tax
+
+      .addCase(deleteTax.pending, (state) => {
+        state.deleteTaxesState.status = "loading";
+        state.deleteTaxesState.loading = true;
+        state.deleteTaxesState.error = "Error";
+      })
+      .addCase(deleteTax.fulfilled, (state) => {
+        state.deleteTaxesState.status = "succeeded";
+        state.deleteTaxesState.loading = false;
+        state.deleteTaxesState.error = "";
+      })
+      .addCase(deleteTax.rejected, (state) => {
+        state.deleteTaxesState.status = "failed";
+        state.deleteTaxesState.loading = false;
+        state.deleteTaxesState.error = "Error";
       })
 
       // Add Bank Account

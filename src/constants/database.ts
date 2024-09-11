@@ -178,6 +178,12 @@ export const DUTY_TYPES_TYPE = [
   { value: "5", label: "Long Duration - Total KM & HR( Monthly Bookings)" },
 ];
 
+export const TAXES_TABLE = [
+  { title: "Tax name", dataIndex: "name" },
+  { title: "Percentage", dataIndex: "percentage" },
+  { title: "Status", dataIndex: "status" },
+];
+
 export const FASTTAG_TABLE = [
   {
     title: "Tag Account",
