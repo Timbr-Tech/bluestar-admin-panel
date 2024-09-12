@@ -16,6 +16,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path={RouteName.HOME} element={<Home />} />
       <Route path={`${RouteName.DATABASE}/:tabId`} element={<Database />} />
+      <Route path={`${RouteName.DATABASE}/:tabId/:id`} element={<Database />} />
       <Route path={RouteName.BOOKINGS} element={<Bookings />} />
       <Route path={RouteName.AVAILABILITY} element={<Availability />} />
       <Route path={RouteName.VEHICLE_EXPENSE} element={<VehicleExpense />} />

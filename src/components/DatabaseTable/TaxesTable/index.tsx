@@ -1,8 +1,12 @@
 /* eslint-disable */
 import { TAXES_TABLE } from "../../../constants/database";
-import { Table, TableProps } from "antd";
+import { Table, TableProps, Dropdown } from "antd";
+import type { MenuProps } from "antd";
 import Modal from "../../Modal";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
+import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
+import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
+import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { getTaxes, deleteTax } from "../../../redux/slices/databaseSlice";
 import React, { useState, useEffect } from "react";
@@ -22,13 +26,40 @@ const TaxesTable = () => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [taxId, setTaxId] = useState("");
+
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    console.log("click", e);
+  };
+
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("click left button", e);
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Edit vehicle",
+      key: "1",
+      icon: <EditIcon />,
+    },
+    {
+      label: "Mark Inactive",
+      key: "2",
+      icon: <Clipboard />,
+    },
+  ];
+
+  const menuProps = {
+    items,
+    onClick: handleMenuClick,
+  };
+
   const columns: TableProps<ITaxesTableData>["columns"] = [
     ...TAXES_TABLE,
     {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div>
+        <div className={styles.editButton}>
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -38,6 +69,11 @@ const TaxesTable = () => {
           >
             <DeleteIcon />
           </button>
+          <Dropdown menu={menuProps} trigger={["click"]}>
+            <button className={styles.button}>
+              <DotsHorizontal />
+            </button>
+          </Dropdown>
         </div>
       ),
     },
