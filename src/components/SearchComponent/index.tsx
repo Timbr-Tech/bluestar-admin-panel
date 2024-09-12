@@ -2,7 +2,8 @@
 
 import { ChangeEventHandler } from "react";
 import styles from "./index.module.scss";
-
+import { Input } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 interface ISearchComponent {
   LeadingIcon: any;
   value: string;
@@ -17,15 +18,13 @@ const SearchComponent = ({
   placeholder,
 }: ISearchComponent) => {
   return (
-    <div className={styles.container}>
-      <LeadingIcon />
-      <input
-        value={value}
-        onChange={onChange}
-        className={styles.inputContainer}
-        placeholder={placeholder}
-      />
-    </div>
+    <Input
+      value={value}
+      prefix={<SearchOutlined />}
+      onChange={onChange}
+      className={styles.inputContainer}
+      placeholder={placeholder}
+    />
   );
 };
 
