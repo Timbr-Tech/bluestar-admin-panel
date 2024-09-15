@@ -80,7 +80,9 @@
       flex-direction: row;
       justify-content: space-between;
       margin-bottom: 20px;
-      gap: 10rem;
+      .inputContainer {
+        max-width: 25rem;
+      }
     }
   }
 }

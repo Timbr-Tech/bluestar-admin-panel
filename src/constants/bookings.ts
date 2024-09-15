@@ -11,6 +11,14 @@ export const BOOKINGS_TABS = [
   { id: 6, name: "Cancelled", type: "cancelled" },
 ];
 
+export const BOOKINGS_STATUS = {
+  booked: "booked",
+  "on-going": "on-going",
+  completed: "completed",
+  billed: "billed",
+  cancelled: "cancelled",
+};
+
 export const BOOKINGS_TABLE = [
   { title: "Start date", dataIndex: "start_date" },
   { title: "Customer", dataIndex: "customer" },
