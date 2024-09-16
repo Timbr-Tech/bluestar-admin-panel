@@ -2,25 +2,16 @@
 import cn from "classnames";
 import { useState, ChangeEvent } from "react";
 import { BOOKINGS_TABS } from "../../constants/bookings";
-import SearchComponent from "../../components/SearchComponent";
-import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
 import styles from "./index.module.scss";
 import SecondaryBtn from "../../components/SecondaryBtn";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import BookingsTable from "../../components/BookingsTable";
-import { DatePicker, Drawer, Input, Radio, Space, Form, Select } from "antd";
+import { DatePicker, Drawer, Input, Radio } from "antd";
+import AddNewBookingForm from "../../components/Bookings/AddNewBooking/AddNewBookingForm";
 
 const { RangePicker } = DatePicker;
-const customizeRequiredMark = (
-  label: React.ReactNode,
-  { required }: { required: boolean }
-) => (
-  <Space>
-    {label}
-    {required && <span style={{ color: "red" }}>*</span>}
-  </Space>
-);
+
 const BookingsTabs = () => {
   const [filter, setFilter] = useState("");
   return (
@@ -47,8 +38,6 @@ const Bookings = () => {
     const value = e.target.value;
     setSearchTerm(value);
   };
-
-  const [form] = Form.useForm();
 
   return (
     <div className={cn("container", styles.container)}>
@@ -97,6 +86,7 @@ const Bookings = () => {
       </div>
       <Drawer
         destroyOnClose
+        size="large"
         mask
         title={
           <div>
@@ -110,28 +100,7 @@ const Bookings = () => {
         open={openAddDrawer}
       >
         <div>
-          <Form
-            layout="vertical"
-            form={form}
-            name="control-hooks"
-            onFinish={() => {}}
-            requiredMark={customizeRequiredMark}
-          >
-            <Form.Item
-              name="bookingId"
-              label="Booking Id"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name="customer"
-              label="Customer"
-              rules={[{ required: true }]}
-            >
-              <Input />
-            </Form.Item>
-          </Form>
+          <AddNewBookingForm />
         </div>
       </Drawer>
     </div>

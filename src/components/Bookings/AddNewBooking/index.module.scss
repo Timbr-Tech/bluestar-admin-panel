@@ -1,0 +1,17 @@
+.form {
+  .BookedByCardContainer {
+  }
+  .PassengerCardContainer {
+    margin: 1rem 0rem;
+    .PassengerCard {
+      position: relative;
+      margin: 1rem 0rem;
+      .deletePassengerButton {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        color: red;
+      }
+    }
+  }
+}
