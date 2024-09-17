@@ -9,6 +9,12 @@ import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import BookingsTable from "../../components/BookingsTable";
 import { DatePicker, Drawer, Input, Radio } from "antd";
 import AddNewBookingForm from "../../components/Bookings/AddNewBooking/AddNewBookingForm";
+import {
+  setIsAddEditDrawerClose,
+  setIsAddEditDrawerOpen,
+} from "../../redux/slices/bookingSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../types/store";
 
 const { RangePicker } = DatePicker;
 
@@ -32,12 +38,16 @@ const BookingsTabs = () => {
 
 const Bookings = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [openAddDrawer, setOpenAddDrawer] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
   };
+
+  const { isAddEditDrawerOpen, currentSelectedBooking } = useSelector(
+    (state: RootState) => state.booking
+  );
 
   return (
     <div className={cn("container", styles.container)}>
@@ -53,7 +63,7 @@ const Bookings = () => {
           <PrimaryBtn
             LeadingIcon={PlusOutlined}
             onClick={() => {
-              setOpenAddDrawer(true);
+              dispatch(setIsAddEditDrawerOpen());
             }}
             btnText="Add bookings"
           />
@@ -95,12 +105,12 @@ const Bookings = () => {
           </div>
         }
         onClose={() => {
-          setOpenAddDrawer(false);
+          dispatch(setIsAddEditDrawerClose());
         }}
-        open={openAddDrawer}
+        open={isAddEditDrawerOpen}
       >
         <div>
-          <AddNewBookingForm />
+          <AddNewBookingForm initialData={currentSelectedBooking} />
         </div>
       </Drawer>
     </div>

@@ -15,11 +15,19 @@ import {
 } from "antd";
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
-import {} from "antd";
+import { isEditable } from "@testing-library/user-event/dist/utils";
 
 const { TextArea } = Input;
-
-const AddNewBookingForm = () => {
+interface AddNewBookingForm {
+  initialData?: {
+    bookingId: string;
+  };
+  isEditable?: boolean;
+}
+const AddNewBookingForm = ({
+  initialData,
+  isEditable = false,
+}: AddNewBookingForm) => {
   const [form] = Form.useForm();
   const [options, setOptions] = useState<AutoCompleteProps["options"]>([]);
   const handleSearch = (value: string) => {
@@ -44,7 +52,9 @@ const AddNewBookingForm = () => {
       layout="vertical"
       form={form}
       name="control-hooks"
+      disabled={isEditable}
       onFinish={() => {}}
+      initialValues={initialData}
       requiredMark={CustomizeRequiredMark}
       className={styles.form}
     >
