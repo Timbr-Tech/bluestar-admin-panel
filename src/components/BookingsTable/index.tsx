@@ -1,10 +1,22 @@
 /* eslint-disable */
 
-import { Badge, Drawer, Dropdown, MenuProps, Space, Table, Tag } from "antd";
+import {
+  Badge,
+  Button,
+  Drawer,
+  Dropdown,
+  MenuProps,
+  Pagination,
+  Space,
+  Table,
+  Tag,
+} from "antd";
 
 import styles from "./index.module.scss";
 import { BOOKINGS_STATUS } from "../../constants/bookings";
 import {
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
   CheckCircleTwoTone,
   DeleteOutlined,
   EditOutlined,
@@ -12,15 +24,17 @@ import {
   FilePdfOutlined,
   MoreOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import { useAppDispatch } from "../../hooks/store";
 import {
   setIsAddEditDrawerOpen,
   setCurrentSelectedBooking,
+  getBookings,
 } from "../../redux/slices/bookingSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
+import pagination, { PaginationProps } from "antd/es/pagination";
 
 interface IBookingsTableData {
   key: React.Key;
@@ -36,98 +50,9 @@ interface IBookingsTableData {
 const BookingsTable = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [conformedBookingModal, setConformedBookingModal] = useState(false);
-  const dataSource = [
-    {
-      startDate: "2024-09-15",
-      customer: "John Doe",
-      passenger: ["Alice Smith", "shadab Ali", "Pratham"],
-      vehicleGroup: "SUV",
-      dutyType: "Airport Transfer",
-      duties: "Pickup from JFK Airport",
-      status: "booked",
-    },
-    {
-      startDate: "2024-09-16",
-      customer: "Jane Doe",
-      passenger: "Bob Johnson",
-      vehicleGroup: "Sedan",
-      dutyType: "City Tour",
-      duties: "Full-day sightseeing",
-      status: "on-going",
-    },
-    {
-      startDate: "2024-09-12",
-      customer: "Tom White",
-      passenger: "Clara White",
-      vehicleGroup: "Luxury",
-      dutyType: "Business Travel",
-      duties: "Office commute",
-      status: "completed",
-    },
-    {
-      startDate: "2024-09-10",
-      customer: "Samuel Green",
-      passenger: ["shadab Ali", "Pratham", "Rachel Green"],
-      vehicleGroup: "Van",
-      dutyType: "Event Transfer",
-      duties: "Wedding transportation",
-      status: "billed",
-    },
-    {
-      startDate: "2024-09-17",
-      customer: "Nancy Brown",
-      passenger: "Michael Brown",
-      vehicleGroup: "Mini Van",
-      dutyType: "School Pickup",
-      duties: "Daily school commute",
-      status: "cancelled",
-    },
-    {
-      startDate: "2024-09-20",
-      customer: "Alex King",
-      passenger: ["Pratham", "shadab Ali", "Emily King"],
-      vehicleGroup: "SUV",
-      dutyType: "Outstation Trip",
-      duties: "Weekend getaway",
-      status: "booked",
-    },
-    {
-      startDate: "2024-09-18",
-      customer: "Oscar Black",
-      passenger: "Sophia Black",
-      vehicleGroup: "Sedan",
-      dutyType: "City Commute",
-      duties: "Office pickup",
-      status: "on-going",
-    },
-    {
-      startDate: "2024-09-11",
-      customer: "Harry Lewis",
-      passenger: "Noah Lewis",
-      vehicleGroup: "SUV",
-      dutyType: "Family Trip",
-      duties: "Airport transfer",
-      status: "completed",
-    },
-    {
-      startDate: "2024-09-14",
-      customer: "Grace Lee",
-      passenger: "Liam Lee",
-      vehicleGroup: "Luxury",
-      dutyType: "Business Meeting",
-      duties: "City transfer",
-      status: "billed",
-    },
-    {
-      startDate: "2024-09-19",
-      customer: "Ethan Walker",
-      passenger: "Lucas Walker",
-      vehicleGroup: "Van",
-      dutyType: "Event Transfer",
-      duties: "Concert transportation",
-      status: "cancelled",
-    },
-  ];
+  const { isAddEditDrawerOpen, currentSelectedBooking, bookings, pagination } =
+    useSelector((state: RootState) => state.booking);
+
   const dispatch = useAppDispatch();
 
   function returnItems(row: any) {
@@ -177,7 +102,7 @@ const BookingsTable = () => {
           <div>
             <Space>
               <EditOutlined twoToneColor="#52c41a" />
-              View booking
+              Edit booking
             </Space>
           </div>
         ),
@@ -313,7 +238,7 @@ const BookingsTable = () => {
   ];
 
   function formateData() {
-    return dataSource.map((each) => {
+    return bookings.map((each: Object) => {
       return {
         ...each,
         action: "",
@@ -345,9 +270,41 @@ const BookingsTable = () => {
     dispatch(setCurrentSelectedBooking({}));
   }
 
-  const { isAddEditDrawerOpen, currentSelectedBooking } = useSelector(
-    (state: RootState) => state.booking
-  );
+  console.log("bookings", bookings);
+  useEffect(() => {
+    dispatch(getBookings());
+  }, []);
+  // handleBookingsTablePageChange = (page, pageSize) => {
+  //   const { dispatch } = this.props;
+  //   dispatch({
+  //     type: batchActions.SET_FILTERS,
+  //     payload: {
+  //       page,
+  //       per_page: pageSize,
+  //     },
+  //   });
+  // };
+  const itemRender: PaginationProps["itemRender"] = (
+    _,
+    type,
+    originalElement
+  ) => {
+    if (type === "prev") {
+      return (
+        <Button>
+          <ArrowLeftOutlined /> Previous
+        </Button>
+      );
+    }
+    if (type === "next") {
+      return (
+        <Button>
+          Next <ArrowRightOutlined />
+        </Button>
+      );
+    }
+    return originalElement;
+  };
   return (
     <>
       <div className={styles.container}>
@@ -356,8 +313,32 @@ const BookingsTable = () => {
             type: "checkbox",
             ...rowSelection,
           }}
-          dataSource={dataSource}
+          dataSource={formateData()}
           columns={columns}
+          // pagination={{
+          //   // po
+          //   // defaultCurrent: 1,
+          //   total: pagination?.total ?? 0,
+          //   current: pagination?.page ?? 1,
+          //   // pageSize: pagination.limit ?? 10,
+          //   pageSize: 2,
+          //   // onChange: handleBookingsTablePageChange,
+          // }}
+          pagination={false}
+          scroll={{
+            x: 756,
+          }}
+          footer={() => (
+            <Pagination
+              total={pagination?.total ?? 0}
+              current={pagination?.page ?? 1}
+              // pageSize: pagination.limit ?? 10,
+              pageSize={1}
+              align="center"
+              itemRender={itemRender}
+              className="custom-pagination"
+            />
+          )}
         />
       </div>
       {/* delete booking */}

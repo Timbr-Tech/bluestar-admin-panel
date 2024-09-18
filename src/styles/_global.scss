@@ -89,3 +89,22 @@ body {
 .flex {
   display: flex;
 }
+// .custom-pagination {
+//   display: flex;
+//   justify-content: space-between; /* Spread prev, numbers, and next */
+//   align-items: center;
+//   width: 100%;
+// }
+
+// .custom-pagination .ant-pagination-prev {
+//   order: 1; /* Keep the 'Prev' button on the left */
+// }
+
+// .custom-pagination .ant-pagination-item {
+//   display: inline-flex;
+//   order: 2; /* Page numbers stay in the middle */
+// }
+
+// .custom-pagination .ant-pagination-next {
+//   order: 3; /* Keep the 'Next' button on the right */
+// }
