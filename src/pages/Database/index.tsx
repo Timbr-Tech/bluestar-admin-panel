@@ -97,14 +97,16 @@ const Database = () => {
         ))}
       </ul>
       <DatabaseTable item={item} handleOpenSidePanel={handleOpenSidePanel} />
-      <div
-        className={cn(styles.formContainer, { [styles.open]: openSidePanel })}
-      >
-        <button className={styles.closeBtn} onClick={handleCloseSidePanel}>
-          <CrossIcon />
-        </button>
-        {renderComponent()}
-      </div>
+      {openSidePanel && (
+        <div
+          className={cn(styles.formContainer, { [styles.open]: openSidePanel })}
+        >
+          <button className={styles.closeBtn} onClick={handleCloseSidePanel}>
+            <CrossIcon />
+          </button>
+          {renderComponent()}
+        </div>
+      )}
     </div>
   );
 };

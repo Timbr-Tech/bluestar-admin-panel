@@ -296,10 +296,11 @@ export const addVehicleGroup = createAsyncThunk(
   "database/addVehicleGroup",
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/vehicle-group", body);
-
-    dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
-
-    return response.data;
+    console.log({ response });
+    if (response.status === 201) {
+      dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
+      return response.data;
+    }
   }
 );
 
