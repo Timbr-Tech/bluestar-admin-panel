@@ -113,7 +113,7 @@ const Bookings = () => {
             <p>clear</p>
           </div>
         </div>
-        <Divider />
+        {/* <Divider /> */}
         <BookingsTable />
       </div>
       <Drawer
