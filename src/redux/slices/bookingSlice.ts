@@ -12,6 +12,11 @@ const initialState = {
   isAddEditDrawerOpen: false,
   currentSelectedBooking: {} as any, // as Ibooking later
   bookings: [],
+  filters: {
+    status: "",
+    q: "",
+  },
+  isEditingBooking: true,
   bookingStates: { status: "idle", loading: false, error: "" },
   pagination: {
     total: 0,
@@ -22,10 +27,10 @@ const initialState = {
 
 export const getBookings = createAsyncThunk(
   "booking/getBookings",
-  async (user) => {
-    // const response = await apiClient.post("/auth/admin/login", user);
+  async (params: any) => {
+    // const response = await apiClient.get("/auth/admin/login", { params });
     // return response.data;
-    console.log("in think");
+
     return {
       total: 10,
       page: 1,
@@ -130,8 +135,17 @@ export const bookingSlice = createSlice({
   name: "booking",
   initialState,
   reducers: {
+    setBookingFilter: (state, action: PayloadAction<any | {}>) => {
+      state.filters = {
+        ...state.filters,
+        ...action.payload,
+      };
+    },
     setIsAddEditDrawerOpen: (state) => {
       state.isAddEditDrawerOpen = true;
+    },
+    setIsEditingBooking: (state, action: PayloadAction<boolean>) => {
+      state.isEditingBooking = action.payload;
     },
     setIsAddEditDrawerClose: (state) => {
       state.isAddEditDrawerOpen = false;
@@ -170,5 +184,7 @@ export const {
   setIsAddEditDrawerOpen,
   setIsAddEditDrawerClose,
   setCurrentSelectedBooking,
+  setBookingFilter,
+  setIsEditingBooking,
 } = actions;
 export default bookingSlice.reducer;

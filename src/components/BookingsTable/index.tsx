@@ -31,6 +31,7 @@ import {
   setIsAddEditDrawerOpen,
   setCurrentSelectedBooking,
   getBookings,
+  setIsEditingBooking,
 } from "../../redux/slices/bookingSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
@@ -50,8 +51,13 @@ interface IBookingsTableData {
 const BookingsTable = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [conformedBookingModal, setConformedBookingModal] = useState(false);
-  const { isAddEditDrawerOpen, currentSelectedBooking, bookings, pagination } =
-    useSelector((state: RootState) => state.booking);
+  const {
+    isAddEditDrawerOpen,
+    currentSelectedBooking,
+    bookings,
+    bookingStates,
+    pagination,
+  } = useSelector((state: RootState) => state.booking);
 
   const dispatch = useAppDispatch();
 
@@ -84,6 +90,7 @@ const BookingsTable = () => {
             onClick={() => {
               dispatch(setCurrentSelectedBooking(row));
               dispatch(setIsAddEditDrawerOpen());
+              dispatch(setIsEditingBooking(false));
             }}
           >
             <Space>
@@ -99,7 +106,13 @@ const BookingsTable = () => {
       {
         key: "3",
         label: (
-          <div>
+          <div
+            onClick={() => {
+              dispatch(setCurrentSelectedBooking(row));
+              dispatch(setIsAddEditDrawerOpen());
+              dispatch(setIsEditingBooking(true));
+            }}
+          >
             <Space>
               <EditOutlined twoToneColor="#52c41a" />
               Edit booking
@@ -270,9 +283,8 @@ const BookingsTable = () => {
     dispatch(setCurrentSelectedBooking({}));
   }
 
-  console.log("bookings", bookings);
   useEffect(() => {
-    dispatch(getBookings());
+    dispatch(getBookings({}));
   }, []);
   // handleBookingsTablePageChange = (page, pageSize) => {
   //   const { dispatch } = this.props;
@@ -313,6 +325,8 @@ const BookingsTable = () => {
             type: "checkbox",
             ...rowSelection,
           }}
+          bordered
+          loading={bookingStates.loading}
           dataSource={formateData()}
           columns={columns}
           // pagination={{
