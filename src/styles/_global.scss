@@ -20,8 +20,8 @@ body {
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
-  min-height: 100vh;
-  overflow-y: scroll;
+  // min-height: 100vh;
+  // overflow-y: scroll;
 }
 
 /* For ultra wide screens */
@@ -88,4 +88,17 @@ body {
 }
 .flex {
   display: flex;
+}
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-pagination .ant-pagination-prev {
+  margin-right: auto;
+}
+
+.custom-pagination .ant-pagination-next {
+  margin-left: auto;
 }

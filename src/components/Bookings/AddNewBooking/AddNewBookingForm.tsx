@@ -12,10 +12,13 @@ import {
   Button,
   Select,
   Checkbox,
+  Row,
+  Col,
+  DatePicker,
+  TimePicker,
 } from "antd";
-import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined, SyncOutlined } from "@ant-design/icons";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
-import { isEditable } from "@testing-library/user-event/dist/utils";
 
 const { TextArea } = Input;
 interface AddNewBookingForm {
@@ -23,12 +26,15 @@ interface AddNewBookingForm {
     bookingId: string;
   };
   isEditable?: boolean;
+  handleFormSubmit: (value?: any) => void;
+  form: any;
 }
 const AddNewBookingForm = ({
   initialData,
-  isEditable = false,
+  isEditable = true,
+  handleFormSubmit,
+  form,
 }: AddNewBookingForm) => {
-  const [form] = Form.useForm();
   const [options, setOptions] = useState<AutoCompleteProps["options"]>([]);
   const handleSearch = (value: string) => {
     setOptions(() => {
@@ -52,8 +58,14 @@ const AddNewBookingForm = ({
       layout="vertical"
       form={form}
       name="control-hooks"
-      disabled={isEditable}
-      onFinish={() => {}}
+      disabled={!isEditable}
+      onFinishFailed={(errorInfo) => {
+        console.log("Failed:", errorInfo);
+      }}
+      onFinish={(value) => {
+        console.log(value);
+        handleFormSubmit(value);
+      }}
       initialValues={initialData}
       requiredMark={CustomizeRequiredMark}
       className={styles.form}
@@ -182,6 +194,156 @@ const AddNewBookingForm = ({
       <Form.Item label="Drop Address">
         <TextArea placeholder="Location (Google map link)"></TextArea>
       </Form.Item>
+      <Form.Item label="Booking type">
+        <Radio.Group
+          className={styles.bookingType}
+          onChange={() => {}}
+          value={""}
+        >
+          <Radio className={styles.item} value={1}>
+            <b>Local booking</b>
+            <p>Local rates would apply</p>
+          </Radio>
+          <Radio className={styles.item} value={2}>
+            <b>Outstation booking</b>
+            <p>Outstation rates would apply</p>
+          </Radio>
+        </Radio.Group>
+      </Form.Item>
+      <Form.Item label="">
+        <Checkbox>This is an airport booking</Checkbox>
+      </Form.Item>
+
+      <Card>
+        <b>Duration Details </b>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Start Date">
+              <DatePicker
+                style={{
+                  width: "100%",
+                }}
+                onChange={() => {}}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="End Date">
+              <DatePicker
+                style={{
+                  width: "100%",
+                }}
+                onChange={() => {}}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item label="Reporting Time">
+              <TimePicker
+                use12Hours
+                format="h:mm:ss A"
+                style={{
+                  width: "100%",
+                }}
+                onChange={() => {}}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Est Drop Time">
+              <TimePicker
+                use12Hours
+                format="h:mm:ss A"
+                style={{
+                  width: "100%",
+                }}
+                onChange={() => {}}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <Form.Item label="Start from garage before (in mins)">
+              <TimePicker
+                format="mm"
+                style={{
+                  width: "100%",
+                }}
+                onChange={() => {}}
+              />
+            </Form.Item>
+          </Col>
+
+          {/*  */}
+        </Row>
+      </Card>
+
+      <Card style={{ marginTop: "1rem" }}>
+        <div className={styles.pricingDetails}>
+          <b>Pricing Details</b>
+          <span>
+            <SyncOutlined />
+            Fetch from Contract
+          </span>
+        </div>
+
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item label="Base Rate">
+              <Input type="text" placeholder="Prefilled based on Duty Type" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Per Extra KM Rate">
+              <Input type="text" placeholder="Per Extra KM Rate" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Per Extra Hour Rate">
+              <Input type="text" placeholder="Per Extra Hour Rate" />
+            </Form.Item>
+          </Col>
+
+          <Col span={24}>
+            <Form.Item label="Bill to">
+              <Select
+                // defaultValue="lucy"
+                placeholder="Company/Customer (Default)"
+                style={{ width: "100%" }}
+                onChange={() => {}}
+                options={[
+                  { value: "jack", label: "Jack" },
+                  { value: "lucy", label: "Lucy" },
+                  { value: "Yiminghe", label: "yiminghe" },
+                  { value: "disabled", label: "Disabled", disabled: true },
+                ]}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Card>
+      <div
+        style={{
+          marginTop: "1rem",
+        }}
+      >
+        <Form.Item label="Operator Notes">
+          <TextArea placeholder="Add a note...."></TextArea>
+        </Form.Item>
+        <Form.Item label="Driver Notes">
+          <TextArea placeholder="Add a note...."></TextArea>
+        </Form.Item>
+      </div>
+      <Form.Item label="">
+        <Checkbox>Mark as unconfirmed booking</Checkbox>
+      </Form.Item>
+      {/* <div className={styles.drawerFooter}>
+        <Button>Cancel</Button>
+        <Button type="primary">Save</Button>
+      </div> */}
     </Form>
   );
 };

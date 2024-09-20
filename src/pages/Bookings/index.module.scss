@@ -1,19 +1,27 @@
+@import "../../styles/index.scss";
 .container {
-  padding: 32px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  // padding: 32px 0;
+  // display: flex;
+  // flex-direction: column;
+  // gap: 20px;
+  position: relative;
 
   .headingContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    padding: 0 40px 20px 40px;
+    flex-wrap: wrap;
+    gap: 1rem;
+    position: sticky;
+    top: 0px;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid #e4e7ec;
+    // margin: 1rem 0px;
+    z-index: 99;
+    background-color: white;
 
     .heading {
-      color: #101828;
+      color: $primary;
       font-size: 30px;
       font-weight: 600;
       line-height: 38px;
@@ -37,7 +45,7 @@
   .mainContainer {
     display: flex;
     flex-direction: column;
-    padding: 8px 40px;
+    padding: 1.5rem 1rem;
     gap: 24px;
 
     .tabsContainer {
@@ -79,10 +87,19 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e4e7ec;
       .inputContainer {
         max-width: 25rem;
       }
     }
   }
+}
+.drawerFooter {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  gap: 10px; // Adds space between the buttons
 }
