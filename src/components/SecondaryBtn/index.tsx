@@ -1,7 +1,7 @@
 /* eslint-disable */
 import styles from "./index.module.scss";
 
-interface ISecondaryBtn {
+interface ISecondaryBtn extends Partial<HTMLButtonElement> {
   LeadingIcon?: any;
   btnText: string;
   onClick: VoidFunction;

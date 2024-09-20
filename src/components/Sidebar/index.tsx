@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Tooltip } from "antd";
 import { ReactComponent as Dashboard } from "../../icons/homeLine.svg";
 import { ReactComponent as Database } from "../../icons/database.svg";

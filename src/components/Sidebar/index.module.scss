@@ -1,9 +1,11 @@
 @import "../../styles/mixins";
 
 .container {
-  position: absolute;
+  // position: absolute;
+  position: sticky;
+  top: 0%;
   left: 0;
-  height: 100%;
+  height: 100vh;
   width: 80px;
   border-right: 1px solid #e4e7ec;
   display: flex;
@@ -13,7 +15,6 @@
   padding-top: 32px;
 
   .logo {
-
   }
 
   .iconsContainer {

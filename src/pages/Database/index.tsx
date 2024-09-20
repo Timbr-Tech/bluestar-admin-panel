@@ -15,6 +15,7 @@ import AllowancesForm from "../../components/DatabaseTable/AllowancesTable/Allow
 import { useEffect, useState } from "react";
 import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import styles from "./index.module.scss";
+import { Button } from "antd";
 
 interface IDatabaseItem {
   id: number;

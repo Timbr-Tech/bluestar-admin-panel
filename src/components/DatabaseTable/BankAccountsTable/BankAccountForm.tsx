@@ -23,7 +23,7 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
     branchName: "",
     notes: "",
   });
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
@@ -35,24 +35,23 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
   const handleChange = (e: { target: { value: any; name: any } }) => {
     const val = e.target.value;
 
-    console.log(Number(val))
+    console.log(Number(val));
 
-    if(e.target.name ==="accountNumber") {
-      const regex = /^[0-9]*\.?[0-9]*$/
-      if(regex.test(val)) {
+    if (e.target.name === "accountNumber") {
+      const regex = /^[0-9]*\.?[0-9]*$/;
+      if (regex.test(val)) {
         setBankAccount({ ...bankAccount, accountNumber: parseInt(val) });
       }
     } else {
       setBankAccount({ ...bankAccount, [e.target.name]: val });
     }
-
   };
 
   const onSubmit = () => {
     openNotificationWithIcon("success");
     handleCloseSidePanel();
 
-    dispatch(addBankAccount(bankAccount))
+    dispatch(addBankAccount(bankAccount));
   };
 
   return (

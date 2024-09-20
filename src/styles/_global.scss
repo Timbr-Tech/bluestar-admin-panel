@@ -11,14 +11,17 @@ html {
 body {
   font-family: "Inter", sans-serif;
 }
+.App {
+  display: flex;
+}
 
 .container {
   position: relative;
   margin: 0 auto;
-  margin-left: 80px;
   width: 100%;
   box-sizing: border-box;
-  height: 100vh;
+  // min-height: 100vh;
+  // overflow-y: scroll;
 }
 
 /* For ultra wide screens */
@@ -82,4 +85,20 @@ body {
       padding: 0;
     }
   }
+}
+.flex {
+  display: flex;
+}
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-pagination .ant-pagination-prev {
+  margin-right: auto;
+}
+
+.custom-pagination .ant-pagination-next {
+  margin-left: auto;
 }
