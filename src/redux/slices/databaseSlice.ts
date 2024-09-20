@@ -27,6 +27,18 @@ export const getBankAccount = createAsyncThunk(
   }
 );
 
+export const getBankAccountById = createAsyncThunk(
+  "database/getBankAccountById",
+
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.get(`/database/bank-accounts/${id}`);
+
+    return response.data;
+  }
+);
+
 export const deleteBankAccount = createAsyncThunk(
   "database/deleteBankAccount",
   async (params: any, { dispatch }) => {
@@ -220,12 +232,80 @@ export const deleteCustomer = createAsyncThunk(
   }
 );
 
+export const getCustomerById = createAsyncThunk(
+  "database/getCustomerById",
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.get(`/database/customer/${id}`);
+
+    return response.data;
+  }
+);
+
 // Allowance APIs
 
 export const addNewAllowance = createAsyncThunk(
   "database/addNewAllowance",
-  async (body) => {
+  async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/allowance", body);
+
+    dispatch(getAllowances({ page: "1", search: "", limit: "" }));
+
+    return response.data;
+  }
+);
+
+export const getAllowances = createAsyncThunk(
+  "database/getAllowances",
+  async (params: any) => {
+    const { page, limit, search } = params;
+    const response = await apiClient.get(
+      `/database/allowances?page=${page}&limit=${limit}&search=${search}`
+    );
+
+    return response.data;
+  }
+);
+
+export const getAllowanceById = createAsyncThunk(
+  "database/getAllowanceById",
+
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.get(`/database/allowances/${id}`);
+
+    return response.data;
+  }
+);
+
+export const updateAllowance = createAsyncThunk(
+  "database/updateAllowance",
+
+  async (body: any, { dispatch }) => {
+    const { payload, id } = body;
+
+    const response = await apiClient.patch(
+      `/database/allowance/${id}`,
+      payload
+    );
+
+    dispatch(getAllowances({ page: "1", search: "", limit: "" }));
+
+    return response.data;
+  }
+);
+
+export const deleteAllowance = createAsyncThunk(
+  "database/deleteAllowance",
+
+  async (params: any, { dispatch }) => {
+    const { id } = params;
+
+    const response = await apiClient.delete(`/database/allowance/${id}`);
+
+    dispatch(getAllowances({ page: "1", search: "", limit: "" }));
 
     return response.data;
   }
@@ -251,6 +331,18 @@ export const getVehicle = createAsyncThunk(
     const response = await apiClient.get(
       `/database/vehicle?page=${page}&limit=${limit}&search=${search}`
     );
+
+    return response.data;
+  }
+);
+
+export const getVehicleById = createAsyncThunk(
+  "database/getVehicleById",
+
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.get(`/database/vehicle/${id}`);
 
     return response.data;
   }
@@ -283,9 +375,62 @@ export const deleteVehicle = createAsyncThunk(
 
 export const addNewDriver = createAsyncThunk(
   "database/addNewDriver",
-  async (body) => {
+  async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/driver", body);
 
+    dispatch(getDrivers({ page: "1", search: "", limit: "" }));
+
+    return response.data;
+  }
+);
+
+export const getDrivers = createAsyncThunk(
+  "database/getDrivers",
+  async (params: any) => {
+    const { page, limit, search } = params;
+
+    const response = await apiClient.get(
+      `/database/driver?page=${page}&limit=${limit}&search=${search}`
+    );
+
+    return response.data;
+  }
+);
+
+export const getDriverById = createAsyncThunk(
+  "database/getDriverById",
+
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.get(`/database/driver/${id}`);
+
+    return response.data;
+  }
+);
+
+export const updateDriver = createAsyncThunk(
+  "database/updateDriver",
+
+  async (body: any, { dispatch }) => {
+    const { payload, id } = body;
+
+    const response = await apiClient.patch(`/database/driver/${id}`, payload);
+
+    dispatch(getDrivers({ page: "1", search: "", limit: "" }));
+    return response.data;
+  }
+);
+
+export const deleteDriver = createAsyncThunk(
+  "database/deleteDriver",
+
+  async (params: any, { dispatch }) => {
+    const { id } = params;
+
+    const response = await apiClient.delete(`/database/driver/${id}`);
+
+    dispatch(getDrivers({ page: "1", search: "", limit: "" }));
     return response.data;
   }
 );
@@ -312,6 +457,18 @@ export const getVehicleGroup = createAsyncThunk(
     const response = await apiClient.get(
       `/database/vehicle-group?page=${page}&limit=${limit}&search=${search}`
     );
+
+    return response.data;
+  }
+);
+
+export const getVehicleGroupById = createAsyncThunk(
+  "database/getVehicleGroupById",
+
+  async (params: any) => {
+    const { id } = params;
+
+    const response = await apiClient.get(`/database/vehicle-group/${id}`);
 
     return response.data;
   }
@@ -360,23 +517,57 @@ export const updateVehicleGroup = createAsyncThunk(
 );
 
 const initialState: any = {
+  // Vehicle Group
   vehicleGroupData: {},
+  selectedVehicleGroup: {},
+  vehicleGroupStates: {
+    status: "idle",
+    loading: false,
+    pagination: { page: 1, total: "", limit: 7 },
+    error: "",
+  },
+  deleteVehicleGroupStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
+  updateVehicleGroupStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
+
+  // Vehicle Group Option
   vehicleGroupOption: {},
+  vehicleGroupOptionStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
+
+  // Customer
   customers: {},
+  selectedCustomer: {},
+  customersStates: {
+    status: "idle",
+    loading: false,
+    pagination: { page: 1, total: "", limit: 7 },
+    error: "",
+  },
+  deleteCustomersStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
+  updateCustomersStates: {
+    status: "idle",
+    loading: false,
+    error: "",
+  },
+
+  // Taxes
   taxes: {},
   selectedTax: {},
-  taxesOptions: {},
-  bankAccounts: {},
-  vehicleList: {},
-
-  vehicleStates: { state: "idle", loading: false, error: "" },
-  deleteVehicleStates: { state: "idle", loading: false, error: "" },
-  updateVehicleStates: { state: "idle", loading: false, error: "" },
-
-  bankAccountStates: { state: "idle", loading: false, error: "" },
-  deleteBankAccountStates: { state: "idle", loading: false, error: "" },
-  updateBankAccountState: { state: "idle", loading: false, error: "" },
-
   taxesStates: {
     status: "idle",
     loading: false,
@@ -393,41 +584,62 @@ const initialState: any = {
     loading: false,
     error: "",
   },
-  customersStates: {
+
+  // Taxes Options
+  taxesOptions: {},
+  taxesOptionsStates: {
     status: "idle",
     loading: false,
     error: "",
   },
-  deleteCustomersStates: {
-    status: "idle",
+
+  // Bank Accounts
+  bankAccounts: {},
+  selectedBankAccount: {},
+  bankAccountStates: {
+    state: "idle",
     loading: false,
+    pagination: { page: 1, total: "", limit: 7 },
     error: "",
   },
-  updateCustomersStates: {
-    status: "idle",
+  deleteBankAccountStates: { state: "idle", loading: false, error: "" },
+  updateBankAccountState: { state: "idle", loading: false, error: "" },
+
+  // Vehicle
+  vehicleList: {},
+  selectedVehicle: {},
+  vehicleStates: {
+    state: "idle",
     loading: false,
     error: "",
+    pagination: { page: 1, total: "", limit: 7 },
   },
-  vehicleGroupStates: {
-    status: "idle",
+  deleteVehicleStates: { state: "idle", loading: false, error: "" },
+  updateVehicleStates: { state: "idle", loading: false, error: "" },
+
+  // Drivers
+  driverList: {},
+  selectedDriver: {},
+  driverStates: {
+    state: "idle",
     loading: false,
     error: "",
+    pagination: { page: 1, total: "", limit: 7 },
   },
-  vehicleGroupOptionStates: {
-    status: "idle",
+  deleteDriverStates: { state: "idle", loading: false, error: "" },
+  updateDriverStates: { state: "idle", loading: false, error: "" },
+
+  // Allowances
+  allowancesList: {},
+  selectedAllowance: {},
+  allowanceStates: {
+    state: "idle",
     loading: false,
     error: "",
+    pagination: { page: 1, total: "", limit: 7 },
   },
-  deleteVehicleGroupStates: {
-    status: "idle",
-    loading: false,
-    error: "",
-  },
-  updateVehicleGroupStates: {
-    status: "idle",
-    loading: false,
-    error: "",
-  },
+  deleteAllowancesStates: { state: "idle", loading: false, error: "" },
+  updateAllowancesStates: { state: "idle", loading: false, error: "" },
 };
 
 export const databaseSlice = createSlice({
@@ -462,8 +674,32 @@ export const databaseSlice = createSlice({
         state.vehicleGroupStates.loading = false;
         state.vehicleGroupStates.error = "";
         state.vehicleGroupData = action.payload;
+        state.vehicleGroupData.pagination = {
+          page: action.payload.page,
+          limit: action.payload.limit,
+          total: action.payload.total,
+        };
       })
       .addCase(getVehicleGroup.rejected, (state) => {
+        state.vehicleGroupStates.status = "failed";
+        state.vehicleGroupStates.loading = false;
+        state.vehicleGroupStates.error = "Error";
+      })
+
+      // Get Vehicle Group By Id
+      .addCase(getVehicleGroupById.pending, (state) => {
+        state.vehicleGroupStates.status = "loading";
+        state.vehicleGroupStates.loading = true;
+      })
+
+      .addCase(getVehicleGroupById.fulfilled, (state, action) => {
+        state.vehicleGroupStates.status = "succeeded";
+        state.vehicleGroupStates.loading = false;
+        state.vehicleGroupStates.error = "";
+        state.selectedVehicleGroup = action.payload;
+      })
+
+      .addCase(getVehicleGroupById.rejected, (state) => {
         state.vehicleGroupStates.status = "failed";
         state.vehicleGroupStates.loading = false;
         state.vehicleGroupStates.error = "Error";
@@ -505,7 +741,6 @@ export const databaseSlice = createSlice({
       })
 
       // Update the Vehicle Group
-
       .addCase(updateVehicleGroup.pending, (state) => {
         state.updateVehicleGroupStates.status = "loading";
         state.updateVehicleGroupStates.loading = true;
@@ -523,7 +758,6 @@ export const databaseSlice = createSlice({
       })
 
       // Add the customer
-
       .addCase(addNewCustomer.pending, (state) => {
         state.customersStates.status = "loading";
         state.customersStates.loading = true;
@@ -541,7 +775,6 @@ export const databaseSlice = createSlice({
       })
 
       // Get the customers List
-
       .addCase(getCustomer.pending, (state) => {
         state.customersStates.status = "loading";
         state.customersStates.loading = true;
@@ -552,6 +785,11 @@ export const databaseSlice = createSlice({
         state.customersStates.loading = false;
         state.customersStates.error = "";
         state.customers = action.payload;
+        state.customersStates.pagination = {
+          page: action.payload.page,
+          limit: action.payload.limit,
+          total: action.payload.total,
+        };
       })
       .addCase(getCustomer.rejected, (state) => {
         state.customersStates.status = "failed";
@@ -559,8 +797,25 @@ export const databaseSlice = createSlice({
         state.customersStates.error = "Error";
       })
 
-      //Delete Customers
+      // Get Customer By Id
+      .addCase(getCustomerById.pending, (state) => {
+        state.customersStates.status = "loading";
+        state.customersStates.loading = true;
+        state.customersStates.error = "";
+      })
+      .addCase(getCustomerById.fulfilled, (state, action) => {
+        state.customersStates.status = "succeeded";
+        state.customersStates.loading = false;
+        state.customersStates.error = "";
+        state.selectedCustomer = action.payload;
+      })
+      .addCase(getCustomerById.rejected, (state) => {
+        state.customersStates.status = "failed";
+        state.customersStates.loading = false;
+        state.customersStates.error = "Error";
+      })
 
+      //Delete Customers
       .addCase(deleteCustomer.pending, (state) => {
         state.deleteCustomersStates.status = "loading";
         state.deleteCustomersStates.loading = true;
@@ -578,7 +833,6 @@ export const databaseSlice = createSlice({
       })
 
       // Update the customer
-
       .addCase(updateCustomer.pending, (state) => {
         state.updateCustomersStates.status = "loading";
         state.updateCustomersStates.loading = true;
@@ -613,7 +867,6 @@ export const databaseSlice = createSlice({
       })
 
       // Get Taxes
-
       .addCase(getTaxes.pending, (state) => {
         state.taxesStates.status = "loading";
         state.taxesStates.loading = true;
@@ -637,7 +890,6 @@ export const databaseSlice = createSlice({
       })
 
       // Get Taxes By Id
-
       .addCase(getTaxesById.pending, (state) => {
         state.taxesStates.status = "loading";
         state.taxesStates.loading = true;
@@ -656,7 +908,6 @@ export const databaseSlice = createSlice({
       })
 
       // Get Taxes Options
-
       .addCase(getTaxesOptions.pending, (state) => {
         state.taxesStates.status = "loading";
         state.taxesStates.loading = true;
@@ -675,7 +926,6 @@ export const databaseSlice = createSlice({
       })
 
       // Update Taxes
-
       .addCase(updateTax.pending, (state) => {
         state.updateTaxesState.status = "loading";
         state.updateTaxesState.loading = true;
@@ -693,7 +943,6 @@ export const databaseSlice = createSlice({
       })
 
       // Delete Tax
-
       .addCase(deleteTax.pending, (state) => {
         state.deleteTaxesState.status = "loading";
         state.deleteTaxesState.loading = true;
@@ -711,7 +960,6 @@ export const databaseSlice = createSlice({
       })
 
       // Add Bank Account
-
       .addCase(addBankAccount.pending, (state) => {
         state.bankAccountStates.status = "loading";
         state.bankAccountStates.loading = true;
@@ -729,7 +977,6 @@ export const databaseSlice = createSlice({
       })
 
       // Get Bank Account
-
       .addCase(getBankAccount.pending, (state) => {
         state.bankAccountStates.status = "loading";
         state.bankAccountStates.loading = true;
@@ -748,7 +995,6 @@ export const databaseSlice = createSlice({
       })
 
       // Update Bank Account
-
       .addCase(updateBankAccount.pending, (state) => {
         state.updateBankAccountState.status = "loading";
         state.updateBankAccountState.loading = true;
@@ -766,7 +1012,6 @@ export const databaseSlice = createSlice({
       })
 
       // Delete Bank Account
-
       .addCase(deleteBankAccount.pending, (state) => {
         state.deleteBankAccountStates.status = "loading";
         state.deleteBankAccountStates.loading = true;
@@ -784,7 +1029,6 @@ export const databaseSlice = createSlice({
       })
 
       // Add New Vehicle
-
       .addCase(addNewVehicle.pending, (state) => {
         state.vehicleStates.status = "loading";
         state.vehicleStates.loading = true;
