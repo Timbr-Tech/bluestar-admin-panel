@@ -244,7 +244,6 @@ export const getCustomerById = createAsyncThunk(
 );
 
 // Allowance APIs
-
 export const addNewAllowance = createAsyncThunk(
   "database/addNewAllowance",
   async (body: any, { dispatch }) => {
@@ -312,7 +311,6 @@ export const deleteAllowance = createAsyncThunk(
 );
 
 // Vehicle APIs
-
 export const addNewVehicle = createAsyncThunk(
   "database/addNewVehicle",
   async (body: any, { dispatch }) => {
@@ -372,13 +370,22 @@ export const deleteVehicle = createAsyncThunk(
 );
 
 // Driver APIs
-
 export const addNewDriver = createAsyncThunk(
   "database/addNewDriver",
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const response = await apiClient.post("/database/driver", body);
 
-    dispatch(getDrivers({ page: "1", search: "", limit: "" }));
+    const { database } = getState().database;
+    const { driverStates } = database;
+    const { pagination } = driverStates;
+
+    dispatch(
+      getDrivers({
+        page: pagination?.page,
+        search: pagination?.search,
+        limit: pagination?.limit,
+      })
+    );
 
     return response.data;
   }
@@ -412,12 +419,22 @@ export const getDriverById = createAsyncThunk(
 export const updateDriver = createAsyncThunk(
   "database/updateDriver",
 
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { payload, id } = body;
 
     const response = await apiClient.patch(`/database/driver/${id}`, payload);
 
-    dispatch(getDrivers({ page: "1", search: "", limit: "" }));
+    const { database } = getState().database;
+    const { driverStates } = database;
+    const { pagination } = driverStates;
+
+    dispatch(
+      getDrivers({
+        page: pagination?.page,
+        search: pagination?.search,
+        limit: pagination?.limit,
+      })
+    );
     return response.data;
   }
 );
@@ -425,18 +442,27 @@ export const updateDriver = createAsyncThunk(
 export const deleteDriver = createAsyncThunk(
   "database/deleteDriver",
 
-  async (params: any, { dispatch }) => {
+  async (params: any, { dispatch, getState }: any) => {
     const { id } = params;
 
     const response = await apiClient.delete(`/database/driver/${id}`);
 
-    dispatch(getDrivers({ page: "1", search: "", limit: "" }));
+    const { database } = getState().database;
+    const { driverStates } = database;
+    const { pagination } = driverStates;
+
+    dispatch(
+      getDrivers({
+        page: pagination?.page,
+        search: pagination?.search,
+        limit: pagination?.limit,
+      })
+    );
     return response.data;
   }
 );
 
 // Vehicle Group CRUD
-
 export const addVehicleGroup = createAsyncThunk(
   "database/addVehicleGroup",
   async (body: any, { dispatch }) => {
@@ -1084,7 +1110,6 @@ export const databaseSlice = createSlice({
       })
 
       // Delete Vehicle List
-
       .addCase(deleteVehicle.pending, (state) => {
         state.deleteVehicleStates.status = "loading";
         state.deleteVehicleStates.loading = true;
@@ -1099,6 +1124,98 @@ export const databaseSlice = createSlice({
         state.deleteVehicleStates.status = "failed";
         state.deleteVehicleStates.loading = false;
         state.deleteVehicleStates.error = "Error";
+      })
+
+      // Add Driver
+      .addCase(addNewDriver.pending, (state) => {
+        state.driverStates.status = "loading";
+        state.driverStates.loading = true;
+        state.driverStates.error = "";
+      })
+      .addCase(addNewDriver.fulfilled, (state) => {
+        state.driverStates.status = "succeeded";
+        state.driverStates.loading = false;
+        state.driverStates.error = "";
+      })
+      .addCase(addNewDriver.rejected, (state) => {
+        state.driverStates.status = "failed";
+        state.driverStates.loading = false;
+        state.driverStates.error = "Error";
+      })
+
+      // Get Drivers
+      .addCase(getDrivers.pending, (state) => {
+        state.driverStates.status = "loading";
+        state.driverStates.loading = true;
+        state.driverStates.error = "";
+      })
+      .addCase(getDrivers.fulfilled, (state, action) => {
+        state.driverStates.status = "succeeded";
+        state.driverStates.loading = false;
+        state.driverList = action.payload;
+        state.driverStates.pagination = {
+          page: action.payload.page,
+          limit: action.payload.limit,
+          total: action.payload.total,
+        };
+        state.driverStates.error = "";
+      })
+      .addCase(getDrivers.rejected, (state) => {
+        state.driverStates.status = "failed";
+        state.driverStates.loading = false;
+        state.driverStates.error = "Error";
+      })
+
+      // Get Driver By Id
+      .addCase(getDriverById.pending, (state) => {
+        state.driverStates.status = "loading";
+        state.driverStates.loading = true;
+        state.driverStates.error = "";
+      })
+      .addCase(getDriverById.fulfilled, (state, action) => {
+        state.driverStates.status = "succeeded";
+        state.driverStates.loading = false;
+        state.selectedDriver = action.payload;
+        state.driverStates.error = "";
+      })
+      .addCase(getDriverById.rejected, (state) => {
+        state.driverStates.status = "failed";
+        state.driverStates.loading = false;
+        state.driverStates.error = "Error";
+      })
+
+      // Delete Driver
+      .addCase(deleteDriver.pending, (state) => {
+        state.deleteDriverStates.status = "loading";
+        state.deleteDriverStates.loading = true;
+        state.deleteDriverStates.error = "";
+      })
+      .addCase(deleteDriver.fulfilled, (state, action) => {
+        state.deleteDriverStates.status = "succeeded";
+        state.deleteDriverStates.loading = false;
+        state.deleteDriverStates.error = "";
+      })
+      .addCase(deleteDriver.rejected, (state) => {
+        state.deleteDriverStates.status = "failed";
+        state.deleteDriverStates.loading = false;
+        state.deleteDriverStates.error = "Error";
+      })
+
+      // Update Driver
+      .addCase(updateDriver.pending, (state) => {
+        state.updateDriverStates.status = "loading";
+        state.updateDriverStates.loading = true;
+        state.updateDriverStates.error = "";
+      })
+      .addCase(updateDriver.fulfilled, (state) => {
+        state.updateDriverStates.status = "succeeded";
+        state.updateDriverStates.loading = false;
+        state.updateDriverStates.error = "";
+      })
+      .addCase(updateDriver.rejected, (state) => {
+        state.updateDriverStates.status = "failed";
+        state.updateDriverStates.loading = false;
+        state.updateDriverStates.error = "Error";
       });
   },
 });
