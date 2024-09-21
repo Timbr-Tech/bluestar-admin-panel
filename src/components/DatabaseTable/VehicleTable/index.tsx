@@ -18,7 +18,7 @@ interface IVehicleTable {
 
 const VehicleTable = () => {
   const dispatch = useAppDispatch();
-  const { vehicleStates, vehicleList } = useAppSelector(
+  const { vehicleStates, vehicleList, q } = useAppSelector(
     (state) => state.database
   );
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -34,8 +34,8 @@ const VehicleTable = () => {
   };
 
   useEffect(() => {
-    dispatch(getVehicle({ page: "1", search: "", limit: "" }));
-  }, []);
+    dispatch(getVehicle({ page: "1", search: q, limit: 10 }));
+  }, [q]);
 
   const columns: TableProps<IVehicleTable>["columns"] = [
     ...VEHICLES,

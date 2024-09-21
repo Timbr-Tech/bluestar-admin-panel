@@ -20,7 +20,7 @@ interface ITaxesTableData {
 }
 
 const TaxesTable = () => {
-  const { taxes, taxesStates, deleteTaxesState } = useAppSelector(
+  const { taxes, taxesStates, deleteTaxesState, q } = useAppSelector(
     (state) => state.database
   );
   const dispatch = useAppDispatch();
@@ -92,11 +92,11 @@ const TaxesTable = () => {
     dispatch(
       getTaxes({
         page: 1,
-        search: "",
+        search: q,
         limit: 7,
       })
     );
-  }, []);
+  }, [q]);
 
   const onChange = (
     selectedRowKeys: React.Key[],

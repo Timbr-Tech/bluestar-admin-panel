@@ -24,7 +24,7 @@ interface IBankAccountsTable {
 
 const BankAccountsTable = () => {
   const dispatch = useAppDispatch();
-  const { bankAccounts, bankAccountStates, deleteBankAccountStates } =
+  const { bankAccounts, bankAccountStates, deleteBankAccountStates, q } =
     useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteBankAccountId, setDeleteBankAccountId] = useState<string>("");
@@ -61,11 +61,11 @@ const BankAccountsTable = () => {
     dispatch(
       getBankAccount({
         page: 1,
-        search: "",
+        search: q,
         limit: "",
       })
     );
-  }, []);
+  }, [q]);
 
   const onChange = (
     selectedRowKeys: React.Key[],

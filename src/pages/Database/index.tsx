@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import styles from "./index.module.scss";
 import { Button } from "antd";
+import { useAppDispatch } from "../../hooks/store";
+import { setQueryForSearch } from "../../redux/slices/databaseSlice";
 
 interface IDatabaseItem {
   id: number;
@@ -34,15 +36,20 @@ const Database = () => {
   const [openSidePanel, setOpenSidePanel] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const tempItem = DATABASE_ITEMS.find((item) => item.type === params.tabId);
-    if (tempItem) selectedItem(tempItem);
+    if (tempItem) {
+      selectedItem(tempItem);
+    }
   }, [params.type]);
 
   const handleNavClick = (data: IDatabaseItem) => {
     navigate(`${RouteName.DATABASE}/${data.type}`);
     selectedItem(data);
+    // empty search field when tab change
+    dispatch(setQueryForSearch(""));
   };
 
   const handleCloseSidePanel = () => {

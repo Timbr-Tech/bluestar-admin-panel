@@ -21,7 +21,7 @@ interface IVehicleGroupTableData {
 const VehicleGroupTable = () => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { vehicleGroupData, vehicleGroupStates } = useAppSelector(
+  const { vehicleGroupData, vehicleGroupStates, q } = useAppSelector(
     (state) => state.database
   );
   const [deleteVehicleGroupId, setDeleteVehicleGroupId] = useState<string>("");
@@ -62,11 +62,11 @@ const VehicleGroupTable = () => {
     dispatch(
       getVehicleGroup({
         page: pagination.current,
-        search: "",
-        limit: "",
+        search: q,
+        limit: 10,
       })
     );
-  }, []);
+  }, [q]);
 
   useEffect(() => {
     setPagination({

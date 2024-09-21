@@ -23,7 +23,7 @@ const CustomerTable = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [customerId, setCustomerId] = useState("");
 
-  const { customers, customersStates } = useAppSelector(
+  const { customers, customersStates, q } = useAppSelector(
     (state) => state.database
   );
 
@@ -67,8 +67,8 @@ const CustomerTable = () => {
   };
 
   useEffect(() => {
-    dispatch(getCustomer({ page: "1", search: "", limit: "" }));
-  }, []);
+    dispatch(getCustomer({ page: "1", search: q, limit: "" }));
+  }, [q]);
 
   return (
     <>
@@ -86,8 +86,8 @@ const CustomerTable = () => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete customer</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this customer? This action
-              cannot be undone.
+              Are you sure you want to delete this customer? This action cannot
+              be undone.
             </div>
           </div>
           <div className={styles.bottomBtns}>

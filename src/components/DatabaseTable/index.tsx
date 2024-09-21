@@ -18,6 +18,9 @@ import VehicleTable from "./VehicleTable";
 import FastTagTable from "./FastTagTable";
 import PrimaryBtn from "../PrimaryBtn";
 import styles from "./index.module.scss";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
+import { setQueryForSearch } from "../../redux/slices/databaseSlice";
+import { RootState } from "../../types/store";
 
 interface IDatabaseItem {
   id: number;
@@ -32,11 +35,11 @@ interface IDatabaseTable {
 }
 
 const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-
+  const dispatch = useAppDispatch();
+  const { q } = useAppSelector((state: RootState) => state.database);
   const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSearchTerm(value);
+    dispatch(setQueryForSearch(value));
   };
 
   const vehicleItems = [
@@ -137,7 +140,7 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
         <div className={styles.searchContainer}>
           <div className={styles.search}>
             <SearchComponent
-              value={searchTerm}
+              value={q}
               onChange={searchHandler}
               LeadingIcon={SearchIcon}
               placeholder={`Search by ${renderSearchText()}`}

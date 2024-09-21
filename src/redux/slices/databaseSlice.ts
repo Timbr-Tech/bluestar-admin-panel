@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../utils/configureAxios";
 
 // Bank Account APIs
@@ -545,6 +545,8 @@ export const updateVehicleGroup = createAsyncThunk(
 
 const initialState: any = {
   // Vehicle Group
+
+  q: "",
   vehicleGroupData: {},
   selectedVehicleGroup: {},
   vehicleGroupStates: {
@@ -672,7 +674,14 @@ const initialState: any = {
 export const databaseSlice = createSlice({
   name: "database",
   initialState,
-  reducers: {},
+  reducers: {
+    setQueryForSearch: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        q: action.payload,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Create a New Vehicle Group
@@ -1219,5 +1228,7 @@ export const databaseSlice = createSlice({
       });
   },
 });
+export const { actions, reducer } = databaseSlice;
+export const { setQueryForSearch } = actions;
 
 export default databaseSlice.reducer;
