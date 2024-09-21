@@ -2,6 +2,7 @@
 
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../utils/configureAxios";
+import { notification } from "antd";
 
 // Bank Account APIs
 
@@ -9,9 +10,16 @@ export const addBankAccount = createAsyncThunk(
   "database/addBankAccount",
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/bank-accounts", body);
-    dispatch(getBankAccount({ page: "1", search: "", limit: "" }));
 
-    return response.data;
+    if (response.status === 201) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Added",
+      });
+      dispatch(getBankAccount({ page: "1", search: "", limit: "" }));
+      return response.data;
+    }
   }
 );
 
@@ -189,9 +197,15 @@ export const addNewCustomer = createAsyncThunk(
   "database/addNewCustomer",
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/customer", body);
-
-    dispatch(getCustomer({ page: "1", search: "", limit: "" }));
-    return response.data;
+    if (response.status === 201) {
+      notification.success({
+        message: "Success",
+        description: "Added",
+      });
+      dispatch(setOpenSidePanel(false));
+      dispatch(getCustomer({ page: "1", search: "", limit: "" }));
+      return response.data;
+    }
   }
 );
 
@@ -467,8 +481,13 @@ export const addVehicleGroup = createAsyncThunk(
   "database/addVehicleGroup",
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/vehicle-group", body);
-    console.log({ response });
+
     if (response.status === 201) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Added",
+      });
       dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
       return response.data;
     }
@@ -547,6 +566,7 @@ const initialState: any = {
   // Vehicle Group
 
   q: "",
+  openSidePanel: false,
   vehicleGroupData: {},
   selectedVehicleGroup: {},
   vehicleGroupStates: {
@@ -679,6 +699,12 @@ export const databaseSlice = createSlice({
       return {
         ...state,
         q: action.payload,
+      };
+    },
+    setOpenSidePanel: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        openSidePanel: action.payload,
       };
     },
   },
@@ -1229,6 +1255,6 @@ export const databaseSlice = createSlice({
   },
 });
 export const { actions, reducer } = databaseSlice;
-export const { setQueryForSearch } = actions;
+export const { setQueryForSearch, setOpenSidePanel } = actions;
 
 export default databaseSlice.reducer;

@@ -10,13 +10,14 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-    padding: 24px 24px 0 24px;
-    height: 90%;
+    padding: 24px 0px 0 0px;
+    height: 100%;
 
     .formHeader {
       display: flex;
       flex-direction: column;
       gap: 4px;
+      padding: 0px 24px 0 24px;
 
       .header {
         color: #101828;
@@ -36,9 +37,10 @@
     .form {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      // gap: 16px;
       height: 100%;
       overflow-y: auto;
+      padding: 0px 24px 0 24px;
 
       .typeContainer {
         display: flex;
@@ -178,8 +180,9 @@
         border-radius: 12px;
         border: 1px solid #e4e7ec;
         background: #f9fafb;
-        width: 582px;
+        // width: 582px;
         padding: 24px;
+        margin-bottom: 1rem;
 
         .customerHeader {
           color: #101828;

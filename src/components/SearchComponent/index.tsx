@@ -22,6 +22,7 @@ const SearchComponent = ({
       value={value}
       prefix={<SearchOutlined />}
       onChange={onChange}
+      allowClear
       className={styles.inputContainer}
       placeholder={placeholder}
     />

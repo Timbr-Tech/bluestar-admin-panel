@@ -15,12 +15,7 @@ interface IVehicleGroupForm {
 
 const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
   const [api, contextHolder] = notification.useNotification();
-  // const [vehicleGroup, setVehicleGroup] = useState({
-  //   name: "",
-  //   seatingCapacity: 0,
-  //   description: "",
-  //   luggageCapacity: 0,
-  // });
+
   const dispatch = useAppDispatch();
 
   const openNotificationWithIcon = (type: NotificationType) => {
@@ -51,43 +46,44 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
   const handleSubmitForm = (values: any) => {
     dispatch(addVehicleGroup(values));
     openNotificationWithIcon("success");
-    handleCloseSidePanel();
+    // handleCloseSidePanel();
   };
   const [form] = Form.useForm();
 
   return (
     <div className={styles.formContainer}>
       {/* {contextHolder} */}
-      <Form
-        name="VehicleGroupForm"
-        layout="vertical"
-        onFinishFailed={(err) => {
-          console.log(err);
-        }}
-        onFinish={(values) => {
-          console.log(values);
-          const res = {
-            ...values,
-            seatingCapacity: Number(values.seatingCapacity),
-            luggageCapacity: Number(values.luggageCapacity),
-          };
-          handleSubmitForm(res);
-          form.resetFields();
-        }}
-        form={form}
-        initialValues={{
-          name: "",
-          seatingCapacity: null,
-          description: "",
-          luggageCapacity: null,
-        }}
-        autoComplete="off"
-      >
-        <div className={styles.container}>
-          <div className={styles.formHeader}>
-            <div className={styles.header}>Vehicle Group</div>
-            <div className={styles.primaryText}>Redesign of untitledui.com</div>
-          </div>
+
+      <div className={styles.container}>
+        <div className={styles.formHeader}>
+          <div className={styles.header}>Vehicle Group</div>
+          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+        </div>
+        <Form
+          name="VehicleGroupForm"
+          layout="vertical"
+          onFinishFailed={(err) => {
+            console.log(err);
+          }}
+          onFinish={(values) => {
+            console.log(values);
+            const res = {
+              ...values,
+              seatingCapacity: Number(values.seatingCapacity),
+              luggageCapacity: Number(values.luggageCapacity),
+            };
+            handleSubmitForm(res);
+            form.resetFields();
+          }}
+          form={form}
+          initialValues={{
+            name: "",
+            seatingCapacity: null,
+            description: "",
+            luggageCapacity: null,
+          }}
+          autoComplete="off"
+        >
           <div className={styles.form}>
             <div className={styles.typeContainer}>
               <Form.Item
@@ -101,7 +97,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
                 ]}
               >
                 <Input
-                  className={styles.input}
+                  // className={styles.input}
                   // name="name"
                   type="text"
                   placeholder="Enter Vehicle Group"
@@ -150,7 +146,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
                 <Input
                   type="number"
                   // name="seatingCapacity"
-                  className={styles.input}
+                  // className={styles.input}
                   placeholder="Enter value ..."
                   // value={vehicleGroup.seatingCapacity}
                   // onChange={handleVehicleGroupChange}
@@ -174,7 +170,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
                 <Input
                   type="number"
                   // name="luggageCapacity"
-                  className={styles.input}
+                  // className={styles.input}
                   placeholder="Enter value ..."
                   // value={vehicleGroup.luggageCapacity}
                   // onChange={handleVehicleGroupChange}
@@ -182,21 +178,22 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               </Form.Item>
             </div>
           </div>
-        </div>
-        <div className={styles.bottomContainer}>
-          <Button onClick={handleCloseSidePanel}>Cancel</Button>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              // onSubmit={() => form.submit()}
-              // onClick={handleSubmitForm}
-            >
-              Save
-            </Button>
-          </Form.Item>
-        </div>
-      </Form>
+        </Form>
+      </div>
+      <div className={styles.bottomContainer}>
+        <Button onClick={handleCloseSidePanel}>Cancel</Button>
+
+        <Button
+          type="primary"
+          htmlType="submit"
+          onClick={() => {
+            form.submit();
+          }}
+          // onClick={handleSubmitForm}
+        >
+          Save
+        </Button>
+      </div>
     </div>
   );
 };

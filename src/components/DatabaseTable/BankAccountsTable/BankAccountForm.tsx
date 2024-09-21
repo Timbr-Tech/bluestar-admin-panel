@@ -1,11 +1,11 @@
 /* eslint-disable */
-import { notification } from "antd";
+import { Form, Input, notification } from "antd";
 import { addBankAccount } from "../../../redux/slices/databaseSlice";
 import { useAppDispatch } from "../../../hooks/store";
 import styles from "../DutyTypeTable/index.module.scss";
-import { useState } from "react";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
+import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 
 interface IBankAccountForm {
   handleCloseSidePanel: () => void;
@@ -15,14 +15,7 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
   const [api, contextHolder] = notification.useNotification();
-  const [bankAccount, setBankAccount] = useState({
-    accountName: "",
-    accountNumber: 1234,
-    bankName: "",
-    ifsc: "",
-    branchName: "",
-    notes: "",
-  });
+
   const dispatch = useAppDispatch();
 
   const openNotificationWithIcon = (type: NotificationType) => {
@@ -32,27 +25,12 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
     });
   };
 
-  const handleChange = (e: { target: { value: any; name: any } }) => {
-    const val = e.target.value;
-
-    console.log(Number(val));
-
-    if (e.target.name === "accountNumber") {
-      const regex = /^[0-9]*\.?[0-9]*$/;
-      if (regex.test(val)) {
-        setBankAccount({ ...bankAccount, accountNumber: parseInt(val) });
-      }
-    } else {
-      setBankAccount({ ...bankAccount, [e.target.name]: val });
-    }
+  const onSubmit = (values: any) => {
+    // openNotificationWithIcon("success");
+    // handleCloseSidePanel();
+    dispatch(addBankAccount(values));
   };
-
-  const onSubmit = () => {
-    openNotificationWithIcon("success");
-    handleCloseSidePanel();
-
-    dispatch(addBankAccount(bankAccount));
-  };
+  const [form] = Form.useForm();
 
   return (
     <div className={styles.formContainer}>
@@ -62,90 +40,118 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
           <div className={styles.header}>New Bank Account</div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
-        <div className={styles.form}>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Account Name</p>
-              <sup>*</sup>
+        <Form
+          onFinishFailed={() => {
+            //for errors
+          }}
+          onFinish={(values) => {
+            // passed validation
+
+            const data = {
+              ...values,
+              accountNumber: Number(values.accountNumber),
+            };
+            onSubmit(data);
+          }}
+          requiredMark={CustomizeRequiredMark}
+          layout="vertical"
+          form={form}
+          className={styles.form}
+        >
+          <div>
+            <div className={styles.typeContainer}>
+              <Form.Item
+                label="Account Name"
+                id="accountName"
+                name="accountName"
+                rules={[
+                  {
+                    required: true,
+                    min: 3,
+                  },
+                ]}
+              >
+                <Input placeholder="Enter account name..." />
+              </Form.Item>
             </div>
-            <input
-              name="accountName"
-              className={styles.input}
-              placeholder="Enter account name..."
-              value={bankAccount.accountName}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Account Number</p>
-              <sup>*</sup>
+            <div className={styles.typeContainer}>
+              <Form.Item
+                label="Account Number"
+                id="accountNumber"
+                name="accountNumber"
+                rules={[
+                  {
+                    required: true,
+                    pattern: new RegExp(/^[0-9]{4,17}$/),
+                    message: "Wrong format!",
+                  },
+                ]}
+              >
+                <Input type="number" placeholder="Enter account number..." />
+              </Form.Item>
             </div>
-            <input
-              name="accountNumber"
-              type="number"
-              className={styles.input}
-              placeholder="Enter account number..."
-              value={bankAccount.accountNumber}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>IFSC Code</p>
-              <sup>*</sup>
+            <div className={styles.typeContainer}>
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                label="IFSC Code"
+                id="ifsc"
+                name="ifsc"
+              >
+                <Input placeholder="Enter IFSC Code..." />
+              </Form.Item>
             </div>
-            <input
-              name="ifsc"
-              className={styles.input}
-              placeholder="Enter IFSC Code..."
-              value={bankAccount.ifsc}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Bank Name</p>
-              <sup>*</sup>
+            <div className={styles.typeContainer}>
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                label="Bank Name"
+                id="bankName"
+                name="bankName"
+              >
+                <Input placeholder="Enter Bank Name..." />
+              </Form.Item>
             </div>
-            <input
-              name="bankName"
-              className={styles.input}
-              placeholder="Enter Bank Name..."
-              value={bankAccount.bankName}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Bank Branch</p>
-              <sup>*</sup>
+            <div className={styles.typeContainer}>
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                label="Bank Branch"
+                id="branchName"
+                name="branchName"
+              >
+                <Input placeholder="Enter Bank Branch..." />
+              </Form.Item>
             </div>
-            <input
-              name="branchName"
-              className={styles.input}
-              placeholder="Enter Bank Branch..."
-              value={bankAccount.branchName}
-              onChange={handleChange}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Notes</p>
+            <div className={styles.typeContainer}>
+              <Form.Item label="Notes" id="notes" name="notes">
+                <Input.TextArea
+                  className={styles.textarea}
+                  placeholder="Add a note...."
+                />
+              </Form.Item>
             </div>
-            <textarea
-              name="notes"
-              value={bankAccount.notes}
-              onChange={handleChange}
-              className={styles.textarea}
-              placeholder="Add a note...."
-            />
           </div>
-        </div>
+        </Form>
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn btnText="Save" onClick={onSubmit} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            form.submit();
+          }}
+          // onClick={onSubmit}
+        />
       </div>
     </div>
   );

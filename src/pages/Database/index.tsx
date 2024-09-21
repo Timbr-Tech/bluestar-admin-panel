@@ -15,9 +15,13 @@ import AllowancesForm from "../../components/DatabaseTable/AllowancesTable/Allow
 import { useEffect, useState } from "react";
 import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import styles from "./index.module.scss";
-import { Button } from "antd";
 import { useAppDispatch } from "../../hooks/store";
-import { setQueryForSearch } from "../../redux/slices/databaseSlice";
+import {
+  setOpenSidePanel,
+  setQueryForSearch,
+} from "../../redux/slices/databaseSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../types/store";
 
 interface IDatabaseItem {
   id: number;
@@ -33,7 +37,9 @@ const Database = () => {
     type: "duty_types",
     text: "Create and manage your duty types here",
   });
-  const [openSidePanel, setOpenSidePanel] = useState(false);
+  const { openSidePanel } = useSelector((state: RootState) => state.database);
+
+  // const [openSidePanel, setOpenSidePanel] = useState(false);
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useAppDispatch();
@@ -53,11 +59,11 @@ const Database = () => {
   };
 
   const handleCloseSidePanel = () => {
-    setOpenSidePanel(false);
+    dispatch(setOpenSidePanel(false));
   };
 
   const handleOpenSidePanel = () => {
-    setOpenSidePanel(true);
+    dispatch(setOpenSidePanel(true));
   };
 
   const renderComponent = () => {

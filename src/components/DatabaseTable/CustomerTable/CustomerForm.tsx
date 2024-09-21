@@ -1,5 +1,13 @@
 /* eslint-disable */
-import { Select, message, Upload, notification } from "antd";
+import {
+  Select,
+  message,
+  Upload,
+  notification,
+  Form,
+  Input,
+  Checkbox,
+} from "antd";
 import type { UploadProps } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
@@ -9,6 +17,7 @@ import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { STATES, CUSTOMER_TAX_TYPES } from "../../../constants/database";
 import { useState } from "react";
 import styles from "../DutyTypeTable/index.module.scss";
+import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 
 interface ICustomerForm {
   handleCloseSidePanel: () => void;
@@ -40,12 +49,12 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
     },
   });
 
-  const onChange = (e: { target: { name: string; value: any } }) => {
-    setCustomerPayload({
-      ...customerPaylod,
-      [e.target.name]: e.target.value,
-    });
-  };
+  // const onChange = (e: { target: { name: string; value: any } }) => {
+  //   setCustomerPayload({
+  //     ...customerPaylod,
+  //     [e.target.name]: e.target.value,
+  //   });
+  // };
 
   const handleSelectChange = (value: string) => {
     setCustomerPayload({ ...customerPaylod, state: value });
@@ -102,11 +111,12 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
     });
   };
 
-  const handleSubmit = () => {
-    dispatch(addNewCustomer(customerPaylod));
-    openNotificationWithIcon("success");
-    handleCloseSidePanel();
+  const handleSubmit = (valuesToSend: any) => {
+    dispatch(addNewCustomer(valuesToSend));
+    // openNotificationWithIcon("success");
+    // handleCloseSidePanel();
   };
+  const [form] = Form.useForm();
 
   return (
     <div className={styles.formContainer}>
@@ -116,148 +126,228 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
           <div className={styles.header}>New Customer</div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
-        <div className={styles.form}>
+        <Form
+          requiredMark={CustomizeRequiredMark}
+          layout="vertical"
+          form={form}
+          className={styles.form}
+          onFinish={(values) => {
+            console.log("values", values);
+            const valuesToSend = {
+              customerCode: values.customerCode,
+              name: values.name,
+              address: values.address,
+              pinCode: values.pinCode,
+              state: values.state,
+              email: values.email,
+              phone: values.phone,
+              autoCreateInvoice: values.autoCreateInvoice,
+              defaultDiscount: values.defaultDiscount,
+              taxDetails: {
+                type: values.type,
+                billingName: values.billingName,
+                taxId: values.taxId,
+                gstNumber: values.gstNumber,
+                billingAddress: values.billingAddress,
+              },
+              files: [
+                {
+                  fileUrl:
+                    "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
+                  fileType: "application/pdf",
+                  fileSize: 201818,
+                },
+              ],
+            };
+            handleSubmit(valuesToSend);
+          }}
+        >
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Customer Code</p>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter Customer code..."
-              value={customerPaylod.customerCode}
-              onChange={onChange}
+            <Form.Item
+              label="Customer Code"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               name="customerCode"
-            />
+              id="customerCode"
+            >
+              <Input placeholder="Enter Customer code..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Name</p>
-              <sup>*</sup>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter name..."
-              value={customerPaylod.name}
-              onChange={onChange}
+            <Form.Item
+              label="Name"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               name="name"
-            />
+              id="name"
+            >
+              <Input placeholder="Enter name..." name="name" />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Address</p>
-              <sup>*</sup>
-            </div>
-            <textarea
-              className={styles.textarea}
-              placeholder="Enter address..."
-              value={customerPaylod.address}
-              onChange={onChange}
+            <Form.Item
+              label="Address"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               name="address"
-            />
+              id="address"
+            >
+              <Input.TextArea
+                className={styles.textarea}
+                placeholder="Enter address..."
+              />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Pincode</p>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter pincode..."
-              value={customerPaylod.pinCode}
-              onChange={onChange}
+            <Form.Item
+              label="Pin code"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               name="pinCode"
-            />
+              id="pinCode"
+            >
+              <Input placeholder="Enter pin code..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>State</p>
-            </div>
-            <Select
-              style={{ width: "100%" }}
-              placeholder="Select One"
-              dropdownRender={(menu) => <>{menu}</>}
-              onChange={handleSelectChange}
-              options={STATES.map((state) => ({
-                label: state.label,
-                value: state.value,
-              }))}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Phone Number</p>
-              <sup>*</sup>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter phone number..."
-              defaultValue={""}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Email Address</p>
-            </div>
-            <input
-              type="email"
-              name="email"
-              className={styles.input}
-              placeholder="Enter email address..."
-              value={customerPaylod.email}
-              onChange={onChange}
-            />
-          </div>
-          <div className={styles.customerTaxDetails}>
-            <div className={styles.customerHeader}>Customer Tax Details</div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Type</p>
-              </div>
+            <Form.Item
+              label="State"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              name="state"
+              id="state"
+            >
               <Select
                 style={{ width: "100%" }}
                 placeholder="Select One"
-                onChange={handleTaxesSelect}
                 dropdownRender={(menu) => <>{menu}</>}
-                options={CUSTOMER_TAX_TYPES.map((state) => ({
+                options={STATES.map((state) => ({
                   label: state.label,
                   value: state.value,
                 }))}
               />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>GSTIN Number</p>
-              </div>
-              <input
-                className={styles.input}
-                name={"gstNumber"}
-                placeholder="Enter GSTIN ..."
-                value={customerPaylod.taxDetails.gstNumber}
-                onChange={onChangeTaxDetails}
+            </Form.Item>
+          </div>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              label="Phone Number"
+              rules={[
+                {
+                  required: true,
+                  // type: "number",
+                },
+              ]}
+              name="phone"
+              id="phone"
+            >
+              <Input placeholder="Enter phone number..." defaultValue={""} />
+            </Form.Item>
+          </div>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              label="Email Address"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              name="email"
+              id="email"
+            >
+              <Input
+                type="email"
+                name="email"
+                placeholder="Enter email address..."
               />
+            </Form.Item>
+          </div>
+          <div className={styles.customerTaxDetails}>
+            <div className={styles.customerHeader}>Customer Tax Details</div>
+            <div className={styles.typeContainer}>
+              <Form.Item
+                label="Type"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                name="type"
+                id="type"
+              >
+                <Select
+                  style={{ width: "100%" }}
+                  placeholder="Select One"
+                  dropdownRender={(menu) => <>{menu}</>}
+                  options={CUSTOMER_TAX_TYPES.map((state) => ({
+                    label: state.label,
+                    value: state.value,
+                  }))}
+                />
+              </Form.Item>
             </div>
             <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Billing Name</p>
-              </div>
-              <input
-                className={styles.input}
-                name={"billingName"}
-                placeholder="Enter Billing Name ..."
-                value={customerPaylod.taxDetails.billingName}
-                onChange={onChangeTaxDetails}
-              />
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                label="GSTIN Number"
+                name="gstNumber"
+                id="gstNumber"
+              >
+                <Input name={"gstNumber"} placeholder="Enter GSTIN ..." />
+              </Form.Item>
             </div>
             <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Billing Address</p>
-              </div>
-              <textarea
-                className={styles.textarea}
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                label="Billing Name"
+                name="billingName"
+                id="billingName"
+              >
+                <Input
+                  name={"billingName"}
+                  placeholder="Enter Billing Name ..."
+                />
+              </Form.Item>
+            </div>
+            <div className={styles.typeContainer}>
+              <Form.Item
+                label="Billing Address"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
                 name="billingAddress"
-                placeholder="Enter address..."
-                value={customerPaylod.taxDetails.billingAddress}
-                onChange={onChangeTaxDetails}
-              />
+                id="billingAddress"
+              >
+                <Input.TextArea
+                  className={styles.textarea}
+                  name="billingAddress"
+                  placeholder="Enter address..."
+                />
+              </Form.Item>
             </div>
             {/* <div className={styles.typeContainer}>
               <div className={styles.text}>
@@ -275,17 +365,17 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             </div> */}
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Default discount %</p>
-            </div>
-            <input
-              type="number"
-              className={styles.input}
+            <Form.Item
+              label="Default discount %"
               name="defaultDiscount"
-              placeholder="Enter default discount..."
-              value={customerPaylod.defaultDiscount}
-              onChange={onChange}
-            />
+              id="defaultDiscount"
+            >
+              <Input
+                type="number"
+                name="defaultDiscount"
+                placeholder="Enter default discount..."
+              />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
@@ -309,29 +399,33 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             <div className={styles.text}>
               <p>Notes</p>
             </div>
-            <textarea
-              className={styles.textarea}
-              name="notes"
-              placeholder="Add a note...."
-              value={customerPaylod.notes}
-              onChange={onChange}
-            />
+            <Form.Item name="notes" id="notes">
+              <Input.TextArea
+                className={styles.textarea}
+                name="notes"
+                placeholder="Add a note...."
+              />
+            </Form.Item>
           </div>
           <div className={styles.checkboxContainer}>
-            <input
-              type="checkbox"
-              id="auto"
-              name="auto"
-              value="auto"
-              onChange={handleCheckbox}
-            />
-            <label> Auto create invoice when duty is completed</label>
+            <Form.Item
+              valuePropName="checked"
+              name="autoCreateInvoice"
+              id="autoCreateInvoice"
+            >
+              <Checkbox>Auto create invoice when duty is completed</Checkbox>
+            </Form.Item>
           </div>
+        </Form>
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <PrimaryBtn
+            btnText="Save"
+            onClick={() => {
+              form.submit();
+            }}
+          />
         </div>
-      </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn btnText="Save" onClick={handleSubmit} />
       </div>
     </div>
   );
