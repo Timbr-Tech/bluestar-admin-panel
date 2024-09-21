@@ -45,7 +45,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
 
   const handleSubmitForm = (values: any) => {
     dispatch(addVehicleGroup(values));
-    openNotificationWithIcon("success");
+    // openNotificationWithIcon("success");
     // handleCloseSidePanel();
   };
   const [form] = Form.useForm();

@@ -96,14 +96,21 @@ export const addNewTax = createAsyncThunk(
     const { taxesStates } = database;
     const { pagination } = taxesStates;
 
-    dispatch(
-      getTaxes({
-        page: pagination.page,
-        search: pagination.search,
-        limit: pagination.limit,
-      })
-    );
-    return response.data;
+    if ((response.status = 201)) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Added",
+      });
+      dispatch(
+        getTaxes({
+          page: pagination.page,
+          search: pagination.search,
+          limit: pagination.limit,
+        })
+      );
+      return response.data;
+    }
   }
 );
 

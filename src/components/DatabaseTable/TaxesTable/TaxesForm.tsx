@@ -2,10 +2,11 @@
 import styles from "../DutyTypeTable/index.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { addNewTax } from "../../../redux/slices/databaseSlice";
-import { notification } from "antd";
+import { Form, Input, notification } from "antd";
 import { useState } from "react";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
+import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 
 interface ITaxesForm {
   handleCloseSidePanel: () => void;
@@ -32,15 +33,10 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
     } else setTaxPayload({ ...taxPayload, [e.target.name]: value });
   };
 
-  const handleSave = () => {
-    dispatch(
-      addNewTax({
-        ...taxPayload,
-        percentage: parseFloat(taxPayload.percentage),
-      })
-    );
-    handleCloseSidePanel();
-    openNotificationWithIcon("success");
+  const handleSave = (valuesToSend: any) => {
+    dispatch(addNewTax(valuesToSend));
+    // handleCloseSidePanel();
+    // openNotificationWithIcon("success");
   };
 
   const openNotificationWithIcon = (type: NotificationType) => {
@@ -49,6 +45,7 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
       description: "Tax type added to the database",
     });
   };
+  const [form] = Form.useForm();
 
   return (
     <div className={styles.formContainer}>
@@ -58,50 +55,72 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
           <div className={styles.header}>New Tax Type</div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
-        <div className={styles.form}>
+        <Form
+          requiredMark={CustomizeRequiredMark}
+          layout="vertical"
+          onFinish={(values) => {
+            const valuesToSend = {
+              ...values,
+              percentage: parseFloat(values.percentage),
+            };
+            console.log({ valuesToSend });
+            handleSave(valuesToSend);
+          }}
+          form={form}
+          className={styles.form}
+        >
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Tax Name</p>
-              <sup>*</sup>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter..."
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               name="name"
-              value={taxPayload.name}
-              onChange={handleChange}
-            />
+              label="Name"
+            >
+              <Input className={styles.input} placeholder="Enter..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Percentage %</p>
-              <sup>*</sup>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter..."
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               name="percentage"
-              value={taxPayload.percentage}
-              onChange={handleChange}
-            />
+              label="Percentage"
+            >
+              <Input className={styles.input} placeholder="Enter..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Notes</p>
-            </div>
-            <textarea
-              className={styles.textarea}
-              placeholder="Add notes...."
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               name="notes"
-              value={taxPayload.notes}
-              onChange={handleChange}
-            />
+              label="Notes"
+            >
+              <Input.TextArea
+                className={styles.textarea}
+                placeholder="Add notes...."
+              />
+            </Form.Item>
           </div>
-        </div>
+        </Form>
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn btnText="Save" onClick={handleSave} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            form.submit();
+          }}
+        />
       </div>
     </div>
   );
