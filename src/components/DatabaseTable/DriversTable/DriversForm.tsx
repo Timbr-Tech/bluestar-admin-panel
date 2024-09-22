@@ -29,62 +29,14 @@ interface IDriverForm {
   handleCloseSidePanel: () => void;
 }
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
+import CustomDatePicker from "../../Common/CustomDatePicker";
 
 dayjs.extend(customParseFormat);
-const isValidIsoDate = (dateString: string) => {
-  return (
-    dayjs(dateString).isValid() && dayjs(dateString).format() === dateString
-  );
-};
-// const parseTime = (timeString: any) => {
-//   if (!timeString) return undefined;
-//   if (isValidIsoDate(timeString)) {
-//     return timeString;
-//   }
-//   try {
-//     const parsedTime = dayjs(timeString, "h:mm A", true);
-//     if (parsedTime.isValid()) {
-//       // Return a new dayjs object set to today's date with the parsed time
-//       return dayjs()
-//         .hour(parsedTime.hour())
-//         .minute(parsedTime.minute())
-//         .second(0);
-//     }
-//     return undefined;
-//   } catch (error) {
-//     console.error("Error parsing time:", error);
-//     return undefined;
-//   }
-// };
+dayjs.extend(weekday);
+dayjs.extend(localeData);
 
-// const parseTimeisoString = (isoString: any) => {
-//   if (!isoString) return undefined;
-//   try {
-//     // Parse the ISO string into a Day.js object
-//     const parsedTime = dayjs(isoString);
-
-//     if (parsedTime.isValid()) {
-//       // Return a new Day.js object set to today's date with the parsed time
-//       return dayjs()
-//         .hour(parsedTime.hour())
-//         .minute(parsedTime.minute())
-//         .second(0);
-//     }
-//     return undefined;
-//   } catch (error) {
-//     console.error("Error parsing ISO time:", error);
-//     return undefined;
-//   }
-// };
-const convertIsoToTimePickerFormat = (isoString: string) => {
-  const dayjsObject = dayjs(isoString);
-
-  if (!dayjsObject.isValid()) {
-    throw new Error("Invalid ISO string");
-  }
-
-  return dayjsObject.format("h:mm A");
-};
 const convertIsoToDayjsObject = (isoString: string) => {
   const dayjsObject = dayjs(isoString);
 
@@ -121,7 +73,6 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
-  console.log("selectedDriver", selectedDriver.data);
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
@@ -133,15 +84,20 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
 
   const [form] = Form.useForm();
   const onSubmit = (values: any) => {
-    if (Object.keys(selectedDriver?.data).length > 0) {
+    if (
+      selectedDriver?.data?._id &&
+      Object.keys(selectedDriver?.data).length > 0
+    ) {
       dispatch(
         updateDriver({
           payload: values,
           id: selectedDriver?.data._id,
         })
       );
+      handleCloseSidePanel();
     } else {
       dispatch(addNewDriver(values));
+      handleCloseSidePanel();
     }
   };
   useEffect(() => {
@@ -185,26 +141,26 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <Form
-          onFinishFailed={() => {
+          onFinishFailed={(err) => {
             //for errors
+            console.log("err", err);
           }}
           onFinish={(values) => {
             // passed validation
             const valuesToSubmit = {
               ...values,
-              monthlySalary: Number(values.monthlySalary),
-              dailySalary: Number(values.dailySalary),
-              phoneNumber: values.phoneNumber.startsWith("+91")
-                ? values.phoneNumber
-                : `+91${values.phoneNumber}`,
+              monthlySalary: Number(values?.monthlySalary),
+              dailySalary: Number(values?.dailySalary),
+              phoneNumber: values?.phoneNumber.startsWith("+91")
+                ? values?.phoneNumber
+                : `+91${values?.phoneNumber}`,
               // timing: {
               //   start: parseTime(values.timing.start),
               //   end: parseTime(values.timing.end),
               // },
             };
-            onSubmit(valuesToSubmit);
-
             console.log("values", valuesToSubmit);
+            onSubmit(valuesToSubmit);
           }}
           requiredMark={CustomizeRequiredMark}
           layout="vertical"
@@ -275,16 +231,8 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               name="dob"
               id="dob"
               label="Date of birth"
-              getValueProps={(value) => ({
-                value: value ? dayjs(value) : undefined,
-              })}
-              getValueFromEvent={(date) => date?.toISOString()}
             >
-              <DatePicker
-                style={{
-                  width: "100%",
-                }}
-              />
+              <CustomDatePicker />
             </Form.Item>
           </div>
           {/* ids */}

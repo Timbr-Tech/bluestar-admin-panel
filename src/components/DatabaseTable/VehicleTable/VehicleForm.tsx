@@ -10,7 +10,7 @@ import {
   DatePicker,
   AutoComplete,
 } from "antd";
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import type { UploadProps } from "antd";
 import { useAppDispatch } from "../../../hooks/store";
 import {
@@ -26,10 +26,16 @@ import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
-import form from "antd/es/form";
-import { RootState } from "../../../types/store";
-import search from "antd/es/transfer/search";
 
+import { RootState } from "../../../types/store";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
+import CustomDatePicker from "../../Common/CustomDatePicker";
+
+dayjs.extend(customParseFormat);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
 interface IVehicleForm {
   handleCloseSidePanel: () => void;
 }
@@ -37,7 +43,6 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   const { Dragger } = Upload;
-  const { Option } = AutoComplete;
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -46,8 +51,9 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
 
   // Function to handle changes in form values
   const handleValuesChange = (changedValues: any, allValues: any) => {
-    if (changedValues.isActive !== undefined) {
-      setIsActive(changedValues.isActive);
+    console.log("changedValues", changedValues);
+    if (changedValues?.loan?.isActive !== undefined) {
+      setIsActive(changedValues?.loan?.isActive);
     }
   };
 
@@ -78,9 +84,11 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
     },
   };
 
-  const { driverOption: options, vehicleGroupSelectOption } = useSelector(
-    (state: RootState) => state.database
-  );
+  const {
+    driverOption: options,
+    vehicleGroupSelectOption,
+    selectedVehicle,
+  } = useSelector((state: RootState) => state.database);
 
   const getPanelValue = (searchText: string) => {
     if (searchText) {
@@ -102,6 +110,15 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   };
   const [form] = Form.useForm();
 
+  console.log("selectedVehicle", selectedVehicle);
+  useEffect(() => {
+    if (Object.keys(selectedVehicle).length) {
+      const values = selectedVehicle;
+      form.setFieldsValue(values);
+      setIsActive(values?.loan?.isActive);
+    }
+  }, [selectedVehicle]);
+
   return (
     <div className={styles.formContainer}>
       {contextHolder}
@@ -116,7 +133,16 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           form={form}
           onFinish={(Values) => {
             console.log(Values);
-            dispatch(addNewVehicle(Values));
+            if (Object.keys(selectedVehicle).length) {
+              //
+            } else {
+              dispatch(addNewVehicle(Values));
+            }
+          }}
+          initialValues={{
+            loan: {
+              isActive: isActive, // Your initial value for the switch
+            },
           }}
           onValuesChange={handleValuesChange}
           className={styles.form}
@@ -146,7 +172,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               name="vehicleNumber"
               id="vehicleNumber"
             >
-              <Input type="number" placeholder="Enter model name..." />
+              <Input placeholder="Enter model name..." />
             </Form.Item>
           </div>
           <div className={styles.typeContainer}>
@@ -228,7 +254,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               name="fastTagId"
               id="fastTagId"
             >
-              <Input type="number" placeholder="Enter model name..." />
+              <Input placeholder="Enter model name..." />
             </Form.Item>
           </div>
           {/* registration */}
@@ -244,16 +270,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                 >
                   <Input placeholder="Owner Name" />
                 </Form.Item>
-                <Form.Item
-                  label="Date"
-                  name={["registration", "date"]}
-                  getValueProps={(value) => ({
-                    value: value ? dayjs(value) : undefined,
-                  })}
-                  getValueFromEvent={(date) => date?.toISOString()}
-                  rules={[{ required: true, message: "Date is required" }]}
-                >
-                  <DatePicker format="DD-MM-YYYY" type="date" />
+                <Form.Item label="Date" name={["registration", "date"]}>
+                  <CustomDatePicker format="DD-MM-YYYY" />
                 </Form.Item>
                 <Form.Item
                   label="Document"
@@ -313,12 +331,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   rules={[
                     { required: true, message: "Issue Date is required" },
                   ]}
-                  getValueProps={(value) => ({
-                    value: value ? dayjs(value) : undefined,
-                  })}
-                  getValueFromEvent={(date) => date?.toISOString()}
                 >
-                  <DatePicker format="DD-MM-YYYY" type="date" />
+                  <CustomDatePicker format="DD-MM-YYYY" />
                 </Form.Item>
               </div>
               <div className={styles.typeContainer}>
@@ -326,12 +340,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   label="Due Date"
                   name={["insurance", "dueDate"]}
                   rules={[{ required: true, message: "Due Date is required" }]}
-                  getValueProps={(value) => ({
-                    value: value ? dayjs(value) : undefined,
-                  })}
-                  getValueFromEvent={(date) => date?.toISOString()}
                 >
-                  <DatePicker format="DD-MM-YYYY" type="date" />
+                  <CustomDatePicker format="DD-MM-YYYY" />
                 </Form.Item>
               </div>
               <div className={styles.typeContainer}>
@@ -404,13 +414,9 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                 <Form.Item
                   label="Registration Date"
                   name={["rto", "date"]}
-                  getValueProps={(value) => ({
-                    value: value ? dayjs(value) : undefined,
-                  })}
-                  getValueFromEvent={(date) => date?.toISOString()}
                   rules={[{ required: true, message: "Date is required" }]}
                 >
-                  <DatePicker format="DD-MM-YYYY" type="date" />
+                  <CustomDatePicker format="DD-MM-YYYY" />
                 </Form.Item>
               </div>
               <div className={styles.typeContainer}>
@@ -493,7 +499,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                 },
               ]}
             >
-              <DatePicker format="DD-MM-YYYY" type="date" />
+              <CustomDatePicker format="DD-MM-YYYY" />
             </Form.Item>
           </div>
           {/* TODO- LOAN */}
@@ -509,7 +515,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                 <div className={styles.text}>Loan</div>
                 <Form.Item
                   valuePropName="checked"
-                  name="isActive"
+                  name={["loan", "isActive"]}
                   id="isActive"
                 >
                   <Switch />
@@ -517,20 +523,19 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               </div>
 
               {isActive && (
-                <>
+                <Fragment>
                   <div className={styles.typeContainer}>
                     <Form.Item
                       label="Emi amount"
-                      name="emiAmount"
-                      id="emiAmount"
+                      name={["loan", "emiAmount"]}
                       rules={[
                         {
                           required: true,
-                          message: "startDate is required",
+                          message: "EMI Amount is required",
                         },
                       ]}
                     >
-                      <Input placeholder="Enter Emi amount" />
+                      <Input type="number" placeholder="Enter Emi amount" />
                     </Form.Item>
                   </div>
                   <div className={styles.typeContainer}>
@@ -543,12 +548,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                           message: "startDate is required",
                         },
                       ]}
-                      getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                      })}
-                      getValueFromEvent={(date) => date?.toISOString()}
                     >
-                      <DatePicker format="DD-MM-YYYY" type="date" />
+                      <CustomDatePicker format="DD-MM-YYYY" />
                     </Form.Item>
                   </div>
                   <div className={styles.typeContainer}>
@@ -561,12 +562,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                           message: "endDate is required",
                         },
                       ]}
-                      getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                      })}
-                      getValueFromEvent={(date) => date?.toISOString()}
                     >
-                      <DatePicker format="DD-MM-YYYY" type="date" />
+                      <CustomDatePicker format="DD-MM-YYYY" />
                     </Form.Item>
                   </div>
                   <div className={styles.typeContainer}>
@@ -593,15 +590,16 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                           message: "EMI date is required",
                         },
                       ]}
-                      getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                      })}
-                      getValueFromEvent={(date) => date?.toISOString()}
+                      // getValueProps={(value) => ({
+                      //   value: value ? dayjs(value) : undefined,
+                      // })}
+                      // getValueFromEvent={(date) => date?.toISOString()}
                     >
-                      <DatePicker
+                      {/* <DatePicker
                         format="DD" // Display format as day only
                         placeholder="Select a day"
-                      />
+                      /> */}
+                      <CustomDatePicker format="DD" />
                     </Form.Item>
                   </div>
                   <div className={styles.typeContainer}>
@@ -630,7 +628,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                       </Dragger>
                     </Form.Item>
                   </div>
-                </>
+                </Fragment>
               )}
             </Input.Group>
           </Form.Item>

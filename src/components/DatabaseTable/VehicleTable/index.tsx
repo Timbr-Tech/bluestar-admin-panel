@@ -43,6 +43,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     if (e.key === "1") {
       dispatch(getVehicleById({ id: vehicleId }));
+
       handleOpenSidePanel();
     }
   };

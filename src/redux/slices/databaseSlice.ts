@@ -182,7 +182,7 @@ export const addNewTax = createAsyncThunk(
     const { taxesStates } = database;
     const { pagination } = taxesStates;
 
-    if ((response.status = 201 || response.status === 200)) {
+    if (response.status === 201 || response.status === 200) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -266,7 +266,7 @@ export const updateTax = createAsyncThunk(
     const { taxesStates, q } = database;
     const { pagination } = taxesStates;
 
-    if ((response.status = 201 || response.status === 200)) {
+    if (response.status === 201 || response.status === 200) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -532,18 +532,21 @@ export const addNewDriver = createAsyncThunk(
     const response = await apiClient.post("/database/driver", body);
 
     const { database } = getState().database;
-    const { driverStates } = database;
-    const { pagination } = driverStates;
+    const { driverStates, pagination } = database;
+    // const { pagination } = driverStates;
 
-    dispatch(
-      getDrivers({
-        page: pagination?.page,
-        search: pagination?.search,
-        limit: pagination?.limit,
-      })
-    );
+    if (response.status === 200) {
+      dispatch(setOpenSidePanel(false));
+      dispatch(
+        getDrivers({
+          page: pagination?.page,
+          search: pagination?.search,
+          limit: pagination?.limit,
+        })
+      );
 
-    return response.data;
+      return response.data;
+    }
   }
 );
 
@@ -592,7 +595,7 @@ export const updateDriver = createAsyncThunk(
 
     const { database } = getState().database;
     const { pagination } = database;
-
+    dispatch(setOpenSidePanel(false));
     dispatch(
       getDrivers({
         page: pagination?.page,
@@ -600,6 +603,7 @@ export const updateDriver = createAsyncThunk(
         limit: pagination?.limit,
       })
     );
+
     return response.data;
   }
 );
@@ -1416,6 +1420,24 @@ export const databaseSlice = createSlice({
         state.deleteVehicleStates.status = "failed";
         state.deleteVehicleStates.loading = false;
         state.deleteVehicleStates.error = "Error";
+      })
+      // getVehicleById
+
+      .addCase(getVehicleById.pending, (state) => {
+        state.vehicleStates.status = "loading";
+        state.vehicleStates.loading = true;
+        state.vehicleStates.error = "";
+      })
+      .addCase(getVehicleById.fulfilled, (state, action) => {
+        state.vehicleStates.status = "succeeded";
+        state.vehicleStates.loading = false;
+        state.selectedVehicle = action.payload.data;
+        state.vehicleStates.error = "";
+      })
+      .addCase(getVehicleById.rejected, (state) => {
+        state.vehicleStates.status = "failed";
+        state.vehicleStates.loading = false;
+        state.vehicleStates.error = "Error";
       })
 
       // Add Driver

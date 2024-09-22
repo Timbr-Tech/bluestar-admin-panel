@@ -20,6 +20,14 @@ import {
 import { DeleteOutlined, PlusOutlined, SyncOutlined } from "@ant-design/icons";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
+import CustomDatePicker from "../../Common/CustomDatePicker";
+
+dayjs.extend(customParseFormat);
+dayjs.extend(weekday);
+dayjs.extend(localeData);
 
 const { TextArea } = Input;
 interface AddNewBookingForm {
@@ -219,35 +227,13 @@ const AddNewBookingForm = ({
         <b>Duration Details </b>
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item
-              getValueProps={(value) => ({
-                value: value ? dayjs(value) : undefined,
-              })}
-              getValueFromEvent={(date) => date?.toISOString()}
-              label="Start Date"
-            >
-              <DatePicker
-                style={{
-                  width: "100%",
-                }}
-                onChange={() => {}}
-              />
+            <Form.Item label="Start Date">
+              <CustomDatePicker format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item
-              getValueProps={(value) => ({
-                value: value ? dayjs(value) : undefined,
-              })}
-              getValueFromEvent={(date) => date?.toISOString()}
-              label="End Date"
-            >
-              <DatePicker
-                style={{
-                  width: "100%",
-                }}
-                onChange={() => {}}
-              />
+            <Form.Item label="End Date">
+              <CustomDatePicker format="DD-MM-YYYY" />
             </Form.Item>
           </Col>
         </Row>
