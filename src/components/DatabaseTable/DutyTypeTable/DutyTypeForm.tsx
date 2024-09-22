@@ -15,6 +15,27 @@ interface IDutyForm {
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
+const rowsArray = [
+  {
+    vehicleGroup: "Swift Dzire/Etios",
+    baseRate: 2,
+    extraKMRate: 3,
+    extraHRRate: 4,
+  },
+  {
+    vehicleGroup: "Toyota Innova",
+    baseRate: 2,
+    extraKMRate: 3,
+    extraHRRate: 4,
+  },
+  {
+    vehicleGroup: "Mini hatchbacks",
+    baseRate: 2,
+    extraKMRate: 3,
+    extraHRRate: 4,
+  },
+];
+
 const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   const [items, setItems] = useState(DUTY_TYPES_TYPE);
   const [value, setValue] = useState(1);
@@ -30,6 +51,13 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
       description: "Duty type added to the database",
     });
   };
+
+  const columnHeader = [
+    { id: 1, name: "Vehicle Group" },
+    { id: 2, name: "Base Rate" },
+    { id: 3, name: "Extra KM rate" },
+    { id: 4, name: "Extra HR rate" },
+  ];
 
   return (
     <div className={styles.formContainer}>
@@ -86,6 +114,39 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                 </div>
               </Radio>
             </Radio.Group>
+          </div>
+          <div className={styles.dutyTypeTable}>
+            <div className={styles.columnsHeader}>
+              {columnHeader?.map((column) => {
+                return <div className={styles.column}>{column?.name}</div>;
+              })}
+            </div>
+            <div className={styles.rowsContainer}>
+              {rowsArray?.map((row) => {
+                return (
+                  <div className={styles.row}>
+                    <div className={styles.vehicleGroup}>
+                      {row?.vehicleGroup}
+                    </div>
+                    <div className={styles.rowItem}>
+                      <input className={styles.input} defaultValue={row?.baseRate} />
+                    </div>
+                    <div className={styles.rowItem}>
+                      <input
+                        className={styles.input}
+                        defaultValue={row?.extraKMRate}
+                      />
+                    </div>
+                    <div className={styles.rowItem}>
+                      <input
+                        className={styles.input}
+                        defaultValue={row?.extraHRRate}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

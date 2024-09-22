@@ -2,7 +2,6 @@
 import { ALLOWANCES_TABLE } from "../../../constants/database";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
-import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { Table, TableProps, Dropdown } from "antd";
