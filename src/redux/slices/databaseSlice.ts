@@ -1258,6 +1258,93 @@ export const databaseSlice = createSlice({
         state.updateDriverStates.status = "failed";
         state.updateDriverStates.loading = false;
         state.updateDriverStates.error = "Error";
+      })
+
+      // Add allowance
+      .addCase(addNewAllowance.pending, (state) => {
+        state.allowanceStates.status = "loading";
+        state.allowanceStates.loading = true;
+        state.allowanceStates.error = "";
+      })
+      .addCase(addNewAllowance.fulfilled, (state) => {
+        state.allowanceStates.status = "succeeded";
+        state.allowanceStates.loading = false;
+        state.allowanceStates.error = "";
+      })
+      .addCase(addNewAllowance.rejected, (state) => {
+        state.allowanceStates.status = "failed";
+        state.allowanceStates.loading = false;
+        state.allowanceStates.error = "Error";
+      })
+
+      // Get Allowances
+      .addCase(getAllowances.pending, (state) => {
+        state.allowanceStates.status = "loading";
+        state.allowanceStates.loading = true;
+        state.allowanceStates.error = "";
+      })
+      .addCase(getAllowances.fulfilled, (state, action) => {
+        state.allowanceStates.status = "succeeded";
+        state.allowanceStates.loading = false;
+        state.allowanceStates.error = "";
+        state.allowancesList = action.payload;
+      })
+      .addCase(getAllowances.rejected, (state) => {
+        state.allowanceStates.status = "failed";
+        state.allowanceStates.loading = false;
+        state.allowanceStates.error = "Error";
+      })
+
+      // Get Allowances By Id
+      .addCase(getAllowanceById.pending, (state) => {
+        state.allowanceStates.status = "loading";
+        state.allowanceStates.loading = true;
+        state.allowanceStates.error = "";
+      })
+      .addCase(getAllowanceById.fulfilled, (state, action) => {
+        state.allowanceStates.status = "succeeded";
+        state.allowanceStates.loading = false;
+        state.allowanceStates.error = "";
+        state.selectedAllowance = action.payload;
+      })
+      .addCase(getAllowanceById.rejected, (state) => {
+        state.allowanceStates.status = "failed";
+        state.allowanceStates.loading = false;
+        state.allowanceStates.error = "Error";
+      })
+
+      // Delete Allowance
+      .addCase(deleteAllowance.pending, (state) => {
+        state.deleteAllowancesStates.status = "loading";
+        state.deleteAllowancesStates.loading = true;
+        state.deleteAllowancesStates.error = "";
+      })
+      .addCase(deleteAllowance.fulfilled, (state) => {
+        state.deleteAllowancesStates.status = "succeeded";
+        state.deleteAllowancesStates.loading = false;
+        state.deleteAllowancesStates.error = "";
+      })
+      .addCase(deleteAllowance.rejected, (state) => {
+        state.deleteAllowancesStates.status = "failed";
+        state.deleteAllowancesStates.loading = false;
+        state.deleteAllowancesStates.error = "Error";
+      })
+
+      // Update Allowance
+      .addCase(updateAllowance.pending, (state) => {
+        state.updateAllowancesStates.status = "loading";
+        state.updateAllowancesStates.loading = true;
+        state.updateAllowancesStates.error = "";
+      })
+      .addCase(updateAllowance.fulfilled, (state) => {
+        state.updateAllowancesStates.status = "succeeded";
+        state.updateAllowancesStates.loading = false;
+        state.updateAllowancesStates.error = "";
+      })
+      .addCase(updateAllowance.rejected, (state) => {
+        state.updateAllowancesStates.status = "failed";
+        state.updateAllowancesStates.loading = false;
+        state.updateAllowancesStates.error = "Error";
       });
   },
 });
