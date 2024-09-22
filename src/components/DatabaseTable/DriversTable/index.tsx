@@ -140,6 +140,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
         dataSource={driverList?.data?.map((data: any) => {
           return {
             ...data,
+            driverId: data?.customDriverId,
             status: (
               <div className={cn(styles.status, { [styles.active]: true })}>
                 <div className={cn(styles.dot, { [styles.active]: true })} />
