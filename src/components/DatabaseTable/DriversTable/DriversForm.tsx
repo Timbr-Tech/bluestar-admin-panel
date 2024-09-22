@@ -153,7 +153,9 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
       {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>New Driver</div>
+          <div className={styles.header}>
+            {Object.keys(selectedDriver).length ? "Driver" : "New Driver"}
+          </div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <Form

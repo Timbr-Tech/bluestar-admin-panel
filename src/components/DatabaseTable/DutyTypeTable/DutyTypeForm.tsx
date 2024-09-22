@@ -206,7 +206,9 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
       )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>Duty Type</div>
+          <div className={styles.header}>
+            {Object.keys(selectedDutyType).length ? "Duty Type" : "New Duty Type"}
+          </div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <div className={styles.form}>

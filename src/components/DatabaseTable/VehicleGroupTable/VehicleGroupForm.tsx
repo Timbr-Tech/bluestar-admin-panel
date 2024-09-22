@@ -28,8 +28,6 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
     });
   };
 
-  console.log(selectedVehicleGroup, "selectedVehicleGroup");
-
   // const handleVehicleGroupChange = (e: any) => {
   //   if (e.target.name === "name") {
   //     setVehicleGroup({ ...vehicleGroup, name: e.target.value });
@@ -99,7 +97,11 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
       )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>Vehicle Group</div>
+          <div className={styles.header}>
+            {Object.keys(selectedVehicleGroup).length
+              ? "Vehicle Group"
+              : "New Vehicle Group"}
+          </div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <Form

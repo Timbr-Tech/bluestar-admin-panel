@@ -87,7 +87,9 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
       )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>New Tax Type</div>
+          <div className={styles.header}>
+            {Object.keys(selectedTax)?.length ? "Tax Type" : "New Tax Type"}
+          </div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <Form

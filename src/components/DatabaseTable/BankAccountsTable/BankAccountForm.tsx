@@ -81,7 +81,11 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
       )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>New Bank Account</div>
+          <div className={styles.header}>
+            {Object.keys(selectedBankAccount)?.length
+              ? "Bank Account"
+              : "New Bank Account"}
+          </div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <Form

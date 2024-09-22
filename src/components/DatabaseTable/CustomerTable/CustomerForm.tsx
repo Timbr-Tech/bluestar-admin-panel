@@ -176,7 +176,9 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
       {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>Customer</div>
+          <div className={styles.header}>
+            {Object.keys(selectedCustomer).length ? "Customer" : "New Customer"}
+          </div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <Form

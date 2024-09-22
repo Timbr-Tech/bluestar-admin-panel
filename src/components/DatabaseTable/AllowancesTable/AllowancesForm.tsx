@@ -31,6 +31,12 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
     setAllowanceType(value);
   };
 
+  useEffect(() => {
+    if (Object.keys(selectedAllowance).length) {
+      setRate(selectedAllowance?.data?.rate);
+    }
+  }, [selectedAllowance]);
+
   console.log(selectedAllowance, "selectedAllowance");
 
   const handleRateChange = (e: any) => {
@@ -108,13 +114,17 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
       )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>New Allowance</div>
+          <div className={styles.header}>
+            {Object.keys(selectedAllowance).length
+              ? "Allowance"
+              : "New Allowance"}
+          </div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <div className={styles.form}>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
-              <p>Taxes</p>
+              <p>Allowance Type</p>
             </div>
             <Select
               style={{ width: "100%" }}
