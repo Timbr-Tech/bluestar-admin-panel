@@ -22,7 +22,11 @@ interface IAllowanceData {
   rate: number;
 }
 
-const AllowancesTable = () => {
+interface IAllowanceTable {
+  handleOpenSidePanel: () => void;
+}
+
+const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
   const { allowancesList, allowanceStates, deleteAllowancesStates, q } =
     useAppSelector((state) => state.database);
   const dispatch = useAppDispatch();
@@ -30,7 +34,10 @@ const AllowancesTable = () => {
   const [allowanceId, setAllowanceId] = useState("");
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    console.log("click", e);
+    if (e.key === "1") {
+      dispatch(getAllowanceById({ id: allowanceId }));
+      handleOpenSidePanel();
+    }
   };
 
   const items: MenuProps["items"] = [
@@ -38,11 +45,6 @@ const AllowancesTable = () => {
       label: "Edit allowance",
       key: "1",
       icon: <EditIcon />,
-    },
-    {
-      label: "Mark Inactive",
-      key: "2",
-      icon: <Clipboard />,
     },
   ];
 
@@ -68,7 +70,10 @@ const AllowancesTable = () => {
             <DeleteIcon />
           </button>
           <Dropdown menu={menuProps} trigger={["click"]}>
-            <button className={styles.button}>
+            <button
+              className={styles.button}
+              onClick={() => setAllowanceId(record._id)}
+            >
               <DotsHorizontal />
             </button>
           </Dropdown>

@@ -18,7 +18,11 @@ interface IVehicleGroupTableData {
   vehicleCount: number;
 }
 
-const VehicleGroupTable = () => {
+interface IVehicleGroupTable {
+  handleOpenSidePanel: () => void;
+}
+
+const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const { vehicleGroupData, vehicleGroupStates, q } = useAppSelector(

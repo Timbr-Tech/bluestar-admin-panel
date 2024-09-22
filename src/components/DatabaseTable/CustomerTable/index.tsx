@@ -18,7 +18,11 @@ interface ICustomerTableData {
   gstNumber: { taxDetails: { gstNumber: string } };
 }
 
-const CustomerTable = () => {
+interface ICustomerTable {
+  handleOpenSidePanel: () => void;
+}
+
+const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [customerId, setCustomerId] = useState("");

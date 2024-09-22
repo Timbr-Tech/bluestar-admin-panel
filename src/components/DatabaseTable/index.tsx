@@ -66,21 +66,21 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
   const renderComponent = () => {
     switch (item.type) {
       case "duty_types":
-        return <DutyTypeTable />;
+        return <DutyTypeTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "vehicle_groups":
-        return <VehicleGroupTable />;
+        return <VehicleGroupTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "customers":
-        return <CustomerTable />;
+        return <CustomerTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "drivers":
         return <DriversTable />;
       case "vehicles":
-        return <VehicleTable />;
+        return <VehicleTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "bank_accounts":
-        return <BankAccountsTable />;
+        return <BankAccountsTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "taxes":
-        return <TaxesTable />;
+        return <TaxesTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "allowances":
-        return <AllowancesTable />;
+        return <AllowancesTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "fastag":
         return <FastTagTable />;
     }

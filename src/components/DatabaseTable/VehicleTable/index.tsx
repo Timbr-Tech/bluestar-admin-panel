@@ -16,7 +16,11 @@ interface IVehicleTable {
   vehicleNumber: string;
 }
 
-const VehicleTable = () => {
+interface IVehicleTableTable {
+  handleOpenSidePanel: () => void;
+}
+
+const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
   const dispatch = useAppDispatch();
   const { vehicleStates, vehicleList, q } = useAppSelector(
     (state) => state.database

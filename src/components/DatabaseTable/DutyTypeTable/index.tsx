@@ -11,6 +11,10 @@ interface IDutyTypeTableData {
   max_hours: number;
 }
 
+interface IDutyTypeTable {
+  handleOpenSidePanel: () => void;
+}
+
 const data: IDutyTypeTableData[] = [
   {
     key: "1",
@@ -62,7 +66,7 @@ const data: IDutyTypeTableData[] = [
     max_hours: 4,
   },
 ];
-const DutyTypeTable = () => {
+const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
   const onChange = (
     selectedRowKeys: React.Key[],
     selectedRows: IDutyTypeTableData[]

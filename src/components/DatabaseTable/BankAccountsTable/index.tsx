@@ -22,7 +22,13 @@ interface IBankAccountsTable {
   notes: string;
 }
 
-const BankAccountsTable = () => {
+interface IBankAccountsTableTable {
+  handleOpenSidePanel: () => void;
+}
+
+const BankAccountsTable = ({
+  handleOpenSidePanel,
+}: IBankAccountsTableTable) => {
   const dispatch = useAppDispatch();
   const { bankAccounts, bankAccountStates, deleteBankAccountStates, q } =
     useAppSelector((state) => state.database);

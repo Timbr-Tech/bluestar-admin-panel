@@ -19,7 +19,11 @@ interface ITaxesTableData {
   status: any;
 }
 
-const TaxesTable = () => {
+interface ITaxesTable {
+  handleOpenSidePanel: () => void;
+}
+
+const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
   const { taxes, taxesStates, deleteTaxesState, q } = useAppSelector(
     (state) => state.database
   );
@@ -133,10 +137,7 @@ const TaxesTable = () => {
             <button className={styles.cancelBtn} onClick={handleCloseModal}>
               Cancel
             </button>
-            <button
-              className={styles.deleteBtn}
-              onClick={handleDeleteTax}
-            >
+            <button className={styles.deleteBtn} onClick={handleDeleteTax}>
               Delete
             </button>
           </div>
