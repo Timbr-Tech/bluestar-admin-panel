@@ -111,6 +111,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   return (
     <>
       <Table
+        bordered
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

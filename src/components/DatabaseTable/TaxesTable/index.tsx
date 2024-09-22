@@ -128,6 +128,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
   return (
     <>
       <Table
+        bordered
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

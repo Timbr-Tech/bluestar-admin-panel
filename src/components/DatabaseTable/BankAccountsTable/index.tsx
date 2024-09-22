@@ -15,6 +15,7 @@ import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import React, { useEffect, useState } from "react";
 import styles from "./index.module.scss";
+import CustomPagination from "../../Common/Pagination";
 
 interface IBankAccountsTable {
   _id: string;
@@ -34,8 +35,13 @@ const BankAccountsTable = ({
   handleOpenSidePanel,
 }: IBankAccountsTableTable) => {
   const dispatch = useAppDispatch();
-  const { bankAccounts, bankAccountStates, deleteBankAccountStates, q } =
-    useAppSelector((state) => state.database);
+  const {
+    bankAccounts,
+    bankAccountStates,
+    deleteBankAccountStates,
+    q,
+    pagination,
+  } = useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteBankAccountId, setDeleteBankAccountId] = useState<string>("");
 
@@ -125,9 +131,21 @@ const BankAccountsTable = ({
           type: "checkbox",
           onChange: onChange,
         }}
+        bordered
         columns={columns}
         dataSource={bankAccounts?.data}
         loading={bankAccountStates?.loading || deleteBankAccountStates?.loading}
+        pagination={false}
+        scroll={{
+          x: 756,
+        }}
+        footer={() => (
+          <CustomPagination
+            total={pagination?.total ?? 0}
+            current={pagination?.page ?? 1}
+            pageSize={pagination.limit ?? 10}
+          />
+        )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

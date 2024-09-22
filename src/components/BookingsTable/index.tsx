@@ -36,6 +36,8 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 import pagination, { PaginationProps } from "antd/es/pagination";
+import CustomPagination from "../Common/Pagination";
+import { setPagination } from "../../redux/slices/databaseSlice";
 
 interface IBookingsTableData {
   key: React.Key;
@@ -284,8 +286,8 @@ const BookingsTable = () => {
   }
 
   useEffect(() => {
-    dispatch(getBookings({}));
-  }, []);
+    dispatch(getBookings({ ...pagination }));
+  }, [pagination]);
   // handleBookingsTablePageChange = (page, pageSize) => {
   //   const { dispatch } = this.props;
   //   dispatch({
@@ -296,27 +298,7 @@ const BookingsTable = () => {
   //     },
   //   });
   // };
-  const itemRender: PaginationProps["itemRender"] = (
-    _,
-    type,
-    originalElement
-  ) => {
-    if (type === "prev") {
-      return (
-        <Button>
-          <ArrowLeftOutlined /> Previous
-        </Button>
-      );
-    }
-    if (type === "next") {
-      return (
-        <Button>
-          Next <ArrowRightOutlined />
-        </Button>
-      );
-    }
-    return originalElement;
-  };
+
   return (
     <>
       <div className={styles.container}>
@@ -329,28 +311,18 @@ const BookingsTable = () => {
           loading={bookingStates.loading}
           dataSource={formateData()}
           columns={columns}
-          // pagination={{
-          //   // po
-          //   // defaultCurrent: 1,
-          //   total: pagination?.total ?? 0,
-          //   current: pagination?.page ?? 1,
-          //   // pageSize: pagination.limit ?? 10,
-          //   pageSize: 2,
-          //   // onChange: handleBookingsTablePageChange,
-          // }}
           pagination={false}
           scroll={{
             x: 756,
           }}
           footer={() => (
-            <Pagination
+            <CustomPagination
               total={pagination?.total ?? 0}
               current={pagination?.page ?? 1}
-              // pageSize: pagination.limit ?? 10,
-              pageSize={1}
-              align="center"
-              itemRender={itemRender}
-              className="custom-pagination"
+              pageSize={pagination.limit ?? 10}
+              onPageChange={() => {
+                // dispatch(setPagination())
+              }}
             />
           )}
         />

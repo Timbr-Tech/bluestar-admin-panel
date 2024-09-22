@@ -80,6 +80,7 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
 
   return (
     <Table
+      bordered
       rowSelection={{
         type: "checkbox",
         onChange: onChange,

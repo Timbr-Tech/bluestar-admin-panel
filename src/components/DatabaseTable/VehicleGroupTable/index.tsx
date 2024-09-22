@@ -138,6 +138,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   return (
     <>
       <Table
+        bordered
         rowSelection={{
           type: "checkbox",
           onChange: onChange,
