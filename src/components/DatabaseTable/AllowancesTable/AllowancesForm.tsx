@@ -2,8 +2,11 @@
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { Select, notification } from "antd";
-import { useState, useMemo, useEffect } from "react";
-import { getTaxesOptions } from "../../../redux/slices/databaseSlice";
+import { useState, useMemo, useEffect, SetStateAction } from "react";
+import {
+  addNewAllowance,
+  updateAllowance,
+} from "../../../redux/slices/databaseSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { ALLOWANCES_TYPES, Allowance } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
@@ -18,16 +21,21 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
   const [allowanceType, setAllowanceType] = useState<string>("");
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useAppDispatch();
-  const { taxesOptions, taxesOptionsStates } = useAppSelector(
+  const { selectedAllowance, updateAllowancesStates } = useAppSelector(
     (state) => state.database
   );
-
-  useEffect(() => {
-    dispatch(getTaxesOptions({ page: 1, size: 10 }));
-  }, []);
+  const [rate, setRate] = useState<number>(0);
 
   const handleAllowanceType = (value: string) => {
     setAllowanceType(value);
+  };
+
+  const handleRateChange = (e: any) => {
+    const value = e.target.value;
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (regex.test(value)) {
+      setRate(value);
+    }
   };
 
   const openNotificationWithIcon = (type: NotificationType) => {
@@ -40,6 +48,17 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
   const allowanceLabel = useMemo(() => {
     return ALLOWANCES_TYPES.filter((type) => type.value === allowanceType)[0];
   }, [allowanceType]);
+
+  const handleAddNewAllowance = () => {
+    dispatch(
+      addNewAllowance({
+        rate: Number(rate),
+        allowanceType: allowanceLabel?.label,
+      })
+    );
+    openNotificationWithIcon("success");
+    handleCloseSidePanel();
+  };
 
   return (
     <div className={styles.formContainer}>
@@ -83,7 +102,8 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
                 type="number"
                 className={styles.input}
                 placeholder="Enter amount..."
-                defaultValue={500}
+                value={rate}
+                onChange={handleRateChange}
               />
             </div>
           )}
@@ -91,13 +111,7 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
-          onClick={() => {
-            openNotificationWithIcon("success");
-            handleCloseSidePanel();
-          }}
-        />
+        <PrimaryBtn btnText="Save" onClick={handleAddNewAllowance} />
       </div>
     </div>
   );

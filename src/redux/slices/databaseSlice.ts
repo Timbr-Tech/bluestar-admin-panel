@@ -281,7 +281,7 @@ export const getAllowances = createAsyncThunk(
   async (params: any) => {
     const { page, limit, search } = params;
     const response = await apiClient.get(
-      `/database/allowances?page=${page}&limit=${limit}&search=${search}`
+      `/database/allowance?page=${page}&limit=${limit}&search=${search}`
     );
 
     return response.data;
@@ -294,7 +294,7 @@ export const getAllowanceById = createAsyncThunk(
   async (params: any) => {
     const { id } = params;
 
-    const response = await apiClient.get(`/database/allowances/${id}`);
+    const response = await apiClient.get(`/database/allowance/${id}`);
 
     return response.data;
   }

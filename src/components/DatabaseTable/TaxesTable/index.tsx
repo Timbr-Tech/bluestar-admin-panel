@@ -83,7 +83,7 @@ const TaxesTable = () => {
     setOpenDeleteModal(false);
   };
 
-  const handleDeleteVehicleGroup = () => {
+  const handleDeleteTax = () => {
     dispatch(deleteTax({ id: taxId }));
     setOpenDeleteModal(false);
   };
@@ -135,7 +135,7 @@ const TaxesTable = () => {
             </button>
             <button
               className={styles.deleteBtn}
-              onClick={handleDeleteVehicleGroup}
+              onClick={handleDeleteTax}
             >
               Delete
             </button>
