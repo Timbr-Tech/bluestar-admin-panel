@@ -467,8 +467,8 @@ export const updateDriver = createAsyncThunk(
     const response = await apiClient.patch(`/database/driver/${id}`, payload);
 
     const { database } = getState().database;
-    const { driverStates } = database;
-    const { pagination } = driverStates;
+    const { driverStates, pagination } = database;
+    // const { pagination } = driverStates;
 
     dispatch(
       getDrivers({

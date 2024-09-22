@@ -29,7 +29,6 @@ interface IDriverForm {
   handleCloseSidePanel: () => void;
 }
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import form from "antd/es/form";
 
 dayjs.extend(customParseFormat);
 
@@ -51,6 +50,25 @@ const parseTime = (timeString: any) => {
   }
 };
 
+// const parseTime = (isoString: any) => {
+//   if (!isoString) return undefined;
+//   try {
+//     // Parse the ISO string into a Day.js object
+//     const parsedTime = dayjs(isoString);
+
+//     if (parsedTime.isValid()) {
+//       // Return a new Day.js object set to today's date with the parsed time
+//       return dayjs()
+//         .hour(parsedTime.hour())
+//         .minute(parsedTime.minute())
+//         .second(0);
+//     }
+//     return undefined;
+//   } catch (error) {
+//     console.error("Error parsing ISO time:", error);
+//     return undefined;
+//   }
+// };
 type NotificationType = "success" | "info" | "warning" | "error";
 
 const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
@@ -103,6 +121,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
   useEffect(() => {
     if (selectedDriver.data && Object.keys(selectedDriver?.data).length > 0) {
       const valuesToMaped = selectedDriver?.data;
+      console.log("valuesToMaped", valuesToMaped);
       form.setFieldsValue({
         address: {
           type: valuesToMaped.address.type,
@@ -147,7 +166,9 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               ...values,
               monthlySalary: Number(values.monthlySalary),
               dailySalary: Number(values.dailySalary),
-              phoneNumber: `+91${values.phoneNumber}`,
+              phoneNumber: values.phoneNumber.startsWith("+91")
+                ? values.phoneNumber
+                : `+91${values.phoneNumber}`,
             };
             onSubmit(valuesToSubmit);
 
