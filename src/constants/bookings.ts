@@ -1,3 +1,4 @@
+/* eslint-disable */
 export const BOOKINGS_TABS = [
   {
     id: 1,

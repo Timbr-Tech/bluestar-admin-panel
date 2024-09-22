@@ -1,3 +1,4 @@
+/* eslint-disable */
 export const DATABASE_ITEMS = [
   {
     id: 1,

@@ -1,3 +1,4 @@
+/* eslint-disable */
 export const RouteName = {
   HOME: "/",
   DASHBOARD: "/dashboard",
