@@ -100,6 +100,7 @@ const VehicleGroupTable = () => {
   return (
     <>
       <Table
+        bordered
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

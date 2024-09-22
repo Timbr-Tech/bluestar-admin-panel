@@ -3,6 +3,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../utils/configureAxios";
 import { notification } from "antd";
+import { useAppDispatch } from "../../hooks/store";
 
 // Bank Account APIs
 
@@ -25,13 +26,22 @@ export const addBankAccount = createAsyncThunk(
 
 export const getBankAccount = createAsyncThunk(
   "database/getBankAccount",
-  async (params: any) => {
+  async (params: any, { dispatch }) => {
     const { page, limit, search } = params;
     const response = await apiClient.get(
       `/database/bank-accounts/?page=${page}&limit=${limit}&search=${search}`
     );
-
-    return response.data;
+    console.log("response.data", response.data);
+    if (response.status == 200) {
+      // dispatch(
+      //   setPagination({
+      //     total: "1",
+      //     page: "1",
+      //     limit: "2",
+      //   })
+      // );
+      return response.data;
+    }
   }
 );
 
@@ -345,13 +355,16 @@ export const addNewVehicle = createAsyncThunk(
 export const getVehicle = createAsyncThunk(
   "database/getVehicle",
 
-  async (params: any) => {
-    const { page, limit, search } = params;
-    const response = await apiClient.get(
-      `/database/vehicle?page=${page}&limit=${limit}&search=${search}`
-    );
+  async (params: any, { dispatch, getState }: any) => {
+    // const { page, limit, search } = params;
+    // const response = await apiClient.get(
+    //   `/database/vehicle?page=${page}&limit=${limit}&search=${search}`
+    // );
+    const response = await apiClient.get(`/database/vehicle`, { params });
 
-    return response.data;
+    if (response.status === 200) {
+      return response.data;
+    }
   }
 );
 
@@ -414,14 +427,23 @@ export const addNewDriver = createAsyncThunk(
 
 export const getDrivers = createAsyncThunk(
   "database/getDrivers",
-  async (params: any) => {
-    const { page, limit, search } = params;
+  async (params: any, { dispatch, getState }: any) => {
+    // const { page, limit, search } = params;
 
-    const response = await apiClient.get(
-      `/database/driver?page=${page}&limit=${limit}&search=${search}`
-    );
+    const response = await apiClient.get(`/database/driver`, { params });
+    // const response = await apiClient.get(
+    //   `/database/driver?page=${page}&limit=${limit}&search=${search}`
+    // );
 
-    return response.data;
+    if (response.status === 200) {
+      let option: Array<object> = response?.data?.data?.map((each: any) => ({
+        value: each._id,
+        label: each.name,
+      }));
+
+      dispatch(setDriverOption(option));
+      return response.data;
+    }
   }
 );
 
@@ -504,12 +526,24 @@ export const addVehicleGroup = createAsyncThunk(
 export const getVehicleGroup = createAsyncThunk(
   "database/getVehicleGroup",
 
-  async (params: any) => {
-    const { page, limit, search } = params;
+  async (params: any, { dispatch, getState }) => {
+    // const { page, limit, search } = params;
 
-    const response = await apiClient.get(
-      `/database/vehicle-group?page=${page}&limit=${limit}&search=${search}`
-    );
+    // const response = await apiClient.get(
+    //   `/database/vehicle-group?page=${page}&limit=${limit}&search=${search}`
+    // );
+
+    const response = await apiClient.get(`/database/vehicle-group`, { params });
+
+    if (response.status === 200) {
+      let option: Array<object> = response?.data?.data?.map((each: any) => ({
+        value: each._id,
+        label: each.name,
+      }));
+
+      dispatch(setVehicleGroupOption(option));
+      return response.data;
+    }
 
     return response.data;
   }
@@ -570,10 +604,17 @@ export const updateVehicleGroup = createAsyncThunk(
 );
 
 const initialState: any = {
-  // Vehicle Group
-
+  // Global
   q: "",
   openSidePanel: false,
+  pagination: {
+    total: null,
+    page: null,
+    limit: null,
+  },
+
+  // Vehicle Group
+
   vehicleGroupData: {},
   selectedVehicleGroup: {},
   vehicleGroupStates: {
@@ -595,6 +636,7 @@ const initialState: any = {
 
   // Vehicle Group Option
   vehicleGroupOption: {},
+  vehicleGroupSelectOption: [],
   vehicleGroupOptionStates: {
     status: "idle",
     loading: false,
@@ -650,7 +692,7 @@ const initialState: any = {
   },
 
   // Bank Accounts
-  bankAccounts: {},
+  bankAccounts: [],
   selectedBankAccount: {},
   bankAccountStates: {
     state: "idle",
@@ -662,7 +704,7 @@ const initialState: any = {
   updateBankAccountState: { state: "idle", loading: false, error: "" },
 
   // Vehicle
-  vehicleList: {},
+  vehicleList: [],
   selectedVehicle: {},
   vehicleStates: {
     state: "idle",
@@ -674,7 +716,8 @@ const initialState: any = {
   updateVehicleStates: { state: "idle", loading: false, error: "" },
 
   // Drivers
-  driverList: {},
+  driverList: [],
+  driverOption: [],
   selectedDriver: {},
   driverStates: {
     state: "idle",
@@ -682,6 +725,7 @@ const initialState: any = {
     error: "",
     pagination: { page: 1, total: "", limit: 7 },
   },
+
   deleteDriverStates: { state: "idle", loading: false, error: "" },
   updateDriverStates: { state: "idle", loading: false, error: "" },
 
@@ -712,6 +756,24 @@ export const databaseSlice = createSlice({
       return {
         ...state,
         openSidePanel: action.payload,
+      };
+    },
+    setDriverOption: (state, action: PayloadAction<Array<object>>) => {
+      return {
+        ...state,
+        driverOption: action.payload,
+      };
+    },
+    setVehicleGroupOption: (state, action: PayloadAction<Array<object>>) => {
+      return {
+        ...state,
+        vehicleGroupSelectOption: action.payload,
+      };
+    },
+    setPagination: (state, action: PayloadAction<Array<object>>) => {
+      return {
+        ...state,
+        pagination: action.payload,
       };
     },
   },
@@ -1262,6 +1324,12 @@ export const databaseSlice = createSlice({
   },
 });
 export const { actions, reducer } = databaseSlice;
-export const { setQueryForSearch, setOpenSidePanel } = actions;
+export const {
+  setQueryForSearch,
+  setOpenSidePanel,
+  setDriverOption,
+  setVehicleGroupOption,
+  setPagination,
+} = actions;
 
 export default databaseSlice.reducer;

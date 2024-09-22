@@ -76,6 +76,7 @@ const DutyTypeTable = () => {
 
   return (
     <Table
+      bordered
       rowSelection={{
         type: "checkbox",
         onChange: onChange,

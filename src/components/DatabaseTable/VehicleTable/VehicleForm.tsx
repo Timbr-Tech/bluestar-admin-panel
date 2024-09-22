@@ -1,14 +1,34 @@
 /* eslint-disable */
-import { Select, Upload, message, notification, Switch } from "antd";
+import {
+  Select,
+  Upload,
+  message,
+  notification,
+  Switch,
+  Form,
+  Input,
+  DatePicker,
+  AutoComplete,
+} from "antd";
 import { useState } from "react";
 import type { UploadProps } from "antd";
 import { useAppDispatch } from "../../../hooks/store";
-import { addNewVehicle } from "../../../redux/slices/databaseSlice";
+import {
+  addNewVehicle,
+  getDrivers,
+  getVehicleGroup,
+} from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { FuelType } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
+import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
+import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import form from "antd/es/form";
+import { RootState } from "../../../types/store";
+import search from "antd/es/transfer/search";
 
 interface IVehicleForm {
   handleCloseSidePanel: () => void;
@@ -17,82 +37,18 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   const { Dragger } = Upload;
-  const [vehiclePayload, setVehiclePayload] = useState({
-    modelName: "",
-    vehicleNumber: "",
-    fuelType: "",
-    vehicleGroupId: "", //Always add an ID from the vehicle-group table, the data for vehicle group is fetched from that
-    driverId: "", //Driver ID from driver collection
-    fastTagId: "",
-    registration: {
-      ownerName: "Dogra",
-      date: "2024-09-02T10:30:00.000Z",
-      registrationDocument: {
-        fileUrl:
-          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
-        fileType: "application/pdf",
-        fileSize: 201818,
-      },
-    },
-    insurance: {
-      companyName: "Laxmi chit fund",
-      policyNumber: "420",
-      issueDate: "2024-09-02T10:30:00.000Z",
-      dueDate: "2024-09-02T10:30:00.000Z",
-      premiumAmount: 6000,
-      coverAmount: 1000000000,
-      insuranceDocument: {
-        fileUrl:
-          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
-        fileType: "application/pdf",
-        fileSize: 201818,
-      },
-    },
-    rto: {
-      ownerName: "Dogra",
-      date: "2024-09-02T10:30:00.000Z",
-      registrationDocument: {
-        fileUrl:
-          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
-        fileType: "application/pdf",
-        fileSize: 201818,
-      },
-    },
-    parts: {
-      chasisNumber: "696969",
-      engineNumber: "420420",
-    },
-    expiryDate: "2024-09-02T10:30:00.000Z",
-    vehicleDocuments: [
-      {
-        fileUrl:
-          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
-        fileType: "application/pdf",
-        fileSize: 201818,
-      },
-    ],
-    notes: "Hello world",
-    loan: {
-      isActive: true,
-      emiAmount: 6000,
-      startDate: "2024-09-02T10:30:00.000Z",
-      endDate: "2024-09-02T10:30:00.000Z",
-      bankName: "NM United Bank",
-      emiDate: "2024-09-02T10:30:00.000Z",
-      loanDocument: {
-        fileUrl:
-          "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
-        fileType: "application/pdf",
-        fileSize: 201818,
-      },
-    },
-  });
-  const [api, contextHolder] = notification.useNotification();
-  const [hasLoan, setHasLoan] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
+  const { Option } = AutoComplete;
 
-  const onChange = (checked: boolean) => {
-    setHasLoan(checked);
+  const [api, contextHolder] = notification.useNotification();
+
+  const dispatch = useAppDispatch();
+  const [isActive, setIsActive] = useState(false); // Track checkbox value in state
+
+  // Function to handle changes in form values
+  const handleValuesChange = (changedValues: any, allValues: any) => {
+    if (changedValues.isActive !== undefined) {
+      setIsActive(changedValues.isActive);
+    }
   };
 
   const openNotificationWithIcon = (type: NotificationType) => {
@@ -122,6 +78,30 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
     },
   };
 
+  const { driverOption: options, vehicleGroupSelectOption } = useSelector(
+    (state: RootState) => state.database
+  );
+
+  const getPanelValue = (searchText: string) => {
+    if (searchText) {
+      dispatch(
+        getDrivers({
+          search: searchText,
+        })
+      );
+    }
+  };
+  const getVehicleGroupValue = (searchText: string) => {
+    if (searchText) {
+      dispatch(
+        getVehicleGroup({
+          search: searchText,
+        })
+      );
+    }
+  };
+  const [form] = Form.useForm();
+
   return (
     <div className={styles.formContainer}>
       {contextHolder}
@@ -130,301 +110,530 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           <div className={styles.header}>New Vehicle</div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
-        <div className={styles.form}>
+        <Form
+          requiredMark={CustomizeRequiredMark}
+          layout="vertical"
+          form={form}
+          onFinish={(Values) => {
+            console.log(Values);
+            dispatch(addNewVehicle(Values));
+          }}
+          onValuesChange={handleValuesChange}
+          className={styles.form}
+        >
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Model Name</p>
-              <sup>*</sup>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter model name..."
-              defaultValue={"John Doe"}
-            />
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Model Name"
+              name="modelName"
+              id="modelName"
+            >
+              <Input placeholder="Enter model name..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Vehicle Number</p>
-              <sup>*</sup>
-            </div>
-            <input
-              type="number"
-              className={styles.input}
-              placeholder="Enter model name..."
-              defaultValue={1000}
-            />
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Vehicle Number"
+              name="vehicleNumber"
+              id="vehicleNumber"
+            >
+              <Input type="number" placeholder="Enter model name..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Fuel Type</p>
-              <sup>*</sup>
-            </div>
-            <Select
-              style={{ width: "100%" }}
-              placeholder="Select One"
-              dropdownRender={(menu) => <>{menu}</>}
-              options={FuelType.map((fuel) => ({
-                label: fuel.label,
-                value: fuel.value,
-              }))}
-            />
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Fuel type"
+              name="fuelType"
+              id="fuelType"
+            >
+              <Select
+                style={{ width: "100%" }}
+                placeholder="Select One"
+                dropdownRender={(menu) => <>{menu}</>}
+                options={FuelType.map((fuel) => ({
+                  label: fuel.label,
+                  value: fuel.value,
+                }))}
+              />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Category - Vehicle Group</p>
-              <sup>*</sup>
-            </div>
-            <Select
-              style={{ width: "100%" }}
-              placeholder="Select One"
-              dropdownRender={(menu) => <>{menu}</>}
-              options={FuelType.map((fuel) => ({
-                label: fuel.label,
-                value: fuel.value,
-              }))}
-            />
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Category - Vehicle Group"
+              name="vehicleGroupId"
+              id="vehicleGroupId"
+            >
+              <AutoComplete
+                allowClear
+                options={vehicleGroupSelectOption}
+                onSearch={(text) => getVehicleGroupValue(text)}
+                placeholder="Search drivers"
+                fieldNames={{ label: "label", value: "value" }}
+                notFoundContent={<div>No search result</div>}
+              />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Assigned Driver</p>
-            </div>
-            <Select
-              style={{ width: "100%" }}
-              placeholder="Select One"
-              dropdownRender={(menu) => <>{menu}</>}
-              options={FuelType.map((fuel) => ({
-                label: fuel.label,
-                value: fuel.value,
-              }))}
-            />
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Assigned Driver"
+              name="driverId"
+              id="driverId"
+            >
+              <AutoComplete
+                allowClear
+                options={options}
+                onSearch={(text) => getPanelValue(text)}
+                placeholder="Search drivers"
+                fieldNames={{ label: "label", value: "value" }}
+                notFoundContent={<div>No search result</div>}
+              />
+            </Form.Item>
             <div className={styles.secondaryText}>
-              {
-                "If you don’t assign a driver then you’ll get an option to assign a driver for this vehicle during each booking"
-              }
+              "If you don’t assign a driver then you’ll get an option to assign
+              a driver for this vehicle during each booking"
             </div>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>FASTag Number</p>
-              <sup>*</sup>
-            </div>
-            <input
-              type="number"
-              className={styles.input}
-              placeholder="Enter model name..."
-              defaultValue={987654321}
-            />
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="FASTag Number"
+              name="fastTagId"
+              id="fastTagId"
+            >
+              <Input type="number" placeholder="Enter model name..." />
+            </Form.Item>
           </div>
+          {/* registration */}
           <div className={styles.secondaryContainer}>
-            <div className={styles.headerText}>
-              Registration
-              <sup>*</sup>
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Owner Name</p>
-              </div>
-              <input
-                className={styles.input}
-                placeholder="Enter model name..."
-                defaultValue={"John Doe"}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Registration Date</p>
-              </div>
-              <input type="date" id="dob" name="dob" className={styles.input} />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Registration Document</p>
-              </div>
-              <Dragger {...props} className="custom-upload">
-                <div className={styles.uploadIconContainer}>
-                  <div className={styles.uploadIcon}>
-                    <UploadIcon />
-                  </div>
-                </div>
-                <div className={styles.uploadText}>
-                  <p>Click to upload</p> or drag and drop
-                </div>
-                <p className={styles.uploadSubtext}>
-                  JPG, PNG, DOC or PDF (max. 20MB)
-                </p>
-              </Dragger>
-            </div>
+            <Form.Item name="registration" label="Registration">
+              <Input.Group>
+                <Form.Item
+                  label="Owner name"
+                  name={["registration", "ownerName"]}
+                  rules={[
+                    { required: true, message: "Owner name is required" },
+                  ]}
+                >
+                  <Input placeholder="Owner Name" />
+                </Form.Item>
+                <Form.Item
+                  label="Date"
+                  name={["registration", "date"]}
+                  getValueProps={(value) => ({
+                    value: value ? dayjs(value) : undefined,
+                  })}
+                  getValueFromEvent={(date) => date?.toISOString()}
+                  rules={[{ required: true, message: "Date is required" }]}
+                >
+                  <DatePicker format="DD-MM-YYYY" type="date" />
+                </Form.Item>
+                <Form.Item
+                  label="Document"
+                  name={["registration", "registrationDocument"]}
+                  // rules={[{ required: true, message: "File is required" }]}
+                >
+                  <Dragger {...props} className="custom-upload">
+                    <div className={styles.uploadIconContainer}>
+                      <div className={styles.uploadIcon}>
+                        <UploadIcon />
+                      </div>
+                    </div>
+                    <div className={styles.uploadText}>
+                      <p>Click to upload</p> or drag and drop
+                    </div>
+                    <p className={styles.uploadSubtext}>
+                      JPG, PNG, DOC or PDF (max. 20MB)
+                    </p>
+                  </Dragger>
+                </Form.Item>
+              </Input.Group>
+            </Form.Item>
           </div>
-          <div className={styles.secondaryContainer}>
-            <div className={styles.headerText}>
-              Insurance
-              <sup>*</sup>
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Company Name</p>
+          {/* Insurance */}
+          <Form.Item
+            className={styles.secondaryContainer}
+            name="insurance"
+            label="Insurance"
+          >
+            <Input.Group>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Company name"
+                  name={["insurance", "companyName"]}
+                  rules={[
+                    { required: true, message: "Company name  is required" },
+                  ]}
+                >
+                  <Input placeholder="Enter company name..." />
+                </Form.Item>
               </div>
-              <input
-                className={styles.input}
-                placeholder="Enter company name..."
-                defaultValue={""}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Policy Number</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Policy Number"
+                  name={["insurance", "policyNumber"]}
+                  rules={[
+                    { required: true, message: "Policy Number is required" },
+                  ]}
+                >
+                  <Input placeholder="Enter policy number..." />
+                </Form.Item>
               </div>
-              <input
-                className={styles.input}
-                placeholder="Enter policy number..."
-                defaultValue={""}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Issue Date</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Issue Date"
+                  name={["insurance", "issueDate"]}
+                  rules={[
+                    { required: true, message: "Issue Date is required" },
+                  ]}
+                  getValueProps={(value) => ({
+                    value: value ? dayjs(value) : undefined,
+                  })}
+                  getValueFromEvent={(date) => date?.toISOString()}
+                >
+                  <DatePicker format="DD-MM-YYYY" type="date" />
+                </Form.Item>
               </div>
-              <input
-                type="date"
-                id="issueDate"
-                name="issueDate"
-                className={styles.input}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Due Date</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Due Date"
+                  name={["insurance", "dueDate"]}
+                  rules={[{ required: true, message: "Due Date is required" }]}
+                  getValueProps={(value) => ({
+                    value: value ? dayjs(value) : undefined,
+                  })}
+                  getValueFromEvent={(date) => date?.toISOString()}
+                >
+                  <DatePicker format="DD-MM-YYYY" type="date" />
+                </Form.Item>
               </div>
-              <input
-                type="date"
-                id="dueDate"
-                name="dueDate"
-                className={styles.input}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Premium Amount</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Premium Amount"
+                  name={["insurance", "premiumAmount"]}
+                  rules={[{ required: true, message: "Due Date is required" }]}
+                >
+                  <Input placeholder="Enter premium amount..." />
+                </Form.Item>
               </div>
-              <input
-                className={styles.input}
-                placeholder="Enter premium amount..."
-                defaultValue={""}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Cover Amount</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Cover Amount"
+                  name={["insurance", "coverAmount"]}
+                  rules={[
+                    { required: true, message: "Cover amount is required" },
+                  ]}
+                >
+                  <Input placeholder="Enter cover amount..." />
+                </Form.Item>
               </div>
-              <input
-                className={styles.input}
-                placeholder="Enter cover amount..."
-                defaultValue={""}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Insurance Document</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Insurance Document"
+                  name={["insurance", "insuranceDocument"]}
+                  rules={[
+                    {
+                      // required: true,
+                      message: "Insurance Document is required",
+                    },
+                  ]}
+                >
+                  <Dragger {...props} className="custom-upload">
+                    <div className={styles.uploadIconContainer}>
+                      <div className={styles.uploadIcon}>
+                        <UploadIcon />
+                      </div>
+                    </div>
+                    <div className={styles.uploadText}>
+                      <p>Click to upload</p> or drag and drop
+                    </div>
+                    <p className={styles.uploadSubtext}>
+                      JPG, PNG, DOC or PDF (max. 10MB)
+                    </p>
+                  </Dragger>
+                </Form.Item>
               </div>
-              <Dragger {...props} className="custom-upload">
-                <div className={styles.uploadIconContainer}>
-                  <div className={styles.uploadIcon}>
-                    <UploadIcon />
-                  </div>
-                </div>
-                <div className={styles.uploadText}>
-                  <p>Click to upload</p> or drag and drop
-                </div>
-                <p className={styles.uploadSubtext}>
-                  JPG, PNG, DOC or PDF (max. 10MB)
-                </p>
-              </Dragger>
-            </div>
-          </div>
-          <div className={styles.secondaryContainer}>
-            <div className={styles.headerText}>
-              RTO
-              <sup>*</sup>
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Owner Name</p>
+            </Input.Group>
+          </Form.Item>
+          {/* RTO */}
+          <Form.Item
+            className={styles.secondaryContainer}
+            name="rto"
+            label="RTO"
+          >
+            <Input.Group>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Owner name"
+                  name={["rto", "ownerName"]}
+                  rules={[
+                    { required: true, message: "Owner name is required" },
+                  ]}
+                >
+                  <Input placeholder="Enter owner name..." />
+                </Form.Item>
               </div>
-              <input
-                className={styles.input}
-                placeholder="Enter owner name..."
-                defaultValue={""}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Registration Date</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Registration Date"
+                  name={["rto", "date"]}
+                  getValueProps={(value) => ({
+                    value: value ? dayjs(value) : undefined,
+                  })}
+                  getValueFromEvent={(date) => date?.toISOString()}
+                  rules={[{ required: true, message: "Date is required" }]}
+                >
+                  <DatePicker format="DD-MM-YYYY" type="date" />
+                </Form.Item>
               </div>
-              <input
-                type="date"
-                id="registrationDate"
-                name="registrationDate"
-                className={styles.input}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Registration Documents</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="RTO Document"
+                  name={["rto", "rtoDocument"]}
+                  rules={[
+                    {
+                      // required: true,
+                      message: "RTO is required",
+                    },
+                  ]}
+                >
+                  <Dragger {...props} className="custom-upload">
+                    <div className={styles.uploadIconContainer}>
+                      <div className={styles.uploadIcon}>
+                        <UploadIcon />
+                      </div>
+                    </div>
+                    <div className={styles.uploadText}>
+                      <p>Click to upload</p> or drag and drop
+                    </div>
+                    <p className={styles.uploadSubtext}>
+                      JPG, PNG, DOC or PDF (max. 10MB)
+                    </p>
+                  </Dragger>
+                </Form.Item>
               </div>
-              <Dragger {...props} className="custom-upload">
-                <div className={styles.uploadIconContainer}>
-                  <div className={styles.uploadIcon}>
-                    <UploadIcon />
-                  </div>
-                </div>
-                <div className={styles.uploadText}>
-                  <p>Click to upload</p> or drag and drop
-                </div>
-                <p className={styles.uploadSubtext}>
-                  JPG, PNG, DOC or PDF (max. 10MB)
-                </p>
-              </Dragger>
-            </div>
-          </div>
-          <div className={styles.secondaryContainer}>
-            <div className={styles.headerText}>Parts</div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Chassis Number</p>
+            </Input.Group>
+          </Form.Item>
+          {/* parts */}
+          <Form.Item
+            className={styles.secondaryContainer}
+            name="parts"
+            label="parts"
+          >
+            <Input.Group>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Chasis number"
+                  name={["parts", "chasisNumber"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "chassis number is required",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter chassis number..." />
+                </Form.Item>
               </div>
-              <input
-                className={styles.input}
-                placeholder="Enter chassis number..."
-                defaultValue={""}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Engine Number</p>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  label="Engine number"
+                  name={["parts", "engineNumber"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Engine  number is required",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter engine number..." />
+                </Form.Item>
               </div>
-              <input
-                className={styles.input}
-                placeholder="Enter engine number..."
-                defaultValue={""}
-              />
-            </div>
-          </div>
+            </Input.Group>
+          </Form.Item>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Car expiry Date</p>
-            </div>
-            <input
-              type="date"
-              id="carExpiryDate"
-              name="carExpiryDate"
-              className={styles.input}
-            />
+            <Form.Item
+              label="Expiry Date"
+              name="expiryDate"
+              getValueProps={(value) => ({
+                value: value ? dayjs(value) : undefined,
+              })}
+              getValueFromEvent={(date) => date?.toISOString()}
+              rules={[
+                {
+                  required: true,
+                  message: "Expiry date is required",
+                },
+              ]}
+            >
+              <DatePicker format="DD-MM-YYYY" type="date" />
+            </Form.Item>
           </div>
+          {/* TODO- LOAN */}
 
-          <div className={styles.switchContainer}>
-            <div className={styles.text}>Loan</div>
-            <Switch onChange={onChange} checked={hasLoan} />
-          </div>
+          <Form.Item name="loan" label="loan">
+            <Input.Group className={styles.secondaryContainer}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div className={styles.text}>Loan</div>
+                <Form.Item
+                  valuePropName="checked"
+                  name="isActive"
+                  id="isActive"
+                >
+                  <Switch />
+                </Form.Item>
+              </div>
+
+              {isActive && (
+                <>
+                  <div className={styles.typeContainer}>
+                    <Form.Item
+                      label="Emi amount"
+                      name="emiAmount"
+                      id="emiAmount"
+                      rules={[
+                        {
+                          required: true,
+                          message: "startDate is required",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Enter Emi amount" />
+                    </Form.Item>
+                  </div>
+                  <div className={styles.typeContainer}>
+                    <Form.Item
+                      label="Start Date"
+                      name={["loan", "startDate"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "startDate is required",
+                        },
+                      ]}
+                      getValueProps={(value) => ({
+                        value: value ? dayjs(value) : undefined,
+                      })}
+                      getValueFromEvent={(date) => date?.toISOString()}
+                    >
+                      <DatePicker format="DD-MM-YYYY" type="date" />
+                    </Form.Item>
+                  </div>
+                  <div className={styles.typeContainer}>
+                    <Form.Item
+                      label="End Date"
+                      name={["loan", "endDate"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "endDate is required",
+                        },
+                      ]}
+                      getValueProps={(value) => ({
+                        value: value ? dayjs(value) : undefined,
+                      })}
+                      getValueFromEvent={(date) => date?.toISOString()}
+                    >
+                      <DatePicker format="DD-MM-YYYY" type="date" />
+                    </Form.Item>
+                  </div>
+                  <div className={styles.typeContainer}>
+                    <Form.Item
+                      label="Bank Name"
+                      name={["loan", "bankName"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Bank name is required",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Enter bank name" />
+                    </Form.Item>
+                  </div>
+                  <div className={styles.typeContainer}>
+                    <Form.Item
+                      label="EMI Date (Every month)"
+                      name={["loan", "emiDate"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "EMI date is required",
+                        },
+                      ]}
+                      getValueProps={(value) => ({
+                        value: value ? dayjs(value) : undefined,
+                      })}
+                      getValueFromEvent={(date) => date?.toISOString()}
+                    >
+                      <DatePicker
+                        format="DD" // Display format as day only
+                        placeholder="Select a day"
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className={styles.typeContainer}>
+                    <Form.Item
+                      label="Loan Document"
+                      name={["loan", "loanDocument"]}
+                      rules={[
+                        {
+                          //  required: true,
+                          message: "loan document is required",
+                        },
+                      ]}
+                    >
+                      <Dragger {...props} className="custom-upload">
+                        <div className={styles.uploadIconContainer}>
+                          <div className={styles.uploadIcon}>
+                            <UploadIcon />
+                          </div>
+                        </div>
+                        <div className={styles.uploadText}>
+                          <p>Click to upload</p> or drag and drop
+                        </div>
+                        <p className={styles.uploadSubtext}>
+                          JPG, PNG, DOC or PDF (max. 10MB)
+                        </p>
+                      </Dragger>
+                    </Form.Item>
+                  </div>
+                </>
+              )}
+            </Input.Group>
+          </Form.Item>
 
           <div className={styles.typeContainer}>
             <div className={styles.text}>
@@ -445,25 +654,35 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             </Dragger>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Notes</p>
-            </div>
-            <textarea
-              className={styles.textarea}
-              placeholder="Add a note...."
-            />
+            <Form.Item
+              label="Notes"
+              name="notes"
+              id="notes"
+              rules={[
+                {
+                  // required: true,
+                  message: "notes is required",
+                },
+              ]}
+            >
+              <Input.TextArea
+                className={styles.textarea}
+                placeholder="Add a note...."
+              />
+            </Form.Item>
           </div>
+        </Form>
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <PrimaryBtn
+            btnText="Save"
+            onClick={() => {
+              form.submit();
+              // openNotificationWithIcon("success");
+              // handleCloseSidePanel();
+            }}
+          />
         </div>
-      </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
-          onClick={() => {
-            openNotificationWithIcon("success");
-            handleCloseSidePanel();
-          }}
-        />
       </div>
     </div>
   );
