@@ -31,26 +31,33 @@ interface IDriverForm {
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
-
-const parseTime = (timeString: any) => {
-  if (!timeString) return undefined;
-  try {
-    const parsedTime = dayjs(timeString, "h:mm A", true);
-    if (parsedTime.isValid()) {
-      // Return a new dayjs object set to today's date with the parsed time
-      return dayjs()
-        .hour(parsedTime.hour())
-        .minute(parsedTime.minute())
-        .second(0);
-    }
-    return undefined;
-  } catch (error) {
-    console.error("Error parsing time:", error);
-    return undefined;
-  }
+const isValidIsoDate = (dateString: string) => {
+  return (
+    dayjs(dateString).isValid() && dayjs(dateString).format() === dateString
+  );
 };
+// const parseTime = (timeString: any) => {
+//   if (!timeString) return undefined;
+//   if (isValidIsoDate(timeString)) {
+//     return timeString;
+//   }
+//   try {
+//     const parsedTime = dayjs(timeString, "h:mm A", true);
+//     if (parsedTime.isValid()) {
+//       // Return a new dayjs object set to today's date with the parsed time
+//       return dayjs()
+//         .hour(parsedTime.hour())
+//         .minute(parsedTime.minute())
+//         .second(0);
+//     }
+//     return undefined;
+//   } catch (error) {
+//     console.error("Error parsing time:", error);
+//     return undefined;
+//   }
+// };
 
-// const parseTime = (isoString: any) => {
+// const parseTimeisoString = (isoString: any) => {
 //   if (!isoString) return undefined;
 //   try {
 //     // Parse the ISO string into a Day.js object
@@ -69,6 +76,24 @@ const parseTime = (timeString: any) => {
 //     return undefined;
 //   }
 // };
+const convertIsoToTimePickerFormat = (isoString: string) => {
+  const dayjsObject = dayjs(isoString);
+
+  if (!dayjsObject.isValid()) {
+    throw new Error("Invalid ISO string");
+  }
+
+  return dayjsObject.format("h:mm A");
+};
+const convertIsoToDayjsObject = (isoString: string) => {
+  const dayjsObject = dayjs(isoString);
+
+  if (!dayjsObject.isValid()) {
+    throw new Error("Invalid ISO string");
+  }
+
+  return dayjsObject;
+};
 type NotificationType = "success" | "info" | "warning" | "error";
 
 const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
@@ -108,7 +133,6 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
 
   const [form] = Form.useForm();
   const onSubmit = (values: any) => {
-    dispatch(addNewDriver(values));
     if (Object.keys(selectedDriver?.data).length > 0) {
       dispatch(
         updateDriver({
@@ -116,6 +140,8 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
           id: selectedDriver?.data._id,
         })
       );
+    } else {
+      dispatch(addNewDriver(values));
     }
   };
   useEffect(() => {
@@ -140,8 +166,8 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
         monthlySalary: valuesToMaped.monthlySalary,
         dailySalary: valuesToMaped.dailySalary,
         timing: {
-          start: parseTime(valuesToMaped.timing.start),
-          end: parseTime(valuesToMaped.timing.end),
+          start: convertIsoToDayjsObject(valuesToMaped.timing.start),
+          end: convertIsoToDayjsObject(valuesToMaped.timing.end),
         },
         offDay: valuesToMaped.offDay,
         notes: valuesToMaped.notes,
@@ -171,10 +197,14 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               phoneNumber: values.phoneNumber.startsWith("+91")
                 ? values.phoneNumber
                 : `+91${values.phoneNumber}`,
+              // timing: {
+              //   start: parseTime(values.timing.start),
+              //   end: parseTime(values.timing.end),
+              // },
             };
             onSubmit(valuesToSubmit);
 
-            console.log("values", values);
+            console.log("values", valuesToSubmit);
           }}
           requiredMark={CustomizeRequiredMark}
           layout="vertical"
@@ -402,14 +432,32 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                       return { value: undefined };
                     }
                   }}
+                  // getValueFromEvent={(time) => {
+                  //   if (!time) return undefined;
+                  //   try {
+                  //     return time.format("h:mm A");
+                  //   } catch (error) {
+                  //     console.error("Error formatting time:", error);
+                  //     return undefined;
+                  //   }
+                  // }}
                   getValueFromEvent={(time) => {
                     if (!time) return undefined;
-                    try {
-                      return time.format("h:mm A");
-                    } catch (error) {
-                      console.error("Error formatting time:", error);
-                      return undefined;
-                    }
+
+                    // Create a new Day.js object based on the selected time
+                    const selectedTime = dayjs(time);
+
+                    // Combine with today's date to get an ISO format
+                    const isoDate = dayjs()
+                      .date(selectedTime.date())
+                      .month(selectedTime.month())
+                      .year(selectedTime.year())
+                      .hour(selectedTime.hour())
+                      .minute(selectedTime.minute())
+                      .second(0)
+                      .millisecond(0);
+
+                    return isoDate.toISOString();
                   }}
                 >
                   <TimePicker
@@ -441,14 +489,32 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                       return { value: undefined };
                     }
                   }}
+                  // getValueFromEvent={(time) => {
+                  //   if (!time) return undefined;
+                  //   try {
+                  //     return time.format("h:mm A");
+                  //   } catch (error) {
+                  //     console.error("Error formatting time:", error);
+                  //     return undefined;
+                  //   }
+                  // }}
                   getValueFromEvent={(time) => {
                     if (!time) return undefined;
-                    try {
-                      return time.format("h:mm A");
-                    } catch (error) {
-                      console.error("Error formatting time:", error);
-                      return undefined;
-                    }
+
+                    // Create a new Day.js object based on the selected time
+                    const selectedTime = dayjs(time);
+
+                    // Combine with today's date to get an ISO format
+                    const isoDate = dayjs()
+                      .date(selectedTime.date())
+                      .month(selectedTime.month())
+                      .year(selectedTime.year())
+                      .hour(selectedTime.hour())
+                      .minute(selectedTime.minute())
+                      .second(0)
+                      .millisecond(0);
+
+                    return isoDate.toISOString();
                   }}
                 >
                   <TimePicker
