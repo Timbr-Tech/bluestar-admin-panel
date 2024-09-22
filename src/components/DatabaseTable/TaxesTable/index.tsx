@@ -16,6 +16,7 @@ import {
 } from "../../../redux/slices/databaseSlice";
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
+import CustomPagination from "../../Common/Pagination";
 
 interface ITaxesTableData {
   _id: string;
@@ -29,9 +30,8 @@ interface ITaxesTable {
 }
 
 const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
-  const { taxes, taxesStates, deleteTaxesState, q } = useAppSelector(
-    (state) => state.database
-  );
+  const { taxes, taxesStates, deleteTaxesState, q, pagination } =
+    useAppSelector((state) => state.database);
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [taxId, setTaxId] = useState("");
@@ -109,7 +109,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
       getTaxes({
         page: 1,
         search: q,
-        limit: 7,
+        limit: 10,
       })
     );
   }, [q]);
@@ -146,7 +146,22 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
           };
         })}
         loading={taxesStates?.loading || deleteTaxesState?.loading}
+        pagination={false}
+        scroll={{
+          x: 756,
+        }}
+        footer={() => (
+          <CustomPagination
+            total={pagination?.total ?? 0}
+            current={pagination?.page ?? 1}
+            pageSize={pagination.limit ?? 10}
+            onPageChange={() => {
+              // dispatch(setPagination())
+            }}
+          />
+        )}
       />
+
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>

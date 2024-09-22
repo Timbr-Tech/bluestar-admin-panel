@@ -13,6 +13,7 @@ import Modal from "../../Modal";
 import type { MenuProps } from "antd";
 import { Table, TableProps, Dropdown } from "antd";
 import React, { useState, useEffect } from "react";
+import CustomPagination from "../../Common/Pagination";
 import styles from "./index.module.scss";
 
 interface IDutyTypeTableData {
@@ -35,6 +36,7 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
     q,
     deleteDutyTypeStates,
     dutyTypeStates,
+    pagination,
   } = useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [dutyTypeId, setDutyTypeId] = useState<string>("");
@@ -131,6 +133,20 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
           };
         })}
         loading={deleteDutyTypeStates?.loading || dutyTypeStates?.loading}
+        pagination={false}
+        scroll={{
+          x: 756,
+        }}
+        footer={() => (
+          <CustomPagination
+            total={pagination?.total ?? 0}
+            current={pagination?.page ?? 1}
+            pageSize={pagination.limit ?? 10}
+            onPageChange={() => {
+              // dispatch(setPagination())
+            }}
+          />
+        )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

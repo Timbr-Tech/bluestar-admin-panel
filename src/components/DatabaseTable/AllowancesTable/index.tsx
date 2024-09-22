@@ -15,6 +15,8 @@ import Modal from "../../Modal";
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
 
+import CustomPagination from "../../Common/Pagination";
+
 interface IAllowanceData {
   _id: string;
   allowanceType: string;
@@ -26,8 +28,13 @@ interface IAllowanceTable {
 }
 
 const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
-  const { allowancesList, allowanceStates, deleteAllowancesStates, q } =
-    useAppSelector((state) => state.database);
+  const {
+    allowancesList,
+    allowanceStates,
+    deleteAllowancesStates,
+    q,
+    pagination,
+  } = useAppSelector((state) => state.database);
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [allowanceId, setAllowanceId] = useState("");
@@ -95,7 +102,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
       getAllowances({
         page: 1,
         search: q,
-        limit: 7,
+        limit: 10,
       })
     );
   }, [q]);
@@ -121,6 +128,20 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
         columns={columns}
         dataSource={allowancesList?.data}
         loading={allowanceStates?.loading || deleteAllowancesStates?.loading}
+        pagination={false}
+        scroll={{
+          x: 756,
+        }}
+        footer={() => (
+          <CustomPagination
+            total={pagination?.total ?? 0}
+            current={pagination?.page ?? 1}
+            pageSize={pagination.limit ?? 10}
+            onPageChange={() => {
+              // dispatch(setPagination())
+            }}
+          />
+        )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

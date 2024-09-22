@@ -108,7 +108,7 @@ const BankAccountsTable = ({
       getBankAccount({
         page: 1,
         search: q,
-        limit: "",
+        limit: 10,
       })
     );
   }, [q]);
