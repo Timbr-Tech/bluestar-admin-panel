@@ -4,10 +4,14 @@ import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import {
   getCustomer,
+  getCustomerById,
   deleteCustomer,
 } from "../../../redux/slices/databaseSlice";
+import type { MenuProps } from "antd";
 import Modal from "../../Modal";
-import { Table, TableProps } from "antd";
+import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
+import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
+import { Table, TableProps, Dropdown } from "antd";
 import styles from "./index.module.scss";
 import React, { useState, useEffect } from "react";
 
@@ -36,8 +40,28 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
     setOpenDeleteModal(false);
   };
 
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    if (e.key === "1") {
+      dispatch(getCustomerById({ id: customerId }));
+      handleOpenSidePanel();
+    }
+  };
+
   const handleCloseModal = () => {
     setOpenDeleteModal(false);
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Edit tax",
+      key: "1",
+      icon: <EditIcon />,
+    },
+  ];
+
+  const menuProps = {
+    items,
+    onClick: handleMenuClick,
   };
 
   const columns: TableProps<ICustomerTableData>["columns"] = [
@@ -46,15 +70,25 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <button
-          onClick={() => {
-            setOpenDeleteModal(true);
-            setCustomerId(record._id);
-          }}
-          className={styles.deleteBtn}
-        >
-          <DeleteIcon />
-        </button>
+        <div className={styles.editButton}>
+          <button
+            onClick={() => {
+              setOpenDeleteModal(true);
+              setCustomerId(record._id);
+            }}
+            className={styles.deleteBtn}
+          >
+            <DeleteIcon />
+          </button>
+          <Dropdown menu={menuProps} trigger={["click"]}>
+            <button
+              className={styles.button}
+              onClick={() => setCustomerId(record._id)}
+            >
+              <DotsHorizontal />
+            </button>
+          </Dropdown>
+        </div>
       ),
     },
   ];

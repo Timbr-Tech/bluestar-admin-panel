@@ -1,11 +1,15 @@
 /* eslint-disable */
 import { VEHICLE_GROUPS } from "../../../constants/database";
-import { Table } from "antd";
+import { Table, Dropdown } from "antd";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import Modal from "../../Modal";
+import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
+import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
+import type { MenuProps } from "antd";
 import {
   getVehicleGroup,
+  getVehicleGroupById,
   deleteVehicleGroup,
 } from "../../../redux/slices/databaseSlice";
 import type { TableProps } from "antd";
@@ -38,6 +42,26 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     setOpenDeleteModal(false);
   };
 
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    if (e.key === "1") {
+      dispatch(getVehicleGroupById({ id: deleteVehicleGroupId }));
+      handleOpenSidePanel();
+    }
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Edit tax",
+      key: "1",
+      icon: <EditIcon />,
+    },
+  ];
+
+  const menuProps = {
+    items,
+    onClick: handleMenuClick,
+  };
+
   const handleDeleteVehicleGroup = () => {
     dispatch(deleteVehicleGroup({ id: deleteVehicleGroupId }));
     setOpenDeleteModal(false);
@@ -49,15 +73,25 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <button
-          onClick={() => {
-            setOpenDeleteModal(true);
-            setDeleteVehicleGroupId(record._id);
-          }}
-          className={styles.deleteBtn}
-        >
-          <DeleteIcon />
-        </button>
+        <div className={styles.editButton}>
+          <button
+            onClick={() => {
+              setOpenDeleteModal(true);
+              setDeleteVehicleGroupId(record._id);
+            }}
+            className={styles.deleteBtn}
+          >
+            <DeleteIcon />
+          </button>
+          <Dropdown menu={menuProps} trigger={["click"]}>
+            <button
+              className={styles.button}
+              onClick={() => setDeleteVehicleGroupId(record._id)}
+            >
+              <DotsHorizontal />
+            </button>
+          </Dropdown>
+        </div>
       ),
     },
   ];

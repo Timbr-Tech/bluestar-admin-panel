@@ -49,7 +49,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Edit vehicle",
+      label: "Edit tax",
       key: "1",
       icon: <EditIcon />,
     },

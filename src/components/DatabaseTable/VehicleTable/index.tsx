@@ -1,10 +1,17 @@
 /* eslint-disable */
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import { getVehicle, deleteVehicle } from "../../../redux/slices/databaseSlice";
+import {
+  getVehicle,
+  deleteVehicle,
+  getVehicleById,
+} from "../../../redux/slices/databaseSlice";
 import { VEHICLES } from "../../../constants/database";
+import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
+import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import Modal from "../../Modal";
-import { Table, TableProps } from "antd";
+import type { MenuProps } from "antd";
+import { Table, TableProps, Dropdown } from "antd";
 import styles from "./index.module.scss";
 import React, { useState, useEffect } from "react";
 
@@ -33,8 +40,28 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
     setOpenDeleteModal(false);
   };
 
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    if (e.key === "1") {
+      dispatch(getVehicleById({ id: vehicleId }));
+      handleOpenSidePanel();
+    }
+  };
+
   const handleCloseModal = () => {
     setOpenDeleteModal(false);
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Edit vehicle",
+      key: "1",
+      icon: <EditIcon />,
+    },
+  ];
+
+  const menuProps = {
+    items,
+    onClick: handleMenuClick,
   };
 
   useEffect(() => {
@@ -48,15 +75,25 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <button
-          onClick={() => {
-            setOpenDeleteModal(true);
-            setVehicleId(record._id);
-          }}
-          className={styles.deleteBtn}
-        >
-          <DeleteIcon />
-        </button>
+        <div className={styles.editButton}>
+          <button
+            onClick={() => {
+              setOpenDeleteModal(true);
+              setVehicleId(record._id);
+            }}
+            className={styles.deleteBtn}
+          >
+            <DeleteIcon />
+          </button>
+          <Dropdown menu={menuProps} trigger={["click"]}>
+            <button
+              className={styles.button}
+              onClick={() => setVehicleId(record._id)}
+            >
+              <DotsHorizontal />
+            </button>
+          </Dropdown>
+        </div>
       ),
     },
   ];
