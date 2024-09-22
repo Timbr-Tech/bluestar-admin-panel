@@ -164,19 +164,22 @@ export const BANK_ACCOUNTS = [
 
 export const DUTY_TYPES_TYPE = [
   {
-    value: "1",
+    value: "Day - KM( Outstation)",
     label: "Day - KM( Outstation)",
   },
   {
-    value: "2",
+    value: "HR - KM(Local)",
     label: "HR - KM(Local)",
   },
   {
-    value: "3",
+    value: "Long Duration - Total KM Daily HR( Monthly Bookings)",
     label: "Long Duration - Total KM Daily HR( Monthly Bookings)",
   },
-  { value: "4", label: "Flat Rate" },
-  { value: "5", label: "Long Duration - Total KM & HR( Monthly Bookings)" },
+  { value: "Flat Rate", label: "Flat Rate" },
+  {
+    value: "Long Duration - Total KM & HR( Monthly Bookings)",
+    label: "Long Duration - Total KM & HR( Monthly Bookings)",
+  },
 ];
 
 export const TAXES_TABLE = [

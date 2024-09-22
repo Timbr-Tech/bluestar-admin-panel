@@ -123,7 +123,13 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
           onChange: onChange,
         }}
         columns={columns}
-        dataSource={dutyTypeList?.data}
+        dataSource={dutyTypeList?.data?.map((data: any) => {
+          return {
+            ...data,
+            max_kilometers: data?.pricing[0]?.extraKmRate,
+            max_hours: data?.pricing[0]?.extraHrRate,
+          };
+        })}
         loading={deleteDutyTypeStates?.loading || dutyTypeStates?.loading}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>

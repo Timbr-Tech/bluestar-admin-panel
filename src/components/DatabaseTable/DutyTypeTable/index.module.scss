@@ -390,17 +390,20 @@
   .rowsContainer {
     .row {
       display: flex;
-      justify-content: space-between;
+      gap: 30px;
 
       .vehicleGroup {
+        flex: 1;
         padding: 16px;
         color: #101828;
         font-size: 14px;
         font-weight: 500;
         line-height: 20px;
+        max-width: 350px;
       }
 
       .rowItem {
+        flex: 1;
         display: flex;
         justify-content: center;
         padding: 16px;

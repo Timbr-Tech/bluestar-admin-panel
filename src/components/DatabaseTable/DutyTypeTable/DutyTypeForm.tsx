@@ -1,14 +1,20 @@
 /* eslint-disable */
-import { Select, Radio, Spin } from "antd";
+import { Select, Radio, Spin, Button } from "antd";
 import { useAppSelector, useAppDispatch } from "../../../hooks/store";
 import type { RadioChangeEvent } from "antd";
-import { getVehicleGroupOptions } from "../../../redux/slices/databaseSlice";
+import {
+  getVehicleGroupOptions,
+  getVehicleGroup,
+  updateDutyType,
+  addDutyType,
+} from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { notification } from "antd";
+import { omit } from "lodash";
 import { DUTY_TYPES_TYPE } from "../../../constants/database";
 import { ReactComponent as HelpCircle } from "../../../icons/help-circle.svg";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import styles from "./index.module.scss";
 
 interface IDutyForm {
@@ -40,19 +46,68 @@ const rowsArray = [
 
 const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   const [items, setItems] = useState(DUTY_TYPES_TYPE);
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState("P2P");
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useAppDispatch();
-  const { vehicleGroupOptionStates } = useAppSelector(
-    (state) => state.database
+  const [dutyType, setDutyType] = useState("");
+  const [name, setName] = useState("");
+  const {
+    vehicleGroupData,
+    vehicleGroupStates,
+    selectedDutyType,
+    updatedDutyTypeStates,
+    dutyTypeStates,
+  } = useAppSelector((state) => state.database);
+  const [vehicleGroupDataArray, setVehicleGroupDataArray] = useState(
+    Object.keys(selectedDutyType)
+      ? selectedDutyType?.data?.pricing
+      : vehicleGroupData?.data?.map((data: any) => {
+          return {
+            name: data?.name,
+            vehicleGroupId: data?._id,
+            baseRate: 0,
+            extraKMRate: 0,
+            extraHRRate: 0,
+          };
+        })
   );
 
   useEffect(() => {
-    dispatch(getVehicleGroupOptions({ page: "1", size: "" }));
+    dispatch(getVehicleGroup({ page: "1", limit: "2" }));
   }, []);
+
+  console.log(vehicleGroupDataArray, "vehicleGroupDataArray");
+
+  useEffect(() => {
+    setVehicleGroupDataArray(
+      vehicleGroupData?.data?.map((data: any) => {
+        return {
+          name: data?.name,
+          vehicleGroupId: data?._id,
+          baseRate: 0,
+          extraKMRate: 0,
+          extraHRRate: 0,
+        };
+      })
+    );
+
+    if (Object.keys(selectedDutyType)) {
+      setDutyType(selectedDutyType?.data?.type);
+      setName(selectedDutyType?.data?.name);
+      setValue(selectedDutyType?.data?.secondaryType);
+    }
+  }, [vehicleGroupData, selectedDutyType]);
+
+  const handleSelectChange = (value: any) => {
+    setDutyType(value);
+  };
 
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
+  };
+
+  const handleNameChange = (e: any) => {
+    setName(e.target.value);
   };
 
   const openNotificationWithIcon = (type: NotificationType) => {
@@ -69,10 +124,69 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
     { id: 4, name: "Extra HR rate" },
   ];
 
+  const handleSave = () => {
+    if (Object.keys(selectedDutyType).length) {
+      dispatch(
+        updateDutyType({
+          payload: {
+            name,
+            type: dutyType,
+            secondaryType: value,
+            pricing: vehicleGroupDataArray?.map((data: any) =>
+              omit(
+                {
+                  ...data,
+                  baseRate: Number(data.baseRate),
+                  extraKMRate: Number(data.extraKMRate),
+                  extraHRRate: Number(data.extraHRRate),
+                },
+                "name"
+              )
+            ),
+          },
+          id: selectedDutyType?.data?._id,
+        })
+      );
+    } else {
+      dispatch(
+        addDutyType({
+          name,
+          type: dutyType,
+          secondaryType: value,
+          pricing: vehicleGroupDataArray?.map((data: any) =>
+            omit(
+              {
+                ...data,
+                baseRate: Number(data.baseRate),
+                extraKMRate: Number(data.extraKMRate),
+                extraHRRate: Number(data.extraHRRate),
+              },
+              "name"
+            )
+          ),
+        })
+      );
+    }
+  };
+
+  const handlePricingValueChange = (e: any, index: any) => {
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (regex.test(e.target.value)) {
+      const tempVehicleGroupDataArray = vehicleGroupDataArray?.map(
+        (data: any, i: any) => {
+          if (i === index) {
+            return { ...data, [e.target.name]: e.target.value };
+          } else return data;
+        }
+      );
+      setVehicleGroupDataArray(tempVehicleGroupDataArray);
+    }
+  };
+
   return (
     <div className={styles.formContainer}>
       {contextHolder}
-      {vehicleGroupOptionStates.loading && (
+      {(vehicleGroupStates.loading || dutyTypeStates.loading) && (
         <div
           style={{
             position: "absolute",
@@ -92,7 +206,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
       )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>New Duty Type</div>
+          <div className={styles.header}>Duty Type</div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <div className={styles.form}>
@@ -104,6 +218,8 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
             </div>
             <Select
               style={{ width: "100%" }}
+              onChange={handleSelectChange}
+              value={dutyType}
               placeholder="Select One"
               dropdownRender={(menu) => <>{menu}</>}
               options={items.map((item) => ({
@@ -119,13 +235,14 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
             </div>
             <input
               className={styles.input}
+              value={name}
+              onChange={handleNameChange}
               placeholder="Enter Duty type name"
-              defaultValue={"olivia@untitledui.com"}
             />
           </div>
           <div className={styles.radio}>
             <Radio.Group onChange={onChange} value={value}>
-              <Radio value={1}>
+              <Radio value={"P2P"}>
                 <div className={styles.radioContainer}>
                   <div className={styles.text}>Is Point to Point (P2P)?</div>
                   <div className={styles.secondary}>
@@ -133,9 +250,9 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                   </div>
                 </div>
               </Radio>
-              <Radio value={2}>
+              <Radio value={"G2G"}>
                 <div className={styles.radioContainer}>
-                  <div className={styles.text}>Is Garage to Garage (GTG)?</div>
+                  <div className={styles.text}>Is Garage to Garage (G2G)?</div>
                   <div className={styles.secondary}>
                     Save my login details for next time.
                   </div>
@@ -143,53 +260,60 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
               </Radio>
             </Radio.Group>
           </div>
-          <div className={styles.dutyTypeTable}>
-            <div className={styles.columnsHeader}>
-              {columnHeader?.map((column) => {
-                return <div className={styles.column}>{column?.name}</div>;
-              })}
+          {dutyType && (
+            <div className={styles.dutyTypeTable}>
+              <div className={styles.columnsHeader}>
+                {columnHeader?.map((column) => {
+                  return <div className={styles.column}>{column?.name}</div>;
+                })}
+              </div>
+              <div className={styles.rowsContainer}>
+                {vehicleGroupDataArray?.map((row: any, index: any) => {
+                  return (
+                    <div className={styles.row}>
+                      <div className={styles.vehicleGroup}>{row?.name}</div>
+                      <div className={styles.rowItem}>
+                        <input
+                          className={styles.input}
+                          value={row?.baseRate}
+                          onChange={(e) => handlePricingValueChange(e, index)}
+                          name={"baseRate"}
+                        />
+                      </div>
+                      <div className={styles.rowItem}>
+                        <input
+                          className={styles.input}
+                          value={row?.extraKMRate}
+                          name={"extraKMRate"}
+                          onChange={(e) => handlePricingValueChange(e, index)}
+                        />
+                      </div>
+                      <div className={styles.rowItem}>
+                        <input
+                          className={styles.input}
+                          value={row?.extraHRRate}
+                          name={"extraHRRate"}
+                          onChange={(e) => handlePricingValueChange(e, index)}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className={styles.rowsContainer}>
-              {rowsArray?.map((row) => {
-                return (
-                  <div className={styles.row}>
-                    <div className={styles.vehicleGroup}>
-                      {row?.vehicleGroup}
-                    </div>
-                    <div className={styles.rowItem}>
-                      <input
-                        className={styles.input}
-                        defaultValue={row?.baseRate}
-                      />
-                    </div>
-                    <div className={styles.rowItem}>
-                      <input
-                        className={styles.input}
-                        defaultValue={row?.extraKMRate}
-                      />
-                    </div>
-                    <div className={styles.rowItem}>
-                      <input
-                        className={styles.input}
-                        defaultValue={row?.extraHRRate}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          )}
         </div>
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
-          onClick={() => {
-            openNotificationWithIcon("success");
-            handleCloseSidePanel();
-          }}
-        />
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={updatedDutyTypeStates?.loading}
+          onClick={handleSave}
+        >
+          Save
+        </Button>
       </div>
     </div>
   );

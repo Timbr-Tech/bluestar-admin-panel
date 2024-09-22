@@ -153,9 +153,9 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
               onClick={handleOpenSidePanel}
             />
           )}
-          <Dropdown menu={{ items: vehicleItems }} trigger={["click"]}>
+          {/* <Dropdown menu={{ items: vehicleItems }} trigger={["click"]}>
             <DotsIcon />
-          </Dropdown>
+          </Dropdown> */}
         </div>
       </div>
       <div className={styles.tableContainer}>{renderComponent()}</div>

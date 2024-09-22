@@ -106,6 +106,7 @@ export const addDutyType = createAsyncThunk(
         message: "Success",
         description: "New Duty type added successfully",
       });
+      dispatch(getAllDutyTypes({ page: "1", limit: 7, search: "" }));
       return response.data;
     }
   }
@@ -152,7 +153,7 @@ export const updateDutyType = createAsyncThunk(
         description: "Duty type updated successfully",
       });
 
-      dispatch(getAllDutyTypes({ page: "1", limit: "", search: "" }));
+      dispatch(getAllDutyTypes({ page: "1", limit: 7, search: "" }));
     }
   }
 );
@@ -923,6 +924,7 @@ export const databaseSlice = createSlice({
         selectedVehicle: {},
         selectedDriver: {},
         selectedAllowance: {},
+        selectedDutyType: {}
       };
     },
   },
