@@ -15,6 +15,7 @@ import { DRIVERS } from "../../../constants/database";
 import styles from "./index.module.scss";
 import cn from "classnames";
 import React, { useEffect, useState } from "react";
+import CustomPagination from "../../Common/Pagination";
 
 interface IDriversTableData {
   _id: string;
@@ -30,9 +31,8 @@ interface IDriversTable {
 
 const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
   const dispatch = useAppDispatch();
-  const { driverList, driverStates, deleteDriverStates, q } = useAppSelector(
-    (state) => state.database
-  );
+  const { driverList, driverStates, deleteDriverStates, q, pagination } =
+    useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [driverId, setDriverId] = useState<string>("");
 
@@ -70,7 +70,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
       getDrivers({
         page: 1,
         search: q,
-        limit: 7,
+        limit: 10,
       })
     );
   }, [q]);
@@ -123,6 +123,20 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
           onChange: onChange,
         }}
         columns={columns}
+        pagination={false}
+        scroll={{
+          x: 756,
+        }}
+        footer={() => (
+          <CustomPagination
+            total={pagination?.total ?? 0}
+            current={pagination?.page ?? 1}
+            pageSize={pagination.limit ?? 10}
+            onPageChange={() => {
+              // dispatch(setPagination())
+            }}
+          />
+        )}
         dataSource={driverList?.data?.map((data: any) => {
           return {
             ...data,

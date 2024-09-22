@@ -18,7 +18,7 @@ export const addBankAccount = createAsyncThunk(
         message: "Success",
         description: "Added",
       });
-      dispatch(getBankAccount({ page: "1", search: "", limit: "" }));
+      dispatch(getBankAccount({ page: "1", search: "", limit: 10 }));
       return response.data;
     }
   }
@@ -64,7 +64,7 @@ export const deleteBankAccount = createAsyncThunk(
 
     const response = await apiClient.delete(`/database/bank-accounts/${id}`);
 
-    dispatch(getBankAccount({ page: "1", search: "", limit: "" }));
+    dispatch(getBankAccount({ page: "1", search: "", limit: 10 }));
     return response.data;
   }
 );
@@ -116,7 +116,7 @@ export const addNewTax = createAsyncThunk(
         getTaxes({
           page: pagination.page,
           search: pagination.search,
-          limit: pagination.limit,
+          limit: 10,
         })
       );
       return response.data;
@@ -159,14 +159,13 @@ export const deleteTax = createAsyncThunk(
     const response = await apiClient.delete(`/database/tax/${id}`);
 
     const { database } = getState().database;
-    const { taxesStates } = database;
+    const { taxesStates, q } = database;
     const { pagination } = taxesStates;
 
     dispatch(
       getTaxes({
         page: pagination.page,
-        search: pagination.search,
-        limit: pagination.limit,
+        search: q,
       })
     );
 
@@ -182,14 +181,14 @@ export const updateTax = createAsyncThunk(
     const response = await apiClient.patch(`/database/tax/${id}`, payload);
 
     const { database } = getState().database;
-    const { taxesStates } = database;
+    const { taxesStates, q } = database;
     const { pagination } = taxesStates;
 
     dispatch(
       getTaxes({
         page: pagination.page,
-        search: pagination.search,
-        limit: pagination.limit,
+        search: q,
+        limit: 10,
       })
     );
 
@@ -220,7 +219,7 @@ export const addNewCustomer = createAsyncThunk(
         description: "Added",
       });
       dispatch(setOpenSidePanel(false));
-      dispatch(getCustomer({ page: "1", search: "", limit: "" }));
+      dispatch(getCustomer({ page: "1", search: "", limit: 10 }));
       return response.data;
     }
   }
@@ -255,7 +254,7 @@ export const deleteCustomer = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const { id } = body;
 
-    dispatch(getCustomer({ page: "1", search: "", limit: "" }));
+    dispatch(getCustomer({ page: "1", search: "", limit: 10 }));
 
     const response = await apiClient.delete(`/database/customer/${id}`);
 
@@ -280,7 +279,7 @@ export const addNewAllowance = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/allowance", body);
 
-    dispatch(getAllowances({ page: "1", search: "", limit: "" }));
+    dispatch(getAllowances({ page: "1", search: "", limit: 10 }));
 
     return response.data;
   }
@@ -321,7 +320,7 @@ export const updateAllowance = createAsyncThunk(
       payload
     );
 
-    dispatch(getAllowances({ page: "1", search: "", limit: "" }));
+    dispatch(getAllowances({ page: "1", search: "", limit: 10 }));
 
     return response.data;
   }
@@ -335,7 +334,7 @@ export const deleteAllowance = createAsyncThunk(
 
     const response = await apiClient.delete(`/database/allowance/${id}`);
 
-    dispatch(getAllowances({ page: "1", search: "", limit: "" }));
+    dispatch(getAllowances({ page: "1", search: "", limit: 10 }));
 
     return response.data;
   }
@@ -347,7 +346,7 @@ export const addNewVehicle = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/vehicle", body);
 
-    dispatch(getVehicle({ page: "1", search: "", limit: "" }));
+    dispatch(getVehicle({ page: "1", search: "", limit: 10 }));
     return response.data;
   }
 );
@@ -398,7 +397,7 @@ export const deleteVehicle = createAsyncThunk(
     const { id } = body;
     const response = await apiClient.delete(`/database/vehicle/${id}`);
 
-    dispatch(getVehicle({ page: "1", search: "", limit: "" }));
+    dispatch(getVehicle({ page: "1", search: "", limit: 10 }));
     return response.data;
   }
 );
@@ -517,7 +516,7 @@ export const addVehicleGroup = createAsyncThunk(
         message: "Success",
         description: "Added",
       });
-      dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
+      dispatch(getVehicleGroup({ page: "1", search: "", limit: 10 }));
       return response.data;
     }
   }
@@ -569,7 +568,7 @@ export const deleteVehicleGroup = createAsyncThunk(
 
     const response = await apiClient.delete(`/database/vehicle-group/${id}`);
 
-    dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
+    dispatch(getVehicleGroup({ page: "1", search: "", limit: 10 }));
 
     return response.data;
   }
@@ -609,8 +608,8 @@ const initialState: any = {
   openSidePanel: false,
   pagination: {
     total: null,
-    page: null,
-    limit: null,
+    page: 1,
+    limit: 10,
   },
 
   // Vehicle Group
@@ -620,7 +619,7 @@ const initialState: any = {
   vehicleGroupStates: {
     status: "idle",
     loading: false,
-    pagination: { page: 1, total: "", limit: 7 },
+    pagination: { page: 1, total: "", limit: 10 },
     error: "",
   },
   deleteVehicleGroupStates: {
@@ -649,7 +648,7 @@ const initialState: any = {
   customersStates: {
     status: "idle",
     loading: false,
-    pagination: { page: 1, total: "", limit: 7 },
+    pagination: { page: 1, total: "", limit: 10 },
     error: "",
   },
   deleteCustomersStates: {
@@ -669,7 +668,7 @@ const initialState: any = {
   taxesStates: {
     status: "idle",
     loading: false,
-    pagination: { page: 1, total: "", limit: 7 },
+    pagination: { page: 1, total: "", limit: 10 },
     error: "",
   },
   deleteTaxesState: {
@@ -770,7 +769,7 @@ export const databaseSlice = createSlice({
         vehicleGroupSelectOption: action.payload,
       };
     },
-    setPagination: (state, action: PayloadAction<Array<object>>) => {
+    setPagination: (state, action: PayloadAction<object>) => {
       return {
         ...state,
         pagination: action.payload,

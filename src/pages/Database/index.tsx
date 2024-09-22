@@ -18,6 +18,7 @@ import styles from "./index.module.scss";
 import { useAppDispatch } from "../../hooks/store";
 import {
   setOpenSidePanel,
+  setPagination,
   setQueryForSearch,
 } from "../../redux/slices/databaseSlice";
 import { useSelector } from "react-redux";
@@ -56,6 +57,13 @@ const Database = () => {
     selectedItem(data);
     // empty search field when tab change
     dispatch(setQueryForSearch(""));
+    dispatch(
+      setPagination({
+        page: null,
+        limit: 10,
+        total: null,
+      })
+    );
   };
 
   const handleCloseSidePanel = () => {

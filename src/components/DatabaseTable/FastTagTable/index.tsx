@@ -2,6 +2,8 @@
 import { FASTTAG_TABLE } from "../../../constants/database";
 import { Table } from "antd";
 import React from "react";
+import CustomPagination from "../../Common/Pagination";
+import { useAppSelector } from "../../../hooks/store";
 
 interface IFastTagTableData {
   key: React.Key;
@@ -57,6 +59,8 @@ const data: IFastTagTableData[] = [
 ];
 
 const FastTagTable = () => {
+  const { q, pagination } = useAppSelector((state) => state.database);
+
   const onChange = (
     selectedRowKeys: React.Key[],
     selectedRows: IFastTagTableData[]
@@ -77,6 +81,20 @@ const FastTagTable = () => {
       }}
       columns={FASTTAG_TABLE}
       dataSource={data}
+      pagination={false}
+      scroll={{
+        x: 756,
+      }}
+      footer={() => (
+        <CustomPagination
+          total={pagination?.total ?? 0}
+          current={pagination?.page ?? 1}
+          pageSize={pagination.limit ?? 10}
+          onPageChange={() => {
+            // dispatch(setPagination())
+          }}
+        />
+      )}
     />
   );
 };

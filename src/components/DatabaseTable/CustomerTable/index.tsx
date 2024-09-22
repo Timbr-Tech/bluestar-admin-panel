@@ -14,6 +14,7 @@ import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { Table, TableProps, Dropdown } from "antd";
 import styles from "./index.module.scss";
 import React, { useState, useEffect } from "react";
+import CustomPagination from "../../Common/Pagination";
 
 interface ICustomerTableData {
   _id: string;
@@ -31,7 +32,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [customerId, setCustomerId] = useState("");
 
-  const { customers, customersStates, q } = useAppSelector(
+  const { customers, customersStates, q, pagination } = useAppSelector(
     (state) => state.database
   );
 
@@ -105,7 +106,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   };
 
   useEffect(() => {
-    dispatch(getCustomer({ page: "1", search: q, limit: "" }));
+    dispatch(getCustomer({ page: "1", search: q, limit: 10 }));
   }, [q]);
 
   return (
@@ -119,6 +120,20 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
         columns={columns}
         dataSource={customers?.data}
         loading={customersStates?.loading}
+        pagination={false}
+        scroll={{
+          x: 756,
+        }}
+        footer={() => (
+          <CustomPagination
+            total={pagination?.total ?? 0}
+            current={pagination?.page ?? 1}
+            pageSize={pagination.limit ?? 10}
+            onPageChange={() => {
+              // dispatch(setPagination())
+            }}
+          />
+        )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

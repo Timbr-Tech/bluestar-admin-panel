@@ -34,7 +34,7 @@ export const getBookings = createAsyncThunk(
     return {
       total: 10,
       page: 1,
-      limit: 2,
+      limit: 10,
       data: [
         {
           startDate: "2024-09-15",

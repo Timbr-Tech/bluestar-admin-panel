@@ -2,6 +2,8 @@
 import { DUTY_TYPES } from "../../../constants/database";
 import { Table } from "antd";
 import React from "react";
+import CustomPagination from "../../Common/Pagination";
+import { useAppSelector } from "../../../hooks/store";
 
 interface IDutyTypeTableData {
   key: React.Key;
@@ -67,6 +69,7 @@ const data: IDutyTypeTableData[] = [
   },
 ];
 const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
+  const { q, pagination } = useAppSelector((state) => state.database);
   const onChange = (
     selectedRowKeys: React.Key[],
     selectedRows: IDutyTypeTableData[]
@@ -87,6 +90,20 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
       }}
       columns={DUTY_TYPES}
       dataSource={data}
+      pagination={false}
+      scroll={{
+        x: 756,
+      }}
+      footer={() => (
+        <CustomPagination
+          total={pagination?.total ?? 0}
+          current={pagination?.page ?? 1}
+          pageSize={pagination.limit ?? 10}
+          onPageChange={() => {
+            // dispatch(setPagination())
+          }}
+        />
+      )}
     />
   );
 };

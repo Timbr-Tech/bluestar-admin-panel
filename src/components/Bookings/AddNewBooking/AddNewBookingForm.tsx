@@ -19,6 +19,7 @@ import {
 } from "antd";
 import { DeleteOutlined, PlusOutlined, SyncOutlined } from "@ant-design/icons";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 interface AddNewBookingForm {
@@ -218,7 +219,13 @@ const AddNewBookingForm = ({
         <b>Duration Details </b>
         <Row gutter={16}>
           <Col span={12}>
-            <Form.Item label="Start Date">
+            <Form.Item
+              getValueProps={(value) => ({
+                value: value ? dayjs(value) : undefined,
+              })}
+              getValueFromEvent={(date) => date?.toISOString()}
+              label="Start Date"
+            >
               <DatePicker
                 style={{
                   width: "100%",
@@ -228,7 +235,13 @@ const AddNewBookingForm = ({
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="End Date">
+            <Form.Item
+              getValueProps={(value) => ({
+                value: value ? dayjs(value) : undefined,
+              })}
+              getValueFromEvent={(date) => date?.toISOString()}
+              label="End Date"
+            >
               <DatePicker
                 style={{
                   width: "100%",

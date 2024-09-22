@@ -1,13 +1,26 @@
 /* eslint-disable */
-import SecondaryBtn from "../../SecondaryBtn";
-import PrimaryBtn from "../../PrimaryBtn";
-import { Select, TimePicker, Upload, message, notification } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Select,
+  TimePicker,
+  Upload,
+  message,
+  notification,
+} from "antd";
 import type { UploadProps } from "antd";
-import type { Dayjs } from "dayjs";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
-import { useState } from "react";
 import { ADDRESS_TYPE } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
+import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
+import dayjs from "dayjs";
+import {
+  addBankAccount,
+  addNewDriver,
+} from "../../../redux/slices/databaseSlice";
+import { useAppDispatch } from "../../../hooks/store";
 
 interface IDriverForm {
   handleCloseSidePanel: () => void;
@@ -16,7 +29,6 @@ interface IDriverForm {
 type NotificationType = "success" | "info" | "warning" | "error";
 
 const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
-  const [value, setValue] = useState<Dayjs | null>(null);
   const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
 
@@ -46,11 +58,14 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
       description: "Driver added to the database",
     });
   };
+  const dispatch = useAppDispatch();
 
-  const onChange = (time: Dayjs) => {
-    setValue(time);
+  const [form] = Form.useForm();
+  const onSubmit = (values: any) => {
+    // openNotificationWithIcon("success");
+    // handleCloseSidePanel();
+    dispatch(addNewDriver(values));
   };
-
   return (
     <div className={styles.formContainer}>
       {contextHolder}
@@ -59,160 +74,323 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
           <div className={styles.header}>New Driver</div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
-        <div className={styles.form}>
+        <Form
+          onFinishFailed={() => {
+            //for errors
+          }}
+          onFinish={(values) => {
+            // passed validation
+            const valuesToSubmit = {
+              ...values,
+              monthlySalary: Number(values.monthlySalary),
+              dailySalary: Number(values.dailySalary),
+              phoneNumber: `+91${values.phoneNumber}`,
+            };
+            onSubmit(valuesToSubmit);
+
+            console.log("values", values);
+          }}
+          requiredMark={CustomizeRequiredMark}
+          layout="vertical"
+          form={form}
+          className={styles.form}
+        >
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Driver ID</p>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter Driver ID..."
-              defaultValue={"BLUDRIVER01"}
-            />
+            <Form.Item
+              name="customDriverId"
+              id="customDriverId"
+              label="Driver ID"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input placeholder="Enter Driver ID..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Name</p>
-              <sup>*</sup>
-            </div>
-            <input
-              className={styles.input}
-              placeholder="Enter Name..."
-              defaultValue={"John Doe"}
-            />
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              name="name"
+              id="name"
+              label="Name"
+            >
+              <Input placeholder="Enter Name..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Phone Number</p>
-              <sup>*</sup>
-            </div>
-            <input
-              type="number"
-              className={styles.input}
-              placeholder="Enter Name..."
-              defaultValue={"987654321"}
-            />
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                  min: 10,
+                  max: 10,
+                },
+              ]}
+              name="phoneNumber"
+              id="phoneNumber"
+              label="Phone Number"
+            >
+              <Input prefix="+91" type="number" placeholder="Enter Name..." />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Date of Birth</p>
-            </div>
-            <input type="date" id="dob" name="dob" className={styles.input} />
-          </div>
-          <div className={styles.secondaryContainer}>
-            <div className={styles.headerText}>
-              <p>Unique IDs</p>
-              <sup>*</sup>
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>PAN Number</p>
-              </div>
-              <input
-                className={styles.input}
-                placeholder="Enter Name..."
-                defaultValue={"John Doe"}
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              name="dob"
+              id="dob"
+              label="Date of birth"
+              getValueProps={(value) => ({
+                value: value ? dayjs(value) : undefined,
+              })}
+              getValueFromEvent={(date) => date?.toISOString()}
+            >
+              <DatePicker
+                style={{
+                  width: "100%",
+                }}
               />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Aadhaar Number</p>
-              </div>
-              <input
-                className={styles.input}
-                placeholder="Enter Aadhaar Number..."
-                defaultValue={"283363222012"}
-              />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Driver License</p>
-              </div>
-              <input
-                className={styles.input}
-                placeholder="Enter driver license..."
-                defaultValue={"283363222012"}
-              />
-            </div>
+            </Form.Item>
           </div>
-          <div className={styles.secondaryContainer}>
-            <div className={styles.headerText}>
-              <p>Address</p>
-              <sup>*</sup>
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Type</p>
+          {/* ids */}
+          <Form.Item
+            name="ids"
+            id="ids"
+            label="Unique IDs"
+            className={styles.secondaryContainer}
+          >
+            <Input.Group>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  name={["ids", "pan"]}
+                  label="PAN Number"
+                >
+                  <Input placeholder="Enter Pan..." />
+                </Form.Item>
               </div>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  name={["ids", "aadhar"]}
+                  label="Aadhaar Number"
+                >
+                  <Input placeholder="Enter aadhar " />
+                </Form.Item>
+              </div>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  name={["ids", "drivingLiscence"]}
+                  label="Driver License"
+                >
+                  <Input placeholder="Enter driving  license" />
+                </Form.Item>
+              </div>
+            </Input.Group>
+          </Form.Item>
+          <Form.Item
+            name="address"
+            id="address"
+            label="Address"
+            className={styles.secondaryContainer}
+          >
+            <Input.Group>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  name={["address", "type"]}
+                  label="Type"
+                >
+                  <Select
+                    style={{ width: "100%" }}
+                    placeholder="Select One"
+                    dropdownRender={(menu) => <>{menu}</>}
+                    options={ADDRESS_TYPE.map((address) => ({
+                      label: address.label,
+                      value: address.value,
+                    }))}
+                  />
+                </Form.Item>
+              </div>
+              <div className={styles.typeContainer}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  name={["address", "fullAddress"]}
+                  label="Full Address"
+                >
+                  <Input.TextArea
+                    className={styles.textarea}
+                    placeholder="Enter address..."
+                  />
+                </Form.Item>
+              </div>
+            </Input.Group>
+          </Form.Item>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              name="monthlySalary"
+              id="monthlySalary"
+              label="Salary per month"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input type="number" placeholder="Enter driver license..." />
+            </Form.Item>
+          </div>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              name="dailySalary"
+              id="dailySalary"
+              label="Daily Wages"
+            >
+              <Input type="number" placeholder="Enter daily wage..." />
+            </Form.Item>
+          </div>
+          <Form.Item id="timing" name="timing">
+            <Input.Group className={styles.twoSections}>
+              <div className={styles.section}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select an start time",
+                    },
+                  ]}
+                  name={["timing", "start"]}
+                  label="Shift Start Time"
+                  getValueProps={(value) => {
+                    if (!value) return { value: undefined };
+                    try {
+                      const timeObj = dayjs(value, "h:mm A", true);
+                      return { value: timeObj.isValid() ? timeObj : undefined };
+                    } catch (error) {
+                      console.error("Error parsing time:", error);
+                      return { value: undefined };
+                    }
+                  }}
+                  getValueFromEvent={(time) => {
+                    if (!time) return undefined;
+                    try {
+                      return time.format("h:mm A");
+                    } catch (error) {
+                      console.error("Error formatting time:", error);
+                      return undefined;
+                    }
+                  }}
+                >
+                  <TimePicker
+                    style={{
+                      width: "100%",
+                    }}
+                    use12Hours
+                    format="h:mm A"
+                  />
+                </Form.Item>
+              </div>
+              <div className={styles.section}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select an end time",
+                    },
+                  ]}
+                  name={["timing", "end"]}
+                  label="Shift End Time"
+                  getValueProps={(value) => {
+                    if (!value) return { value: undefined };
+                    try {
+                      const timeObj = dayjs(value, "h:mm A", true);
+                      return { value: timeObj.isValid() ? timeObj : undefined };
+                    } catch (error) {
+                      console.error("Error parsing time:", error);
+                      return { value: undefined };
+                    }
+                  }}
+                  getValueFromEvent={(time) => {
+                    if (!time) return undefined;
+                    try {
+                      return time.format("h:mm A");
+                    } catch (error) {
+                      console.error("Error formatting time:", error);
+                      return undefined;
+                    }
+                  }}
+                >
+                  <TimePicker
+                    style={{
+                      width: "100%",
+                    }}
+                    use12Hours
+                    format="h:mm A"
+                  />
+                </Form.Item>
+              </div>
+              <div className={styles.totalText}>{"Total working hour: 8"}</div>
+            </Input.Group>
+          </Form.Item>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              name="offDay"
+              id="offDay"
+              label="offDay"
+            >
               <Select
                 style={{ width: "100%" }}
                 placeholder="Select One"
                 dropdownRender={(menu) => <>{menu}</>}
-                options={ADDRESS_TYPE.map((address) => ({
-                  label: address.label,
-                  value: address.value,
+                options={[
+                  { value: "sat", label: "Saturday" },
+                  { value: "sun", label: "Sunday" },
+                ].map((day) => ({
+                  label: day.label,
+                  value: day.value,
                 }))}
               />
-            </div>
-            <div className={styles.typeContainer}>
-              <div className={styles.text}>
-                <p>Address</p>
-              </div>
-              <textarea
-                className={styles.textarea}
-                placeholder="Enter address..."
-              />
-            </div>
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Salary per month</p>
-            </div>
-            <input
-              type="number"
-              className={styles.input}
-              placeholder="Enter driver license..."
-              defaultValue={10000}
-            />
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Daily Wages</p>
-            </div>
-            <input
-              type="number"
-              className={styles.input}
-              placeholder="Enter daily wage..."
-              defaultValue={10000}
-            />
-          </div>
-          <div className={styles.twoSections}>
-            <div className={styles.section}>
-              <div className={styles.timeText}>Shift Start Time</div>
-              <TimePicker value={value} onChange={onChange} />
-            </div>
-            <div className={styles.section}>
-              <div className={styles.timeText}>Shift End Time</div>
-              <TimePicker value={value} onChange={onChange} />
-            </div>
-            <div className={styles.totalText}>{"Total working hour: 8"}</div>
-          </div>
-          <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Off Day</p>
-            </div>
-            <Select
-              style={{ width: "100%" }}
-              placeholder="Select One"
-              dropdownRender={(menu) => <>{menu}</>}
-              options={[
-                { value: "sat", label: "Saturday" },
-                { value: "sun", label: "Sunday" },
-              ].map((day) => ({
-                label: day.label,
-                value: day.value,
-              }))}
-            />
+            </Form.Item>
           </div>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
@@ -233,25 +411,28 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
             </Dragger>
           </div>
           <div className={styles.typeContainer}>
-            <div className={styles.text}>
-              <p>Notes</p>
-            </div>
-            <textarea
-              className={styles.textarea}
-              placeholder="Add a note...."
-            />
+            <Form.Item label="Notes" id="notes" name="notes">
+              <Input.TextArea
+                className={styles.textarea}
+                placeholder="Add a note...."
+              />
+            </Form.Item>
           </div>
-        </div>
+        </Form>
       </div>
       <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
+        <Button onClick={handleCloseSidePanel}>Cancel</Button>
+        <Button
+          type="primary"
+          htmlType="submit"
           onClick={() => {
-            openNotificationWithIcon("success");
-            handleCloseSidePanel();
+            form.submit();
+            // openNotificationWithIcon("success");
+            // handleCloseSidePanel();
           }}
-        />
+        >
+          Save
+        </Button>
       </div>
     </div>
   );

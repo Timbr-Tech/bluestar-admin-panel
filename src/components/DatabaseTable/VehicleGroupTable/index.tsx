@@ -11,10 +11,12 @@ import {
   getVehicleGroup,
   getVehicleGroupById,
   deleteVehicleGroup,
+  setPagination,
 } from "../../../redux/slices/databaseSlice";
 import type { TableProps } from "antd";
 import styles from "./index.module.scss";
 import React, { useEffect, useState } from "react";
+import CustomPagination from "../../Common/Pagination";
 
 interface IVehicleGroupTableData {
   _id: string;
@@ -29,14 +31,9 @@ interface IVehicleGroupTable {
 const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { vehicleGroupData, vehicleGroupStates, q } = useAppSelector(
-    (state) => state.database
-  );
+  const { vehicleGroupData, vehicleGroupStates, q, pagination } =
+    useAppSelector((state) => state.database);
   const [deleteVehicleGroupId, setDeleteVehicleGroupId] = useState<string>("");
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-  });
 
   const handleCloseModal = () => {
     setOpenDeleteModal(false);
@@ -119,7 +116,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
       getVehicleGroup({
         page: pagination.current,
         search: "",
-        limit: pagination.pageSize,
+        limit: 10,
       })
     );
   };
@@ -147,6 +144,20 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
         onChange={handleTableChange}
         dataSource={vehicleGroupData?.data}
         loading={vehicleGroupStates?.loading}
+        pagination={false}
+        scroll={{
+          x: 756,
+        }}
+        footer={() => (
+          <CustomPagination
+            total={pagination?.total ?? 0}
+            current={pagination?.page ?? 1}
+            pageSize={pagination.limit ?? 10}
+            onPageChange={() => {
+              // dispatch(setPagination())
+            }}
+          />
+        )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

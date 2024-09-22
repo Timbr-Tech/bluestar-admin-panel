@@ -254,11 +254,11 @@ export const STATES = [
 
 export const ADDRESS_TYPE = [
   {
-    value: "permanent",
+    value: "Permanent",
     label: "Permanent Address",
   },
   {
-    value: "temporary",
+    value: "Temporary",
     label: "Temporary Address",
   },
 ];
