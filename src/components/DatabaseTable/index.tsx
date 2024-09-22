@@ -72,7 +72,7 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
       case "customers":
         return <CustomerTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "drivers":
-        return <DriversTable />;
+        return <DriversTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "vehicles":
         return <VehicleTable handleOpenSidePanel={handleOpenSidePanel} />;
       case "bank_accounts":

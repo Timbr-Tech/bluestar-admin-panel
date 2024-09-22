@@ -51,7 +51,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Edit tax",
+      label: "Edit Vehicle Group",
       key: "1",
       icon: <EditIcon />,
     },

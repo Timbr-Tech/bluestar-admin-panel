@@ -127,8 +127,8 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete tax</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this tax? This action cannot be
-              undone.
+              Are you sure you want to delete this Allowance? This action cannot
+              be undone.
             </div>
           </div>
           <div className={styles.bottomBtns}>

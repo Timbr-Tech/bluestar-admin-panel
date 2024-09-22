@@ -112,7 +112,7 @@ export const DRIVERS = [
   },
   {
     title: "Phone",
-    dataIndex: "phone",
+    dataIndex: "phoneNumber",
   },
   {
     title: "Status",

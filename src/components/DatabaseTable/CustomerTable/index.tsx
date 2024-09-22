@@ -53,7 +53,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
 
   const items: MenuProps["items"] = [
     {
-      label: "Edit tax",
+      label: "Edit Customer",
       key: "1",
       icon: <EditIcon />,
     },
