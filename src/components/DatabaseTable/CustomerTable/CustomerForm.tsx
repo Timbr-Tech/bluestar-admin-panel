@@ -473,19 +473,19 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             </Form.Item>
           </div>
         </Form>
-        <div className={styles.bottomContainer}>
-          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-          <Button
-            type="primary"
-            htmlType="submit"
-            onClick={() => {
-              form.submit();
-            }}
-            loading={customersStates?.loading || updateCustomersStates?.loading}
-          >
-            Save
-          </Button>
-        </div>
+      </div>
+      <div className={styles.bottomContainer}>
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <Button
+          type="primary"
+          htmlType="submit"
+          onClick={() => {
+            form.submit();
+          }}
+          loading={customersStates?.loading || updateCustomersStates?.loading}
+        >
+          Save
+        </Button>
       </div>
     </div>
   );

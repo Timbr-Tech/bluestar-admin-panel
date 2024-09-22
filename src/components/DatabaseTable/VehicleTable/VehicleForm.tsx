@@ -672,17 +672,17 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             </Form.Item>
           </div>
         </Form>
-        <div className={styles.bottomContainer}>
-          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-          <PrimaryBtn
-            btnText="Save"
-            onClick={() => {
-              form.submit();
-              // openNotificationWithIcon("success");
-              // handleCloseSidePanel();
-            }}
-          />
-        </div>
+      </div>
+      <div className={styles.bottomContainer}>
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+        <PrimaryBtn
+          btnText="Save"
+          onClick={() => {
+            form.submit();
+            // openNotificationWithIcon("success");
+            // handleCloseSidePanel();
+          }}
+        />
       </div>
     </div>
   );
