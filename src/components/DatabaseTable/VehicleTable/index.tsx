@@ -29,7 +29,7 @@ interface IVehicleTableTable {
 
 const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
   const dispatch = useAppDispatch();
-  const { vehicleStates, vehicleList, q } = useAppSelector(
+  const { vehicleStates, vehicleList, q, deleteVehicleStates } = useAppSelector(
     (state) => state.database
   );
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -123,7 +123,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
           group: "Taxi",
           assigned_driver: data.registration.ownerName,
         }))}
-        loading={vehicleStates?.loading}
+        loading={vehicleStates?.loading || deleteVehicleStates?.loading}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

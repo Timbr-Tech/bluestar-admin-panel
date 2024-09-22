@@ -97,10 +97,77 @@ export const updateBankAccount = createAsyncThunk(
 
 export const addDutyType = createAsyncThunk(
   "database/addDutyType",
-  async (body) => {
+  async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/duty-type", body);
 
+    if (response.status === 201 || response.status === 200) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "New Duty type added successfully",
+      });
+      return response.data;
+    }
+  }
+);
+
+export const getAllDutyTypes = createAsyncThunk(
+  "database/getAllDutyTypes",
+  async (params: any) => {
+    const { page, limit, search } = params;
+
+    const response = await apiClient.get(
+      `/database/duty-type?page=${page}&limit=${limit}&search=${search}`
+    );
+
     return response.data;
+  }
+);
+
+export const getDutyTypeById = createAsyncThunk(
+  "database/getDutyTypeById",
+  async (params: any) => {
+    const { id } = params;
+    const response = await apiClient.get(`/database/duty-type/${id}`);
+
+    return response.data;
+  }
+);
+
+export const updateDutyType = createAsyncThunk(
+  "database/updateDutyType",
+
+  async (body: any, { dispatch }) => {
+    const { payload, id } = body;
+
+    const response = await apiClient.patch(
+      `/database/duty-type/${id}`,
+      payload
+    );
+
+    if (response?.status === 200) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Duty type updated successfully",
+      });
+
+      dispatch(getAllDutyTypes({ page: "1", limit: "", search: "" }));
+    }
+  }
+);
+
+export const deleteDutyType = createAsyncThunk(
+  "database/deleteDutyType",
+
+  async (params: any, { dispatch }) => {
+    const { id } = params;
+
+    const response = await apiClient.delete(`/database/duty-type/${id}`);
+
+    if (response?.status === 200) {
+      dispatch(getAllDutyTypes({ page: "1", limit: 7, search: "" }));
+    }
   }
 );
 
@@ -790,6 +857,26 @@ const initialState: any = {
   },
   deleteAllowancesStates: { state: "idle", loading: false, error: "" },
   updateAllowancesStates: { state: "idle", loading: false, error: "" },
+
+  // Duty Type
+  dutyTypeList: {},
+  selectedDutyType: {},
+  dutyTypeStates: {
+    state: "idle",
+    loading: false,
+    error: "",
+    pagination: { page: 1, total: "", limit: 7 },
+  },
+  deleteDutyTypeStates: {
+    state: "idle",
+    loading: false,
+    error: "",
+  },
+  updatedDutyTypeStates: {
+    state: "idle",
+    loading: false,
+    error: "",
+  },
 };
 
 export const databaseSlice = createSlice({
@@ -1487,6 +1574,93 @@ export const databaseSlice = createSlice({
         state.updateAllowancesStates.status = "failed";
         state.updateAllowancesStates.loading = false;
         state.updateAllowancesStates.error = "Error";
+      })
+
+      // Add Duty Type
+      .addCase(addDutyType.pending, (state) => {
+        state.dutyTypeStates.status = "loading";
+        state.dutyTypeStates.loading = true;
+        state.dutyTypeStates.error = "";
+      })
+      .addCase(addDutyType.fulfilled, (state) => {
+        state.dutyTypeStates.status = "succeeded";
+        state.dutyTypeStates.loading = false;
+        state.dutyTypeStates.error = "";
+      })
+      .addCase(addDutyType.rejected, (state) => {
+        state.dutyTypeStates.status = "failed";
+        state.dutyTypeStates.loading = false;
+        state.dutyTypeStates.error = "Error";
+      })
+
+      // Get Duty Types
+      .addCase(getAllDutyTypes.pending, (state) => {
+        state.dutyTypeStates.status = "loading";
+        state.dutyTypeStates.loading = true;
+        state.dutyTypeStates.error = "";
+      })
+      .addCase(getAllDutyTypes.fulfilled, (state, action) => {
+        state.dutyTypeStates.status = "succeeded";
+        state.dutyTypeStates.loading = false;
+        state.dutyTypeStates.error = "";
+        state.dutyTypeList = action.payload;
+      })
+      .addCase(getAllDutyTypes.rejected, (state) => {
+        state.dutyTypeStates.status = "failed";
+        state.dutyTypeStates.loading = false;
+        state.dutyTypeStates.error = "Error";
+      })
+
+      // Get Duty Type By Id
+      .addCase(getDutyTypeById.pending, (state) => {
+        state.dutyTypeStates.status = "loading";
+        state.dutyTypeStates.loading = true;
+        state.dutyTypeStates.error = "";
+      })
+      .addCase(getDutyTypeById.fulfilled, (state, action) => {
+        state.dutyTypeStates.status = "succeeded";
+        state.dutyTypeStates.loading = false;
+        state.dutyTypeStates.error = "";
+        state.selectedDutyType = action.payload;
+      })
+      .addCase(getDutyTypeById.rejected, (state) => {
+        state.dutyTypeStates.status = "failed";
+        state.dutyTypeStates.loading = false;
+        state.dutyTypeStates.error = "Error";
+      })
+
+      // Delete Duty Type
+      .addCase(deleteDutyType.pending, (state) => {
+        state.deleteDutyTypeStates.status = "loading";
+        state.deleteDutyTypeStates.loading = true;
+        state.deleteDutyTypeStates.error = "";
+      })
+      .addCase(deleteDutyType.fulfilled, (state, action) => {
+        state.deleteDutyTypeStates.status = "succeeded";
+        state.deleteDutyTypeStates.loading = false;
+        state.deleteDutyTypeStates.error = "";
+      })
+      .addCase(deleteDutyType.rejected, (state) => {
+        state.deleteDutyTypeStates.status = "failed";
+        state.deleteDutyTypeStates.loading = false;
+        state.deleteDutyTypeStates.error = "Error";
+      })
+
+      // Update Duty Type
+      .addCase(updateDutyType.pending, (state) => {
+        state.updatedDutyTypeStates.status = "loading";
+        state.updatedDutyTypeStates.loading = true;
+        state.updatedDutyTypeStates.error = "";
+      })
+      .addCase(updateDutyType.fulfilled, (state, action) => {
+        state.updatedDutyTypeStates.status = "succeeded";
+        state.updatedDutyTypeStates.loading = false;
+        state.updatedDutyTypeStates.error = "";
+      })
+      .addCase(updateDutyType.rejected, (state) => {
+        state.updatedDutyTypeStates.status = "failed";
+        state.updatedDutyTypeStates.loading = false;
+        state.updatedDutyTypeStates.error = "Error";
       });
   },
 });

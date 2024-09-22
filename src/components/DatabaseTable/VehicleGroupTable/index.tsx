@@ -29,9 +29,8 @@ interface IVehicleGroupTable {
 const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const { vehicleGroupData, vehicleGroupStates, q } = useAppSelector(
-    (state) => state.database
-  );
+  const { vehicleGroupData, vehicleGroupStates, q, deleteVehicleGroupStates } =
+    useAppSelector((state) => state.database);
   const [deleteVehicleGroupId, setDeleteVehicleGroupId] = useState<string>("");
   const [pagination, setPagination] = useState({
     current: 1,
@@ -146,7 +145,9 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
         columns={columns}
         onChange={handleTableChange}
         dataSource={vehicleGroupData?.data}
-        loading={vehicleGroupStates?.loading}
+        loading={
+          vehicleGroupStates?.loading || deleteVehicleGroupStates?.loading
+        }
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

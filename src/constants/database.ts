@@ -92,8 +92,8 @@ export const CUSTOMERS = [
     dataIndex: "name",
   },
   {
-    title: "Email",
-    dataIndex: "email",
+    title: "Phone",
+    dataIndex: "phoneNumber",
   },
   {
     title: "GSTIN number",

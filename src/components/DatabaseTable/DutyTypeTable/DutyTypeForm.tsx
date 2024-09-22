@@ -1,12 +1,14 @@
 /* eslint-disable */
-import { Select, Radio } from "antd";
+import { Select, Radio, Spin } from "antd";
+import { useAppSelector, useAppDispatch } from "../../../hooks/store";
 import type { RadioChangeEvent } from "antd";
+import { getVehicleGroupOptions } from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { notification } from "antd";
 import { DUTY_TYPES_TYPE } from "../../../constants/database";
 import { ReactComponent as HelpCircle } from "../../../icons/help-circle.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./index.module.scss";
 
 interface IDutyForm {
@@ -40,6 +42,14 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   const [items, setItems] = useState(DUTY_TYPES_TYPE);
   const [value, setValue] = useState(1);
   const [api, contextHolder] = notification.useNotification();
+  const dispatch = useAppDispatch();
+  const { vehicleGroupOptionStates } = useAppSelector(
+    (state) => state.database
+  );
+
+  useEffect(() => {
+    dispatch(getVehicleGroupOptions({ page: "1", size: "" }));
+  }, []);
 
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
@@ -62,6 +72,24 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   return (
     <div className={styles.formContainer}>
       {contextHolder}
+      {vehicleGroupOptionStates.loading && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            zIndex: 10,
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Duty Type</div>
@@ -129,7 +157,10 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                       {row?.vehicleGroup}
                     </div>
                     <div className={styles.rowItem}>
-                      <input className={styles.input} defaultValue={row?.baseRate} />
+                      <input
+                        className={styles.input}
+                        defaultValue={row?.baseRate}
+                      />
                     </div>
                     <div className={styles.rowItem}>
                       <input

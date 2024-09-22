@@ -18,7 +18,7 @@ import React, { useState, useEffect } from "react";
 interface ICustomerTableData {
   _id: string;
   name: string;
-  email: string;
+  phoneNumber: string;
   gstNumber: string;
 }
 
@@ -31,9 +31,8 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [customerId, setCustomerId] = useState("");
 
-  const { customers, customersStates, q } = useAppSelector(
-    (state) => state.database
-  );
+  const { customers, customersStates, q, deleteCustomersStates } =
+    useAppSelector((state) => state.database);
 
   const handleDeleteVehicleGroup = () => {
     dispatch(deleteCustomer({ id: customerId }));
@@ -109,7 +108,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   }, [q]);
 
   return (
-    <>
+  <>
       <Table
         bordered
         rowSelection={{
@@ -120,7 +119,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
         dataSource={customers?.data?.map((data: any) => {
           return { ...data, gstNumber: data?.taxDetails?.gstNumber };
         })}
-        loading={customersStates?.loading}
+        loading={customersStates?.loading || deleteCustomersStates?.loading}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>
