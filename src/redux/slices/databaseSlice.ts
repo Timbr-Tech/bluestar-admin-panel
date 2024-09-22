@@ -3,7 +3,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../utils/configureAxios";
 import { notification } from "antd";
-import { useAppDispatch } from "../../hooks/store";
 
 // Bank Account APIs
 
@@ -12,11 +11,11 @@ export const addBankAccount = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/bank-accounts", body);
 
-    if (response.status === 201) {
+    if (response.status === 201 || response.status === 200) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
-        description: "Added",
+        description: "New bank account added successfully",
       });
       dispatch(getBankAccount({ page: "1", search: "", limit: "" }));
       return response.data;
@@ -72,13 +71,23 @@ export const deleteBankAccount = createAsyncThunk(
 export const updateBankAccount = createAsyncThunk(
   "database/updateBankAccount",
 
-  async (body: any) => {
+  async (body: any, { dispatch }) => {
     const { id, payload } = body;
 
     const response = await apiClient.patch(
       `/database/bank-accounts/${id}`,
       payload
     );
+
+    if (response.status === 201 || response.status === 200) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Bank account updated successfully",
+      });
+      dispatch(getBankAccount({ page: "1", search: "", limit: "" }));
+      return response.data;
+    }
 
     return response.data;
   }
@@ -106,11 +115,11 @@ export const addNewTax = createAsyncThunk(
     const { taxesStates } = database;
     const { pagination } = taxesStates;
 
-    if ((response.status = 201)) {
+    if ((response.status = 201 || response.status === 200)) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
-        description: "Added",
+        description: "New tax added successfully",
       });
       dispatch(
         getTaxes({
@@ -185,15 +194,21 @@ export const updateTax = createAsyncThunk(
     const { taxesStates } = database;
     const { pagination } = taxesStates;
 
-    dispatch(
-      getTaxes({
-        page: pagination.page,
-        search: pagination.search,
-        limit: pagination.limit,
-      })
-    );
-
-    return response.data;
+    if ((response.status = 201 || response.status === 200)) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Tax updated successfully",
+      });
+      dispatch(
+        getTaxes({
+          page: "1",
+          search: "",
+          limit: "",
+        })
+      );
+      return response.data;
+    }
   }
 );
 
@@ -214,10 +229,10 @@ export const addNewCustomer = createAsyncThunk(
   "database/addNewCustomer",
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/customer", body);
-    if (response.status === 201) {
+    if (response.status === 201 || response.status === 200) {
       notification.success({
         message: "Success",
-        description: "Added",
+        description: "New customer added successfully",
       });
       dispatch(setOpenSidePanel(false));
       dispatch(getCustomer({ page: "1", search: "", limit: "" }));
@@ -241,12 +256,20 @@ export const getCustomer = createAsyncThunk(
 
 export const updateCustomer = createAsyncThunk(
   "database/updateCustomer",
-  async (body: any) => {
+  async (body: any, { dispatch }) => {
     const { payload, id } = body;
 
     const response = await apiClient.patch(`/database/customer/${id}`, payload);
 
-    return response.data;
+    if (response.status === 201 || response.status === 200) {
+      notification.success({
+        message: "Success",
+        description: "Customer updated successfully",
+      });
+      dispatch(setOpenSidePanel(false));
+      dispatch(getCustomer({ page: "1", search: "", limit: "" }));
+      return response.data;
+    }
   }
 );
 
@@ -280,9 +303,16 @@ export const addNewAllowance = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/allowance", body);
 
-    dispatch(getAllowances({ page: "1", search: "", limit: "" }));
+    if (response?.status === 201) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Allowance added successfully",
+      });
+      dispatch(getAllowances({ page: "1", search: "", limit: "" }));
 
-    return response.data;
+      return response.data;
+    }
   }
 );
 
@@ -321,9 +351,16 @@ export const updateAllowance = createAsyncThunk(
       payload
     );
 
-    dispatch(getAllowances({ page: "1", search: "", limit: "" }));
+    if (response?.status === 201 || response?.status === 200) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Allowance updated successfully",
+      });
+      dispatch(getAllowances({ page: "1", search: "", limit: "" }));
 
-    return response.data;
+      return response.data;
+    }
   }
 );
 
@@ -511,11 +548,11 @@ export const addVehicleGroup = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/vehicle-group", body);
 
-    if (response.status === 201) {
+    if (response.status === 201 || response.status === 200) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
-        description: "Added",
+        description: "Vehicle group added successfully",
       });
       dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
       return response.data;
@@ -592,13 +629,26 @@ export const getVehicleGroupOptions = createAsyncThunk(
 export const updateVehicleGroup = createAsyncThunk(
   "database/updateVehicleGroup",
 
-  async (body: any) => {
+  async (body: any, { dispatch }) => {
     const { payload, id } = body;
+
+    console.log(body, "body");
 
     const response = await apiClient.patch(
       `/database/vehicle-group/${id}`,
       payload
     );
+
+    if (response.status === 201 || response.status === 200) {
+      dispatch(setOpenSidePanel(false));
+      notification.success({
+        message: "Success",
+        description: "Vehicle group updated successfully",
+      });
+      dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
+      return response.data;
+    }
+
     return response.data;
   }
 );
@@ -774,6 +824,18 @@ export const databaseSlice = createSlice({
       return {
         ...state,
         pagination: action.payload,
+      };
+    },
+    setResetSelectedStates: (state) => {
+      return {
+        ...state,
+        selectedVehicleGroup: {},
+        selectedCustomer: {},
+        selectedTax: {},
+        selectedBankAccount: {},
+        selectedVehicle: {},
+        selectedDriver: {},
+        selectedAllowance: {},
       };
     },
   },
@@ -1435,6 +1497,7 @@ export const {
   setDriverOption,
   setVehicleGroupOption,
   setPagination,
+  setResetSelectedStates,
 } = actions;
 
 export default databaseSlice.reducer;

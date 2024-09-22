@@ -7,15 +7,20 @@ import {
   Form,
   Input,
   Checkbox,
+  Spin,
+  Button,
 } from "antd";
 import type { UploadProps } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
-import { useAppDispatch } from "../../../hooks/store";
-import { addNewCustomer } from "../../../redux/slices/databaseSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
+import {
+  addNewCustomer,
+  updateCustomer,
+} from "../../../redux/slices/databaseSlice";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { STATES, CUSTOMER_TAX_TYPES } from "../../../constants/database";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 
@@ -27,6 +32,8 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
   const dispatch = useAppDispatch();
+  const { selectedCustomer, customersStates, updateCustomersStates } =
+    useAppSelector((state) => state.database);
   const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
   const [customerPaylod, setCustomerPayload] = useState({
@@ -111,19 +118,65 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
     });
   };
 
-  const handleSubmit = (valuesToSend: any) => {
-    dispatch(addNewCustomer(valuesToSend));
-    // openNotificationWithIcon("success");
-    // handleCloseSidePanel();
+  const handleSubmit = (values: any) => {
+    if (Object.keys(selectedCustomer).length) {
+      dispatch(
+        updateCustomer({ payload: values, id: selectedCustomer?.data?._id })
+      );
+    } else {
+      dispatch(addNewCustomer(values));
+    }
   };
   const [form] = Form.useForm();
 
+  console.log(selectedCustomer, "selectedCustomer");
+
+  useEffect(() => {
+    if (Object.keys(selectedCustomer).length) {
+      form.setFieldsValue({
+        customerCode: selectedCustomer?.data?.customerCode,
+        name: selectedCustomer?.data?.name,
+        address: selectedCustomer?.data?.address,
+        pinCode: selectedCustomer?.data?.pinCode,
+        state: selectedCustomer?.data?.state,
+        email: selectedCustomer?.data?.email,
+        phoneNumber: selectedCustomer?.data?.phoneNumber,
+        autoCreateInvoice: selectedCustomer?.data?.autoCreateInvoice,
+        defaultDiscount: selectedCustomer?.data?.defaultDiscount,
+        type: selectedCustomer?.data?.taxDetails?.type,
+        billingName: selectedCustomer?.data?.taxDetails?.billingName,
+        taxId: selectedCustomer?.data?.taxDetails?.taxId,
+        gstNumber: selectedCustomer?.data?.taxDetails?.gstNumber,
+        billingAddress: selectedCustomer?.data?.taxDetails?.billingAddress,
+        files: selectedCustomer?.data?.files,
+      });
+    }
+  }, [selectedCustomer]);
+
   return (
     <div className={styles.formContainer}>
+      {customersStates.loading && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            zIndex: 10,
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      )}
       {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>New Customer</div>
+          <div className={styles.header}>Customer</div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
         <Form
@@ -140,7 +193,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               pinCode: values.pinCode,
               state: values.state,
               email: values.email,
-              phone: values.phone,
+              phoneNumber: values.phoneNumber,
               autoCreateInvoice: values.autoCreateInvoice,
               defaultDiscount: values.defaultDiscount,
               taxDetails: {
@@ -160,6 +213,9 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               ],
             };
             handleSubmit(valuesToSend);
+          }}
+          onFinishFailed={(error) => {
+            console.log(error, "Error");
           }}
         >
           <div className={styles.typeContainer}>
@@ -252,8 +308,8 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
                   // type: "number",
                 },
               ]}
-              name="phone"
-              id="phone"
+              name="phoneNumber"
+              id="phoneNumber"
             >
               <Input placeholder="Enter phone number..." defaultValue={""} />
             </Form.Item>
@@ -419,12 +475,16 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
         </Form>
         <div className={styles.bottomContainer}>
           <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-          <PrimaryBtn
-            btnText="Save"
+          <Button
+            type="primary"
+            htmlType="submit"
             onClick={() => {
               form.submit();
             }}
-          />
+            loading={customersStates?.loading || updateCustomersStates?.loading}
+          >
+            Save
+          </Button>
         </div>
       </div>
     </div>

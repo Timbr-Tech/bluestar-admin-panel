@@ -19,7 +19,7 @@ interface ICustomerTableData {
   _id: string;
   name: string;
   email: string;
-  gstNumber: { taxDetails: { gstNumber: string } };
+  gstNumber: string;
 }
 
 interface ICustomerTable {
@@ -117,7 +117,9 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
           onChange: onChange,
         }}
         columns={columns}
-        dataSource={customers?.data}
+        dataSource={customers?.data?.map((data: any) => {
+          return { ...data, gstNumber: data?.taxDetails?.gstNumber };
+        })}
         loading={customersStates?.loading}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>

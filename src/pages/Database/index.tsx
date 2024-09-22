@@ -19,6 +19,7 @@ import { useAppDispatch } from "../../hooks/store";
 import {
   setOpenSidePanel,
   setQueryForSearch,
+  setResetSelectedStates,
 } from "../../redux/slices/databaseSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
@@ -60,6 +61,7 @@ const Database = () => {
 
   const handleCloseSidePanel = () => {
     dispatch(setOpenSidePanel(false));
+    dispatch(setResetSelectedStates());
   };
 
   const handleOpenSidePanel = () => {

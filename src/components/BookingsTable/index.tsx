@@ -287,7 +287,7 @@ const BookingsTable = () => {
 
   useEffect(() => {
     dispatch(getBookings({ ...pagination }));
-  }, [pagination]);
+  }, []);
   // handleBookingsTablePageChange = (page, pageSize) => {
   //   const { dispatch } = this.props;
   //   dispatch({

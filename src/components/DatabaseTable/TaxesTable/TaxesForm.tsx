@@ -1,9 +1,9 @@
 /* eslint-disable */
 import styles from "../DutyTypeTable/index.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import { addNewTax } from "../../../redux/slices/databaseSlice";
-import { Form, Input, notification } from "antd";
-import { useState } from "react";
+import { addNewTax, updateTax } from "../../../redux/slices/databaseSlice";
+import { Form, Input, notification, Spin, Button } from "antd";
+import { useState, useEffect } from "react";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
@@ -22,6 +22,9 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
     notes: "",
   });
   const dispatch = useAppDispatch();
+  const { selectedTax, taxesStates, updateTaxesState } = useAppSelector(
+    (state) => state.database
+  );
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const value = e.target.value;
@@ -34,9 +37,13 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
   };
 
   const handleSave = (valuesToSend: any) => {
-    dispatch(addNewTax(valuesToSend));
-    // handleCloseSidePanel();
-    // openNotificationWithIcon("success");
+    if (Object.keys(selectedTax).length) {
+      dispatch(
+        updateTax({ payload: valuesToSend, id: selectedTax?.data?._id })
+      );
+    } else {
+      dispatch(addNewTax(valuesToSend));
+    }
   };
 
   const openNotificationWithIcon = (type: NotificationType) => {
@@ -47,9 +54,37 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
   };
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    if (Object.keys(selectedTax).length) {
+      form.setFieldsValue({
+        name: selectedTax?.data?.name,
+        percentage: selectedTax?.data?.percentage,
+        notes: selectedTax?.data?.notes,
+      });
+    }
+  }, [selectedTax]);
+
   return (
     <div className={styles.formContainer}>
       {contextHolder}
+      {taxesStates.loading && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            zIndex: 10,
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Tax Type</div>
@@ -92,7 +127,13 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
               name="percentage"
               label="Percentage"
             >
-              <Input className={styles.input} placeholder="Enter..." />
+              <Input
+                type="number"
+                min={0}
+                max={100}
+                className={styles.input}
+                placeholder="Enter..."
+              />
             </Form.Item>
           </div>
           <div className={styles.typeContainer}>
@@ -115,12 +156,16 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={taxesStates?.loading || updateTaxesState?.loading}
           onClick={() => {
             form.submit();
           }}
-        />
+        >
+          Save
+        </Button>
       </div>
     </div>
   );

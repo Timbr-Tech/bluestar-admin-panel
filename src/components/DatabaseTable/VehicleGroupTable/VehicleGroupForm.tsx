@@ -1,11 +1,12 @@
 /* eslint-disable */
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input, notification, Spin } from "antd";
 import styles from "../DutyTypeTable/index.module.scss";
-import SecondaryBtn from "../../SecondaryBtn";
-import { useState } from "react";
-import { useAppDispatch } from "../../../hooks/store";
-import { addVehicleGroup } from "../../../redux/slices/databaseSlice";
-import PrimaryBtn from "../../PrimaryBtn";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
+import {
+  addVehicleGroup,
+  updateVehicleGroup,
+} from "../../../redux/slices/databaseSlice";
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
@@ -15,6 +16,8 @@ interface IVehicleGroupForm {
 
 const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
   const [api, contextHolder] = notification.useNotification();
+  const { selectedVehicleGroup, updateVehicleGroupStates, vehicleGroupStates } =
+    useAppSelector((state) => state.database);
 
   const dispatch = useAppDispatch();
 
@@ -24,6 +27,8 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
       description: "Vehicle group added to the database",
     });
   };
+
+  console.log(selectedVehicleGroup, "selectedVehicleGroup");
 
   // const handleVehicleGroupChange = (e: any) => {
   //   if (e.target.name === "name") {
@@ -44,16 +49,54 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
   // };
 
   const handleSubmitForm = (values: any) => {
-    dispatch(addVehicleGroup(values));
+    if (Object.keys(selectedVehicleGroup).length) {
+      dispatch(
+        updateVehicleGroup({
+          payload: values,
+          id: selectedVehicleGroup?.data?._id,
+        })
+      );
+    } else {
+      dispatch(addVehicleGroup(values));
+    }
+
     // openNotificationWithIcon("success");
     // handleCloseSidePanel();
   };
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    if (Object.keys(selectedVehicleGroup).length) {
+      form.setFieldsValue({
+        name: selectedVehicleGroup?.data?.name || "",
+        seatingCapacity: selectedVehicleGroup?.data?.seatingCapacity || null,
+        description: selectedVehicleGroup?.data?.description || "",
+        luggageCapacity: selectedVehicleGroup?.data?.luggageCapacity || null,
+      });
+    }
+  }, [selectedVehicleGroup]);
+
   return (
     <div className={styles.formContainer}>
-      {/* {contextHolder} */}
-
+      {contextHolder}
+      {vehicleGroupStates.loading && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            zIndex: 10,
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>Vehicle Group</div>
@@ -66,7 +109,6 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
             console.log(err);
           }}
           onFinish={(values) => {
-            console.log(values);
             const res = {
               ...values,
               seatingCapacity: Number(values.seatingCapacity),
@@ -77,10 +119,12 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
           }}
           form={form}
           initialValues={{
-            name: "",
-            seatingCapacity: null,
-            description: "",
-            luggageCapacity: null,
+            name: selectedVehicleGroup?.data?.name || "",
+            seatingCapacity:
+              selectedVehicleGroup?.data?.seatingCapacity || null,
+            description: selectedVehicleGroup?.data?.description || "",
+            luggageCapacity:
+              selectedVehicleGroup?.data?.luggageCapacity || null,
           }}
           autoComplete="off"
         >
@@ -145,6 +189,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               >
                 <Input
                   type="number"
+                  min={0}
                   // name="seatingCapacity"
                   // className={styles.input}
                   placeholder="Enter value ..."
@@ -169,6 +214,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               >
                 <Input
                   type="number"
+                  min={0}
                   // name="luggageCapacity"
                   // className={styles.input}
                   placeholder="Enter value ..."
@@ -189,6 +235,9 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
           onClick={() => {
             form.submit();
           }}
+          loading={
+            updateVehicleGroupStates.loading || vehicleGroupStates.loading
+          }
           // onClick={handleSubmitForm}
         >
           Save

@@ -1,10 +1,14 @@
 /* eslint-disable */
-import { Form, Input, notification } from "antd";
-import { addBankAccount } from "../../../redux/slices/databaseSlice";
-import { useAppDispatch } from "../../../hooks/store";
+import { Form, Input, notification, Spin, Button } from "antd";
+import {
+  addBankAccount,
+  updateBankAccount,
+} from "../../../redux/slices/databaseSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import styles from "../DutyTypeTable/index.module.scss";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
+import { useEffect } from "react";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 
 interface IBankAccountForm {
@@ -15,6 +19,8 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
   const [api, contextHolder] = notification.useNotification();
+  const { selectedBankAccount, bankAccountStates, updateBankAccountState } =
+    useAppSelector((state) => state.database);
 
   const dispatch = useAppDispatch();
 
@@ -26,15 +32,53 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
   };
 
   const onSubmit = (values: any) => {
-    // openNotificationWithIcon("success");
-    // handleCloseSidePanel();
-    dispatch(addBankAccount(values));
+    if (Object.keys(selectedBankAccount).length) {
+      dispatch(
+        updateBankAccount({
+          id: selectedBankAccount?.data?._id,
+          payload: values,
+        })
+      );
+    } else {
+      dispatch(addBankAccount(values));
+    }
   };
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (Object.keys(selectedBankAccount).length) {
+      form.setFieldsValue({
+        accountName: selectedBankAccount?.data?.accountName || "",
+        accountNumber: selectedBankAccount?.data?.accountNumber || "",
+        bankName: selectedBankAccount?.data?.bankName || "",
+        ifsc: selectedBankAccount?.data?.ifsc || "",
+        branchName: selectedBankAccount?.data?.branchName || "",
+        notes: selectedBankAccount?.data?.notes || "",
+      });
+    }
+  }, [selectedBankAccount]);
 
   return (
     <div className={styles.formContainer}>
       {contextHolder}
+      {bankAccountStates.loading && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            zIndex: 10,
+          }}
+        >
+          <Spin size="large" />
+        </div>
+      )}
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>New Bank Account</div>
@@ -145,13 +189,16 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
+        <Button
+          type="primary"
+          htmlType="submit"
           onClick={() => {
             form.submit();
           }}
-          // onClick={onSubmit}
-        />
+          loading={updateBankAccountState.loading || bankAccountStates.loading}
+        >
+          Save
+        </Button>
       </div>
     </div>
   );
