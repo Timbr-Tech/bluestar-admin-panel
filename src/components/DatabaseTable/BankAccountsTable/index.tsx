@@ -3,11 +3,15 @@ import { BANK_ACCOUNTS } from "../../../constants/database";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import {
   getBankAccount,
+  getBankAccountById,
   deleteBankAccount,
 } from "../../../redux/slices/databaseSlice";
-import { Table } from "antd";
+import type { MenuProps } from "antd";
+import { Table, Dropdown } from "antd";
 import type { TableProps } from "antd";
 import Modal from "../../Modal";
+import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
+import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import React, { useEffect, useState } from "react";
 import styles from "./index.module.scss";
@@ -44,21 +48,51 @@ const BankAccountsTable = ({
     setOpenDeleteModal(false);
   };
 
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
+    if (e.key === "1") {
+      dispatch(getBankAccountById({ id: deleteBankAccountId }));
+      handleOpenSidePanel();
+    }
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      label: "Edit Bank Account",
+      key: "1",
+      icon: <EditIcon />,
+    },
+  ];
+
+  const menuProps = {
+    items,
+    onClick: handleMenuClick,
+  };
+
   const columns: TableProps<IBankAccountsTable>["columns"] = [
     ...BANK_ACCOUNTS,
     {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <button
-          onClick={() => {
-            setOpenDeleteModal(true);
-            setDeleteBankAccountId(record._id);
-          }}
-          className={styles.deleteBtn}
-        >
-          <DeleteIcon />
-        </button>
+        <div className={styles.editButton}>
+          <button
+            onClick={() => {
+              setOpenDeleteModal(true);
+              setDeleteBankAccountId(record._id);
+            }}
+            className={styles.deleteBtn}
+          >
+            <DeleteIcon />
+          </button>
+          <Dropdown menu={menuProps} trigger={["click"]}>
+            <button
+              className={styles.button}
+              onClick={() => setDeleteBankAccountId(record._id)}
+            >
+              <DotsHorizontal />
+            </button>
+          </Dropdown>
+        </div>
       ),
     },
   ];

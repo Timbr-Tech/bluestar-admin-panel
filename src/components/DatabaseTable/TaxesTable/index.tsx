@@ -3,12 +3,17 @@ import { TAXES_TABLE } from "../../../constants/database";
 import { Table, TableProps, Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import Modal from "../../Modal";
+import cn from "classnames";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import { getTaxes, deleteTax } from "../../../redux/slices/databaseSlice";
+import {
+  getTaxes,
+  deleteTax,
+  getTaxesById,
+} from "../../../redux/slices/databaseSlice";
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
 
@@ -32,7 +37,10 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
   const [taxId, setTaxId] = useState("");
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    console.log("click", e);
+    if (e.key === "1") {
+      dispatch(getTaxesById({ id: taxId }));
+      handleOpenSidePanel();
+    }
   };
 
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,6 +57,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
       label: "Mark Inactive",
       key: "2",
       icon: <Clipboard />,
+      disabled: true,
     },
   ];
 
@@ -74,7 +83,10 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
             <DeleteIcon />
           </button>
           <Dropdown menu={menuProps} trigger={["click"]}>
-            <button className={styles.button}>
+            <button
+              className={styles.button}
+              onClick={() => setTaxId(record._id)}
+            >
               <DotsHorizontal />
             </button>
           </Dropdown>
@@ -121,7 +133,17 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
           onChange: onChange,
         }}
         columns={columns}
-        dataSource={taxes?.data}
+        dataSource={taxes?.data?.map((data: any) => {
+          return {
+            ...data,
+            status: (
+              <div className={cn(styles.status, { [styles.active]: true })}>
+                <div className={cn(styles.dot, { [styles.active]: true })} />
+                {"Active"}
+              </div>
+            ),
+          };
+        })}
         loading={taxesStates?.loading || deleteTaxesState?.loading}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>

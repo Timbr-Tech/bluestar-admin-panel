@@ -1,3 +1,15 @@
+.editButton {
+  display: flex;
+  gap: 4px;
+}
+
+.button {
+  background: none;
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
+
 .deleteBtn {
   background: none;
   outline: none;

@@ -1063,6 +1063,24 @@ export const databaseSlice = createSlice({
         state.bankAccountStates.error = "Error";
       })
 
+      // Get Bank Account By Id
+      .addCase(getBankAccountById.pending, (state) => {
+        state.bankAccountStates.status = "loading";
+        state.bankAccountStates.loading = true;
+        state.bankAccountStates.error = "";
+      })
+      .addCase(getBankAccountById.fulfilled, (state, action) => {
+        state.bankAccountStates.status = "succeeded";
+        state.bankAccountStates.loading = false;
+        state.bankAccountStates.error = "";
+        state.selectedBankAccount = action.payload;
+      })
+      .addCase(getBankAccountById.rejected, (state) => {
+        state.bankAccountStates.status = "failed";
+        state.bankAccountStates.loading = false;
+        state.bankAccountStates.error = "Error";
+      })
+
       // Update Bank Account
       .addCase(updateBankAccount.pending, (state) => {
         state.updateBankAccountState.status = "loading";

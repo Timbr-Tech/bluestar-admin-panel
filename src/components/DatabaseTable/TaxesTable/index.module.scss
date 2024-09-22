@@ -84,3 +84,41 @@
     }
   }
 }
+
+.status {
+  border-radius: 9999px;
+  width: 63px;
+  height: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+
+  color: #344054;
+  border: 1px solid #e4e7ec;
+  background-color: #f9fafb;
+
+  &.active {
+    border: 1px solid #abefc6;
+    background-color: #ecfdf3;
+    color: #067647;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    background: #667085;
+    border: 1px solid #e4e7ec;
+
+    &.active {
+      border: 1px solid #abefc6;
+      background: #ecfdf3;
+    }
+  }
+}
