@@ -101,20 +101,10 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   useEffect(() => {
     dispatch(
       getVehicleGroup({
-        page: pagination.current,
         search: q,
-        limit: 10,
       })
     );
   }, [q]);
-
-  useEffect(() => {
-    setPagination({
-      ...pagination,
-      pageSize: vehicleGroupData.limit,
-      current: vehicleGroupData.page,
-    });
-  }, [vehicleGroupData]);
 
   const handleTableChange = (pagination: any) => {
     dispatch(
@@ -157,11 +147,16 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
         }}
         footer={() => (
           <CustomPagination
-            total={pagination?.total ?? 0}
-            current={pagination?.page ?? 1}
-            pageSize={pagination.limit ?? 10}
-            onPageChange={() => {
-              // dispatch(setPagination())
+            total={pagination?.total}
+            current={pagination?.page}
+            pageSize={pagination.limit}
+            onPageChange={(page: number) => {
+              dispatch(
+                getVehicleGroup({
+                  search: q,
+                  page: page,
+                })
+              );
             }}
           />
         )}

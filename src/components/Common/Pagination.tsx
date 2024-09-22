@@ -25,17 +25,17 @@ const itemRender: PaginationProps["itemRender"] = (
   }
   return originalElement;
 };
-const CustomPagination = ({ total, page, limit }: any) => {
+const CustomPagination = ({ total, page, limit, onPageChange }: any) => {
   return (
     <Pagination
-      total={total ?? 0}
-      current={page ?? 1}
-      pageSize={limit ?? 10}
+      total={total}
+      current={page}
+      pageSize={limit}
       align="center"
       itemRender={itemRender}
       className="custom-pagination"
       onChange={(page) => {
-        console.log(page);
+        onPageChange(Number(page));
       }}
     />
   );

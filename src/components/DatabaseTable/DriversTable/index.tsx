@@ -68,9 +68,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
   useEffect(() => {
     dispatch(
       getDrivers({
-        page: 1,
         search: q,
-        limit: 10,
       })
     );
   }, [q]);
@@ -132,8 +130,13 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
             total={pagination?.total ?? 0}
             current={pagination?.page ?? 1}
             pageSize={pagination.limit ?? 10}
-            onPageChange={() => {
-              // dispatch(setPagination())
+            onPageChange={(page: number) => {
+              dispatch(
+                getDrivers({
+                  search: q,
+                  page: page,
+                })
+              );
             }}
           />
         )}

@@ -26,19 +26,18 @@ export const addBankAccount = createAsyncThunk(
 export const getBankAccount = createAsyncThunk(
   "database/getBankAccount",
   async (params: any, { dispatch }) => {
-    const { page, limit, search } = params;
-    const response = await apiClient.get(
-      `/database/bank-accounts/?page=${page}&limit=${limit}&search=${search}`
-    );
-    console.log("response.data", response.data);
+    const response = await apiClient.get(`/database/bank-accounts/`, {
+      params,
+    });
+
     if (response.status == 200) {
-      // dispatch(
-      //   setPagination({
-      //     total: "1",
-      //     page: "1",
-      //     limit: "2",
-      //   })
-      // );
+      dispatch(
+        setPagination({
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+        })
+      );
       return response.data;
     }
   }
@@ -204,13 +203,19 @@ export const addNewTax = createAsyncThunk(
 export const getTaxes = createAsyncThunk(
   "database/getTaxes",
 
-  async (params: any) => {
-    const { page, limit, search } = params;
-    const response = await apiClient.get(
-      `/database/tax/?page=${page}&limit=${limit}&search=${search}`
-    );
+  async (params: any, { dispatch }) => {
+    const response = await apiClient.get(`/database/tax/`, { params });
 
-    return response.data;
+    if (response.status === 200) {
+      dispatch(
+        setPagination({
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+        })
+      );
+      return response.data;
+    }
   }
 );
 
@@ -310,14 +315,19 @@ export const addNewCustomer = createAsyncThunk(
 
 export const getCustomer = createAsyncThunk(
   "database/getCustomer",
-  async (params: any) => {
-    const { page, limit, search } = params;
+  async (params: any, { dispatch }) => {
+    const response = await apiClient.get(`/database/customer`, { params });
 
-    const response = await apiClient.get(
-      `/database/customer?page=${page}&limit=${limit}&search=${search}`
-    );
-
-    return response.data;
+    if (response.status === 200) {
+      dispatch(
+        setPagination({
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+        })
+      );
+      return response.data;
+    }
   }
 );
 
@@ -385,13 +395,18 @@ export const addNewAllowance = createAsyncThunk(
 
 export const getAllowances = createAsyncThunk(
   "database/getAllowances",
-  async (params: any) => {
-    const { page, limit, search } = params;
-    const response = await apiClient.get(
-      `/database/allowance?page=${page}&limit=${limit}&search=${search}`
-    );
-
-    return response.data;
+  async (params: any, { dispatch }) => {
+    const response = await apiClient.get(`/database/allowance`, { params });
+    if (response.status === 200) {
+      dispatch(
+        setPagination({
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+        })
+      );
+      return response.data;
+    }
   }
 );
 
@@ -460,13 +475,16 @@ export const getVehicle = createAsyncThunk(
   "database/getVehicle",
 
   async (params: any, { dispatch, getState }: any) => {
-    // const { page, limit, search } = params;
-    // const response = await apiClient.get(
-    //   `/database/vehicle?page=${page}&limit=${limit}&search=${search}`
-    // );
     const response = await apiClient.get(`/database/vehicle`, { params });
 
     if (response.status === 200) {
+      dispatch(
+        setPagination({
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+        })
+      );
       return response.data;
     }
   }
@@ -532,19 +550,20 @@ export const addNewDriver = createAsyncThunk(
 export const getDrivers = createAsyncThunk(
   "database/getDrivers",
   async (params: any, { dispatch, getState }: any) => {
-    // const { page, limit, search } = params;
-
     const response = await apiClient.get(`/database/driver`, { params });
-    // const response = await apiClient.get(
-    //   `/database/driver?page=${page}&limit=${limit}&search=${search}`
-    // );
 
     if (response.status === 200) {
       let option: Array<object> = response?.data?.data?.map((each: any) => ({
         value: each._id,
         label: each.name,
       }));
-
+      dispatch(
+        setPagination({
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+        })
+      );
       dispatch(setDriverOption(option));
       return response.data;
     }
@@ -572,8 +591,7 @@ export const updateDriver = createAsyncThunk(
     const response = await apiClient.patch(`/database/driver/${id}`, payload);
 
     const { database } = getState().database;
-    const { driverStates, pagination } = database;
-    // const { pagination } = driverStates;
+    const { pagination } = database;
 
     dispatch(
       getDrivers({
@@ -631,12 +649,6 @@ export const getVehicleGroup = createAsyncThunk(
   "database/getVehicleGroup",
 
   async (params: any, { dispatch, getState }) => {
-    // const { page, limit, search } = params;
-
-    // const response = await apiClient.get(
-    //   `/database/vehicle-group?page=${page}&limit=${limit}&search=${search}`
-    // );
-
     const response = await apiClient.get(`/database/vehicle-group`, { params });
 
     if (response.status === 200) {
@@ -644,6 +656,14 @@ export const getVehicleGroup = createAsyncThunk(
         value: each._id,
         label: each.name,
       }));
+
+      dispatch(
+        setPagination({
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+        })
+      );
 
       dispatch(setVehicleGroupOption(option));
       return response.data;

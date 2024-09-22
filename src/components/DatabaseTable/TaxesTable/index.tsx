@@ -107,9 +107,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
   useEffect(() => {
     dispatch(
       getTaxes({
-        page: 1,
         search: q,
-        limit: 10,
       })
     );
   }, [q]);
@@ -155,8 +153,13 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
             total={pagination?.total ?? 0}
             current={pagination?.page ?? 1}
             pageSize={pagination.limit ?? 10}
-            onPageChange={() => {
-              // dispatch(setPagination())
+            onPageChange={(page: number) => {
+              dispatch(
+                getTaxes({
+                  search: q,
+                  page: page,
+                })
+              );
             }}
           />
         )}
