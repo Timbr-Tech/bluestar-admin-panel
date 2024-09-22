@@ -184,6 +184,11 @@ export const TAXES_TABLE = [
   { title: "Status", dataIndex: "status" },
 ];
 
+export const ALLOWANCES_TABLE = [
+  { title: "Name", dataIndex: "allowanceType" },
+  { title: "Allowance Rate", dataIndex: "rate" },
+];
+
 export const FASTTAG_TABLE = [
   {
     title: "Tag Account",

@@ -2,7 +2,9 @@
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { Select, notification } from "antd";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { getTaxesOptions } from "../../../redux/slices/databaseSlice";
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { ALLOWANCES_TYPES, Allowance } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 
@@ -15,6 +17,14 @@ type NotificationType = "success" | "info" | "warning" | "error";
 const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
   const [allowanceType, setAllowanceType] = useState<string>("");
   const [api, contextHolder] = notification.useNotification();
+  const dispatch = useAppDispatch();
+  const { taxesOptions, taxesOptionsStates } = useAppSelector(
+    (state) => state.database
+  );
+
+  useEffect(() => {
+    dispatch(getTaxesOptions({ page: 1, size: 10 }));
+  }, []);
 
   const handleAllowanceType = (value: string) => {
     setAllowanceType(value);
