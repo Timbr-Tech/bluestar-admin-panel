@@ -19,19 +19,46 @@ import dayjs from "dayjs";
 import {
   addBankAccount,
   addNewDriver,
+  updateDriver,
 } from "../../../redux/slices/databaseSlice";
-import { useAppDispatch } from "../../../hooks/store";
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
+import { useEffect } from "react";
+import { RootState } from "../../../types/store";
 
 interface IDriverForm {
   handleCloseSidePanel: () => void;
 }
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import form from "antd/es/form";
+
+dayjs.extend(customParseFormat);
+
+const parseTime = (timeString: any) => {
+  if (!timeString) return undefined;
+  try {
+    const parsedTime = dayjs(timeString, "h:mm A", true);
+    if (parsedTime.isValid()) {
+      // Return a new dayjs object set to today's date with the parsed time
+      return dayjs()
+        .hour(parsedTime.hour())
+        .minute(parsedTime.minute())
+        .second(0);
+    }
+    return undefined;
+  } catch (error) {
+    console.error("Error parsing time:", error);
+    return undefined;
+  }
+};
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
 const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
   const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
-
+  const { selectedDriver } = useAppSelector(
+    (state: RootState) => state.database
+  );
   const props: UploadProps = {
     name: "file",
     multiple: true,
@@ -51,6 +78,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
+  console.log("selectedDriver", selectedDriver.data);
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
@@ -62,10 +90,45 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
 
   const [form] = Form.useForm();
   const onSubmit = (values: any) => {
-    // openNotificationWithIcon("success");
-    // handleCloseSidePanel();
     dispatch(addNewDriver(values));
+    if (Object.keys(selectedDriver?.data).length > 0) {
+      dispatch(
+        updateDriver({
+          payload: values,
+          id: selectedDriver?.data._id,
+        })
+      );
+    }
   };
+  useEffect(() => {
+    if (selectedDriver.data && Object.keys(selectedDriver?.data).length > 0) {
+      const valuesToMaped = selectedDriver?.data;
+      form.setFieldsValue({
+        address: {
+          type: valuesToMaped.address.type,
+          fullAddress: valuesToMaped.address.fullAddress,
+        },
+        _id: valuesToMaped._id,
+        customDriverId: valuesToMaped.customDriverId,
+        name: valuesToMaped.name,
+        phoneNumber: valuesToMaped.phoneNumber,
+        dob: valuesToMaped.dob,
+        ids: {
+          pan: valuesToMaped.ids.pan,
+          aadhar: valuesToMaped.ids.aadhar,
+          drivingLiscence: valuesToMaped.ids.drivingLiscence,
+        },
+        monthlySalary: valuesToMaped.monthlySalary,
+        dailySalary: valuesToMaped.dailySalary,
+        timing: {
+          start: parseTime(valuesToMaped.timing.start),
+          end: parseTime(valuesToMaped.timing.end),
+        },
+        offDay: valuesToMaped.offDay,
+        notes: valuesToMaped.notes,
+      });
+    }
+  }, [selectedDriver]);
   return (
     <div className={styles.formContainer}>
       {contextHolder}
@@ -128,15 +191,25 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               rules={[
                 {
                   required: true,
-                  min: 10,
-                  max: 10,
+                },
+                {
+                  pattern: /^(\+91)?[6-9][0-9]{9}$/,
+                  message: "Please enter a valid Indian phone number",
                 },
               ]}
               name="phoneNumber"
               id="phoneNumber"
               label="Phone Number"
+              getValueProps={(value) => ({
+                value: value ? value.replace(/^\+91/, "") : "",
+              })}
+              // Ensure +91 is stripped when user enters phone number
+              getValueFromEvent={(e) => {
+                const inputValue = e.target.value;
+                return inputValue.replace(/^\+91\s?/, ""); // Remove +91 if present
+              }}
             >
-              <Input prefix="+91" type="number" placeholder="Enter Name..." />
+              <Input prefix="+91" type="text" placeholder="Enter phone..." />
             </Form.Item>
           </div>
           <div className={styles.typeContainer}>
