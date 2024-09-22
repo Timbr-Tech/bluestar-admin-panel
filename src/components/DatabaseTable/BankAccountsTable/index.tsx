@@ -106,9 +106,7 @@ const BankAccountsTable = ({
   useEffect(() => {
     dispatch(
       getBankAccount({
-        page: 1,
         search: q,
-        limit: 10,
       })
     );
   }, [q]);
@@ -144,6 +142,14 @@ const BankAccountsTable = ({
             total={pagination?.total ?? 0}
             current={pagination?.page ?? 1}
             pageSize={pagination.limit ?? 10}
+            onPageChange={(page: number) => {
+              dispatch(
+                getBankAccount({
+                  search: q,
+                  page: page,
+                })
+              );
+            }}
           />
         )}
       />

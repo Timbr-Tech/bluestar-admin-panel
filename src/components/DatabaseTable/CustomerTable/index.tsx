@@ -6,6 +6,7 @@ import {
   getCustomer,
   getCustomerById,
   deleteCustomer,
+  getBankAccount,
 } from "../../../redux/slices/databaseSlice";
 import type { MenuProps } from "antd";
 import Modal from "../../Modal";
@@ -106,7 +107,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   };
 
   useEffect(() => {
-    dispatch(getCustomer({ page: "1", search: q, limit: 10 }));
+    dispatch(getCustomer({ search: q }));
   }, [q]);
 
   return (
@@ -129,8 +130,13 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
             total={pagination?.total ?? 0}
             current={pagination?.page ?? 1}
             pageSize={pagination.limit ?? 10}
-            onPageChange={() => {
-              // dispatch(setPagination())
+            onPageChange={(page: number) => {
+              dispatch(
+                getCustomer({
+                  search: q,
+                  page: page,
+                })
+              );
             }}
           />
         )}

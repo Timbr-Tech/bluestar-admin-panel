@@ -14,6 +14,7 @@ import type { MenuProps } from "antd";
 import { Table, TableProps, Dropdown } from "antd";
 import styles from "./index.module.scss";
 import React, { useState, useEffect } from "react";
+import CustomPagination from "../../Common/Pagination";
 
 interface IVehicleTable {
   _id: string;
@@ -29,7 +30,7 @@ interface IVehicleTableTable {
 
 const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
   const dispatch = useAppDispatch();
-  const { vehicleStates, vehicleList, q } = useAppSelector(
+  const { vehicleStates, vehicleList, q, pagination } = useAppSelector(
     (state) => state.database
   );
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -65,7 +66,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
   };
 
   useEffect(() => {
-    dispatch(getVehicle({ page: "1", search: q, limit: 10 }));
+    dispatch(getVehicle({ search: q }));
   }, [q]);
 
   const columns: TableProps<IVehicleTable>["columns"] = [
@@ -124,6 +125,25 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
           assigned_driver: data.registration.ownerName,
         }))}
         loading={vehicleStates?.loading}
+        pagination={false}
+        scroll={{
+          x: 756,
+        }}
+        footer={() => (
+          <CustomPagination
+            total={pagination?.total ?? 0}
+            current={pagination?.page ?? 1}
+            pageSize={pagination.limit ?? 10}
+            onPageChange={(page: number) => {
+              dispatch(
+                getVehicle({
+                  search: q,
+                  page: page,
+                })
+              );
+            }}
+          />
+        )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
         <div className={styles.modalContainer}>

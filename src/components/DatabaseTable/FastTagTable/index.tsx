@@ -87,11 +87,16 @@ const FastTagTable = () => {
       }}
       footer={() => (
         <CustomPagination
-          total={pagination?.total ?? 0}
-          current={pagination?.page ?? 1}
-          pageSize={pagination.limit ?? 10}
-          onPageChange={() => {
-            // dispatch(setPagination())
+          total={pagination?.total}
+          current={pagination?.page}
+          pageSize={pagination.limit}
+          onPageChange={(page: number) => {
+            // dispatch(
+            //   getDrivers({
+            //     search: q,
+            //     page: page,
+            //   })
+            // );
           }}
         />
       )}

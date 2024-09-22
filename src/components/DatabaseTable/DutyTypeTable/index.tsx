@@ -99,8 +99,13 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
           total={pagination?.total ?? 0}
           current={pagination?.page ?? 1}
           pageSize={pagination.limit ?? 10}
-          onPageChange={() => {
-            // dispatch(setPagination())
+          onPageChange={(page: number) => {
+            // dispatch(
+            //   getDrivers({
+            //     search: q,
+            //     page: page,
+            //   })
+            // );
           }}
         />
       )}

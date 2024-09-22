@@ -100,9 +100,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
   useEffect(() => {
     dispatch(
       getAllowances({
-        page: 1,
         search: q,
-        limit: 10,
       })
     );
   }, [q]);
@@ -137,8 +135,13 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
             total={pagination?.total ?? 0}
             current={pagination?.page ?? 1}
             pageSize={pagination.limit ?? 10}
-            onPageChange={() => {
-              // dispatch(setPagination())
+            onPageChange={(page: number) => {
+              dispatch(
+                getAllowances({
+                  search: q,
+                  page,
+                })
+              );
             }}
           />
         )}
