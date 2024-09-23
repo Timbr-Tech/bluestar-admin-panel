@@ -17,6 +17,7 @@ import {
   addNewVehicle,
   getDrivers,
   getVehicleGroup,
+  updateVehicle,
 } from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
@@ -115,6 +116,14 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
     if (Object.keys(selectedVehicle).length) {
       const values = selectedVehicle;
       form.setFieldsValue(values);
+      form.setFieldValue("vehicleGroupId", {
+        value: selectedVehicle.vehicleGroupId._id,
+        label: selectedVehicle.vehicleGroupId.name,
+      });
+      form.setFieldValue("driverId", {
+        value: selectedVehicle.driverId._id,
+        label: selectedVehicle.driverId.name,
+      });
       setIsActive(values?.loan?.isActive);
     }
   }, [selectedVehicle]);
@@ -135,6 +144,9 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             console.log(Values);
             if (Object.keys(selectedVehicle).length) {
               //
+              dispatch(
+                updateVehicle({ id: selectedVehicle._id, payload: Values })
+              );
             } else {
               dispatch(addNewVehicle(Values));
             }
@@ -371,7 +383,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   rules={[
                     {
                       // required: true,
-                      message: "Insurance Document is required",
+                      // message: "Insurance Document is required",
                     },
                   ]}
                 >
@@ -426,7 +438,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   rules={[
                     {
                       // required: true,
-                      message: "RTO is required",
+                      // message: "RTO is required",
                     },
                   ]}
                 >
@@ -609,7 +621,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                       rules={[
                         {
                           //  required: true,
-                          message: "loan document is required",
+                          // message: "loan document is required",
                         },
                       ]}
                     >
