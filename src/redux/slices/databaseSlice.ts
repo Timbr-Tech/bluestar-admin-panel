@@ -17,7 +17,7 @@ export const addBankAccount = createAsyncThunk(
         message: "Success",
         description: "New bank account added successfully",
       });
-      dispatch(getBankAccount({ page: "1", search: "", limit: 10 }));
+      dispatch(getBankAccount({ page: 1, limit: 10 }));
       return response.data;
     }
   }
@@ -57,12 +57,14 @@ export const getBankAccountById = createAsyncThunk(
 
 export const deleteBankAccount = createAsyncThunk(
   "database/deleteBankAccount",
-  async (params: any, { dispatch }) => {
+  async (params: any, { dispatch, getState }: any) => {
     const { id } = params;
 
     const response = await apiClient.delete(`/database/bank-accounts/${id}`);
+    const { database } = getState().database;
+    const { pagination, q } = database;
 
-    dispatch(getBankAccount({ page: "1", search: "", limit: 10 }));
+    dispatch(getBankAccount({ page: pagination.page, search: "", limit: 10 }));
     return response.data;
   }
 );
@@ -70,13 +72,15 @@ export const deleteBankAccount = createAsyncThunk(
 export const updateBankAccount = createAsyncThunk(
   "database/updateBankAccount",
 
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { id, payload } = body;
 
     const response = await apiClient.patch(
       `/database/bank-accounts/${id}`,
       payload
     );
+    const { database } = getState().database;
+    const { pagination, q } = database;
 
     if (response.status === 201 || response.status === 200) {
       dispatch(setOpenSidePanel(false));
@@ -84,7 +88,7 @@ export const updateBankAccount = createAsyncThunk(
         message: "Success",
         description: "Bank account updated successfully",
       });
-      dispatch(getBankAccount({ page: "1", search: "", limit: "" }));
+      dispatch(getBankAccount({ page: pagination.page, search: q, limit: 10 }));
       return response.data;
     }
 
@@ -137,13 +141,15 @@ export const getDutyTypeById = createAsyncThunk(
 export const updateDutyType = createAsyncThunk(
   "database/updateDutyType",
 
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { payload, id } = body;
 
     const response = await apiClient.patch(
       `/database/duty-type/${id}`,
       payload
     );
+    const { database } = getState().database;
+    const { pagination, q } = database;
 
     if (response?.status === 200) {
       dispatch(setOpenSidePanel(false));
@@ -152,7 +158,9 @@ export const updateDutyType = createAsyncThunk(
         description: "Duty type updated successfully",
       });
 
-      dispatch(getAllDutyTypes({ page: "1", limit: 7, search: "" }));
+      dispatch(
+        getAllDutyTypes({ page: pagination.page, limit: 10, search: q })
+      );
     }
   }
 );
@@ -160,13 +168,17 @@ export const updateDutyType = createAsyncThunk(
 export const deleteDutyType = createAsyncThunk(
   "database/deleteDutyType",
 
-  async (params: any, { dispatch }) => {
+  async (params: any, { dispatch, getState }: any) => {
     const { id } = params;
 
     const response = await apiClient.delete(`/database/duty-type/${id}`);
+    const { database } = getState().database;
+    const { pagination, q } = database;
 
     if (response?.status === 200) {
-      dispatch(getAllDutyTypes({ page: "1", limit: 7, search: "" }));
+      dispatch(
+        getAllDutyTypes({ page: pagination.page, limit: 10, search: q })
+      );
     }
   }
 );
@@ -241,13 +253,13 @@ export const deleteTax = createAsyncThunk(
     const response = await apiClient.delete(`/database/tax/${id}`);
 
     const { database } = getState().database;
-    const { taxesStates, q } = database;
-    const { pagination } = taxesStates;
+    const { pagination, q } = database;
 
     dispatch(
       getTaxes({
         page: pagination.page,
         search: q,
+        limit: 10,
       })
     );
 
@@ -263,8 +275,7 @@ export const updateTax = createAsyncThunk(
     const response = await apiClient.patch(`/database/tax/${id}`, payload);
 
     const { database } = getState().database;
-    const { taxesStates, q } = database;
-    const { pagination } = taxesStates;
+    const { pagination, q } = database;
 
     if (response.status === 201 || response.status === 200) {
       dispatch(setOpenSidePanel(false));
@@ -333,18 +344,19 @@ export const getCustomer = createAsyncThunk(
 
 export const updateCustomer = createAsyncThunk(
   "database/updateCustomer",
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { payload, id } = body;
 
     const response = await apiClient.patch(`/database/customer/${id}`, payload);
-
+    const { database } = getState().database;
+    const { pagination, q } = database;
     if (response.status === 201 || response.status === 200) {
       notification.success({
         message: "Success",
         description: "Customer updated successfully",
       });
       dispatch(setOpenSidePanel(false));
-      dispatch(getCustomer({ page: "1", search: "", limit: "" }));
+      dispatch(getCustomer({ page: pagination.page, search: q, limit: 10 }));
       return response.data;
     }
   }
@@ -352,10 +364,11 @@ export const updateCustomer = createAsyncThunk(
 
 export const deleteCustomer = createAsyncThunk(
   "database/deleteCustomer",
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { id } = body;
-
-    dispatch(getCustomer({ page: "1", search: "", limit: 10 }));
+    const { database } = getState().database;
+    const { pagination, q } = database;
+    dispatch(getCustomer({ page: pagination.page, search: q, limit: 10 }));
 
     const response = await apiClient.delete(`/database/customer/${id}`);
 
@@ -425,13 +438,15 @@ export const getAllowanceById = createAsyncThunk(
 export const updateAllowance = createAsyncThunk(
   "database/updateAllowance",
 
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { payload, id } = body;
 
     const response = await apiClient.patch(
       `/database/allowance/${id}`,
       payload
     );
+    const { database } = getState().database;
+    const { pagination, q } = database;
 
     if (response?.status === 201 || response?.status === 200) {
       dispatch(setOpenSidePanel(false));
@@ -439,7 +454,7 @@ export const updateAllowance = createAsyncThunk(
         message: "Success",
         description: "Allowance updated successfully",
       });
-      dispatch(getAllowances({ page: "1", search: "", limit: 10 }));
+      dispatch(getAllowances({ page: pagination.page, search: q, limit: 10 }));
 
       return response.data;
     }
@@ -449,12 +464,13 @@ export const updateAllowance = createAsyncThunk(
 export const deleteAllowance = createAsyncThunk(
   "database/deleteAllowance",
 
-  async (params: any, { dispatch }) => {
+  async (params: any, { dispatch, getState }: any) => {
     const { id } = params;
 
     const response = await apiClient.delete(`/database/allowance/${id}`);
-
-    dispatch(getAllowances({ page: "1", search: "", limit: 10 }));
+    const { database } = getState().database;
+    const { pagination, q } = database;
+    dispatch(getAllowances({ page: pagination.page, search: q, limit: 10 }));
 
     return response.data;
   }
@@ -505,10 +521,12 @@ export const getVehicleById = createAsyncThunk(
 export const updateVehicle = createAsyncThunk(
   "database/updateVehicle",
 
-  async (body: any) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { payload, id } = body;
     const response = await apiClient.patch(`/database/vehicle/${id}`, payload);
-
+    const { database } = getState().database;
+    const { pagination, q } = database;
+    dispatch(getVehicle({ page: pagination.page, search: q, limit: 10 }));
     return response.data;
   }
 );
@@ -516,11 +534,13 @@ export const updateVehicle = createAsyncThunk(
 export const deleteVehicle = createAsyncThunk(
   "database/deleteVehicle",
 
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { id } = body;
     const response = await apiClient.delete(`/database/vehicle/${id}`);
+    const { database } = getState().database;
+    const { pagination, q } = database;
 
-    dispatch(getVehicle({ page: "1", search: "", limit: 10 }));
+    dispatch(getVehicle({ page: pagination.page, search: q, limit: 10 }));
     return response.data;
   }
 );
@@ -617,13 +637,12 @@ export const deleteDriver = createAsyncThunk(
     const response = await apiClient.delete(`/database/driver/${id}`);
 
     const { database } = getState().database;
-    const { driverStates } = database;
-    const { pagination } = driverStates;
+    const { pagination, q } = database;
 
     dispatch(
       getDrivers({
         page: pagination?.page,
-        search: pagination?.search,
+        search: q,
         limit: pagination?.limit,
       })
     );
@@ -692,12 +711,14 @@ export const getVehicleGroupById = createAsyncThunk(
 export const deleteVehicleGroup = createAsyncThunk(
   "database/deleteVehicleGroup",
 
-  async (params: any, { dispatch }) => {
+  async (params: any, { dispatch, getState }: any) => {
     const { id } = params;
+    const { database } = getState().database;
+    const { pagination, q } = database;
 
     const response = await apiClient.delete(`/database/vehicle-group/${id}`);
 
-    dispatch(getVehicleGroup({ page: "1", search: "", limit: 10 }));
+    dispatch(getVehicleGroup({ page: pagination.page, search: q, limit: 10 }));
 
     return response.data;
   }
@@ -720,7 +741,7 @@ export const getVehicleGroupOptions = createAsyncThunk(
 export const updateVehicleGroup = createAsyncThunk(
   "database/updateVehicleGroup",
 
-  async (body: any, { dispatch }) => {
+  async (body: any, { dispatch, getState }: any) => {
     const { payload, id } = body;
 
     console.log(body, "body");
@@ -729,6 +750,8 @@ export const updateVehicleGroup = createAsyncThunk(
       `/database/vehicle-group/${id}`,
       payload
     );
+    const { database } = getState().database;
+    const { pagination, q } = database;
 
     if (response.status === 201 || response.status === 200) {
       dispatch(setOpenSidePanel(false));
@@ -736,7 +759,9 @@ export const updateVehicleGroup = createAsyncThunk(
         message: "Success",
         description: "Vehicle group updated successfully",
       });
-      dispatch(getVehicleGroup({ page: "1", search: "", limit: "" }));
+      dispatch(
+        getVehicleGroup({ page: pagination.page, search: q, limit: 10 })
+      );
       return response.data;
     }
 
