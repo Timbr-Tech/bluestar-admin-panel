@@ -46,8 +46,6 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
     setOpenDeleteModal(false);
   };
 
-  console.log(dutyTypeList, "dutyTypeList");
-
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     if (e.key === "1") {
       dispatch(getDutyTypeById({ id: dutyTypeId }));

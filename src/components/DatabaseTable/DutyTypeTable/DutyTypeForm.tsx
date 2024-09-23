@@ -27,20 +27,20 @@ const rowsArray = [
   {
     vehicleGroup: "Swift Dzire/Etios",
     baseRate: 2,
-    extraKMRate: 3,
-    extraHRRate: 4,
+    extraKmRate: 3,
+    extraHrRate: 4,
   },
   {
     vehicleGroup: "Toyota Innova",
     baseRate: 2,
-    extraKMRate: 3,
-    extraHRRate: 4,
+    extraKmRate: 3,
+    extraHrRate: 4,
   },
   {
     vehicleGroup: "Mini hatchbacks",
     baseRate: 2,
-    extraKMRate: 3,
-    extraHRRate: 4,
+    extraKmRate: 3,
+    extraHrRate: 4,
   },
 ];
 
@@ -59,42 +59,49 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
     dutyTypeStates,
   } = useAppSelector((state) => state.database);
   const [vehicleGroupDataArray, setVehicleGroupDataArray] = useState(
-    Object.keys(selectedDutyType)
-      ? selectedDutyType?.data?.pricing
-      : vehicleGroupData?.data?.map((data: any) => {
-          return {
-            name: data?.name,
-            vehicleGroupId: data?._id,
-            baseRate: 0,
-            extraKMRate: 0,
-            extraHRRate: 0,
-          };
-        })
+    vehicleGroupData?.data?.map((data: any) => {
+      return {
+        name: data?.name,
+        vehicleGroupId: data?._id,
+        baseRate: 0,
+        extraKmRate: 0,
+        extraHrRate: 0,
+      };
+    })
   );
 
   useEffect(() => {
     dispatch(getVehicleGroup({ page: "1", limit: "2" }));
   }, []);
 
-  console.log(vehicleGroupDataArray, "vehicleGroupDataArray");
-
   useEffect(() => {
-    setVehicleGroupDataArray(
-      vehicleGroupData?.data?.map((data: any) => {
-        return {
-          name: data?.name,
-          vehicleGroupId: data?._id,
-          baseRate: 0,
-          extraKMRate: 0,
-          extraHRRate: 0,
-        };
-      })
-    );
-
     if (Object.keys(selectedDutyType)) {
+      const tempArr = selectedDutyType?.data?.pricing?.map((data: any) => {
+        return {
+          name: data?.vehicleGroup?.name,
+          vehicleGroupId: data?._id,
+          baseRate: data?.baseRate,
+          extraKmRate: data?.extraKmRate,
+          extraHrRate: data?.extraKmRate,
+        };
+      });
+
+      setVehicleGroupDataArray(tempArr);
       setDutyType(selectedDutyType?.data?.type);
       setName(selectedDutyType?.data?.name);
       setValue(selectedDutyType?.data?.secondaryType);
+    } else {
+      setVehicleGroupDataArray(
+        vehicleGroupData?.data?.map((data: any) => {
+          return {
+            name: data?.name,
+            vehicleGroupId: data?._id,
+            baseRate: 0,
+            extraKmRate: 0,
+            extraHrRate: 0,
+          };
+        })
+      );
     }
   }, [vehicleGroupData, selectedDutyType]);
 
@@ -126,6 +133,20 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
 
   const handleSave = () => {
     if (Object.keys(selectedDutyType).length) {
+      console.log(
+        vehicleGroupDataArray?.map((data: any) =>
+          omit(
+            {
+              ...data,
+              baseRate: Number(data.baseRate),
+              extraKmRate: Number(data.extraKmRate),
+              extraHrRate: Number(data.extraHrRate),
+            },
+            "name"
+          )
+        ),
+        "Data"
+      );
       dispatch(
         updateDutyType({
           payload: {
@@ -137,8 +158,8 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                 {
                   ...data,
                   baseRate: Number(data.baseRate),
-                  extraKMRate: Number(data.extraKMRate),
-                  extraHRRate: Number(data.extraHRRate),
+                  extraKmRate: Number(data.extraKmRate),
+                  extraHrRate: Number(data.extraHrRate),
                 },
                 "name"
               )
@@ -158,8 +179,8 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
               {
                 ...data,
                 baseRate: Number(data.baseRate),
-                extraKMRate: Number(data.extraKMRate),
-                extraHRRate: Number(data.extraHRRate),
+                extraKmRate: Number(data.extraKmRate),
+                extraHrRate: Number(data.extraHrRate),
               },
               "name"
             )
@@ -171,6 +192,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
 
   const handlePricingValueChange = (e: any, index: any) => {
     const regex = /^[0-9]*\.?[0-9]*$/;
+    console.log(e.target.name, "e.target.name");
     if (regex.test(e.target.value)) {
       const tempVehicleGroupDataArray = vehicleGroupDataArray?.map(
         (data: any, i: any) => {
@@ -207,7 +229,9 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>
-            {Object.keys(selectedDutyType).length ? "Duty Type" : "New Duty Type"}
+            {Object.keys(selectedDutyType).length
+              ? "Duty Type"
+              : "New Duty Type"}
           </div>
           <div className={styles.primaryText}>Redesign of untitledui.com</div>
         </div>
@@ -285,16 +309,16 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                       <div className={styles.rowItem}>
                         <input
                           className={styles.input}
-                          value={row?.extraKMRate}
-                          name={"extraKMRate"}
+                          value={row?.extraKmRate}
+                          name={"extraKmRate"}
                           onChange={(e) => handlePricingValueChange(e, index)}
                         />
                       </div>
                       <div className={styles.rowItem}>
                         <input
                           className={styles.input}
-                          value={row?.extraHRRate}
-                          name={"extraHRRate"}
+                          value={row?.extraHrRate}
+                          name={"extraHrRate"}
                           onChange={(e) => handlePricingValueChange(e, index)}
                         />
                       </div>

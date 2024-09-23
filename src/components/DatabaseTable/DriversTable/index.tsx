@@ -116,6 +116,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
   return (
     <>
       <Table
+        bordered
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

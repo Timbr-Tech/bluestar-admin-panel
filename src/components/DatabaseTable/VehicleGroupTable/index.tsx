@@ -106,16 +106,6 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     );
   }, [q]);
 
-  const handleTableChange = (pagination: any) => {
-    dispatch(
-      getVehicleGroup({
-        page: pagination.current,
-        search: "",
-        limit: 10,
-      })
-    );
-  };
-
   const onChange = (
     selectedRowKeys: React.Key[],
     selectedRows: IVehicleGroupTableData[]
@@ -136,7 +126,6 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
           onChange: onChange,
         }}
         columns={columns}
-        onChange={handleTableChange}
         dataSource={vehicleGroupData?.data}
         loading={
           vehicleGroupStates?.loading || deleteVehicleGroupStates?.loading

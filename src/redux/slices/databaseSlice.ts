@@ -790,7 +790,6 @@ const initialState: any = {
   customersStates: {
     status: "idle",
     loading: false,
-    pagination: { page: 1, total: "", limit: 10 },
     error: "",
   },
   deleteCustomersStates: {
@@ -810,7 +809,6 @@ const initialState: any = {
   taxesStates: {
     status: "idle",
     loading: false,
-    pagination: { page: 1, total: "", limit: 10 },
     error: "",
   },
   deleteTaxesState: {
@@ -838,7 +836,6 @@ const initialState: any = {
   bankAccountStates: {
     state: "idle",
     loading: false,
-    pagination: { page: 1, total: "", limit: 7 },
     error: "",
   },
   deleteBankAccountStates: { state: "idle", loading: false, error: "" },
@@ -851,7 +848,6 @@ const initialState: any = {
     state: "idle",
     loading: false,
     error: "",
-    pagination: { page: 1, total: "", limit: 7 },
   },
   deleteVehicleStates: { state: "idle", loading: false, error: "" },
   updateVehicleStates: { state: "idle", loading: false, error: "" },
@@ -864,7 +860,6 @@ const initialState: any = {
     state: "idle",
     loading: false,
     error: "",
-    pagination: { page: 1, total: "", limit: 7 },
   },
 
   deleteDriverStates: { state: "idle", loading: false, error: "" },
@@ -877,7 +872,6 @@ const initialState: any = {
     state: "idle",
     loading: false,
     error: "",
-    pagination: { page: 1, total: "", limit: 7 },
   },
   deleteAllowancesStates: { state: "idle", loading: false, error: "" },
   updateAllowancesStates: { state: "idle", loading: false, error: "" },
@@ -889,7 +883,6 @@ const initialState: any = {
     state: "idle",
     loading: false,
     error: "",
-    pagination: { page: 1, total: "", limit: 7 },
   },
   deleteDutyTypeStates: {
     state: "idle",
@@ -979,11 +972,6 @@ export const databaseSlice = createSlice({
         state.vehicleGroupStates.loading = false;
         state.vehicleGroupStates.error = "";
         state.vehicleGroupData = action.payload;
-        state.vehicleGroupData.pagination = {
-          page: action.payload.page,
-          limit: action.payload.limit,
-          total: action.payload.total,
-        };
       })
       .addCase(getVehicleGroup.rejected, (state) => {
         state.vehicleGroupStates.status = "failed";
@@ -1090,11 +1078,6 @@ export const databaseSlice = createSlice({
         state.customersStates.loading = false;
         state.customersStates.error = "";
         state.customers = action.payload;
-        state.customersStates.pagination = {
-          page: action.payload.page,
-          limit: action.payload.limit,
-          total: action.payload.total,
-        };
       })
       .addCase(getCustomer.rejected, (state) => {
         state.customersStates.status = "failed";
@@ -1182,11 +1165,6 @@ export const databaseSlice = createSlice({
         state.taxesStates.loading = false;
         state.taxesStates.error = "";
         state.taxes = action.payload;
-        state.taxesStates.pagination = {
-          page: action.payload.page,
-          limit: action.payload.limit,
-          total: action.payload.total,
-        };
       })
       .addCase(getTaxes.rejected, (state) => {
         state.taxesStates.status = "failed";
@@ -1467,11 +1445,6 @@ export const databaseSlice = createSlice({
         state.driverStates.status = "succeeded";
         state.driverStates.loading = false;
         state.driverList = action.payload;
-        state.driverStates.pagination = {
-          page: action.payload.page,
-          limit: action.payload.limit,
-          total: action.payload.total,
-        };
         state.driverStates.error = "";
       })
       .addCase(getDrivers.rejected, (state) => {

@@ -60,7 +60,7 @@ const Database = () => {
     dispatch(setQueryForSearch(""));
     dispatch(
       setPagination({
-        page: null,
+        page: 1,
         limit: 10,
         total: null,
       })

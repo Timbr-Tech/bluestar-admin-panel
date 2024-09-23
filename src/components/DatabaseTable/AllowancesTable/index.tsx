@@ -119,6 +119,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
   return (
     <>
       <Table
+        bordered
         rowSelection={{
           type: "checkbox",
           onChange: onChange,
