@@ -53,28 +53,22 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   const [name, setName] = useState("");
   const {
     vehicleGroupData,
-    vehicleGroupStates,
+    vehicleGroupOptionStates,
     selectedDutyType,
     updatedDutyTypeStates,
     dutyTypeStates,
+    vehicleGroupOption,
   } = useAppSelector((state) => state.database);
-  const [vehicleGroupDataArray, setVehicleGroupDataArray] = useState(
-    vehicleGroupData?.data?.map((data: any) => {
-      return {
-        name: data?.name,
-        vehicleGroupId: data?._id,
-        baseRate: 0,
-        extraKmRate: 0,
-        extraHrRate: 0,
-      };
-    })
-  );
+  const [vehicleGroupDataArray, setVehicleGroupDataArray] = useState<any[]>([]);
 
   useEffect(() => {
-    dispatch(getVehicleGroup({ page: "1", limit: "2" }));
+    dispatch(getVehicleGroupOptions({ page: "1", size: "2" }));
   }, []);
 
+  console.log(vehicleGroupDataArray, "vehicleGroupDataArray");
+
   useEffect(() => {
+    console.log("Called")
     if (Object.keys(selectedDutyType)) {
       const tempArr = selectedDutyType?.data?.pricing?.map((data: any) => {
         return {
@@ -91,19 +85,21 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
       setName(selectedDutyType?.data?.name);
       setValue(selectedDutyType?.data?.secondaryType);
     } else {
-      setVehicleGroupDataArray(
-        vehicleGroupData?.data?.map((data: any) => {
-          return {
-            name: data?.name,
-            vehicleGroupId: data?._id,
-            baseRate: 0,
-            extraKmRate: 0,
-            extraHrRate: 0,
-          };
-        })
-      );
+      const tempArr = vehicleGroupOption?.data?.map((data: any) => {
+        return {
+          name: data?.name,
+          vehicleGroupId: data?._id,
+          baseRate: 0,
+          extraKmRate: 0,
+          extraHrRate: 0,
+        };
+      });
+
+      console.log(tempArr, "tempArr")
+
+      setVehicleGroupDataArray(tempArr);
     }
-  }, [vehicleGroupData, selectedDutyType]);
+  }, [vehicleGroupOption, selectedDutyType]);
 
   const handleSelectChange = (value: any) => {
     setDutyType(value);
@@ -208,7 +204,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   return (
     <div className={styles.formContainer}>
       {contextHolder}
-      {(vehicleGroupStates.loading || dutyTypeStates.loading) && (
+      {(vehicleGroupOptionStates.loading || dutyTypeStates.loading) && (
         <div
           style={{
             position: "absolute",

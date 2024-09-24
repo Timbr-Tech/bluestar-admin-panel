@@ -64,7 +64,7 @@ export const deleteBankAccount = createAsyncThunk(
     const { database } = getState().database;
     const { pagination, q } = database;
 
-    dispatch(getBankAccount({ page: pagination.page, search: "", limit: 10 }));
+    dispatch(getBankAccount({ page: pagination.page, search: q, limit: 10 }));
     return response.data;
   }
 );
