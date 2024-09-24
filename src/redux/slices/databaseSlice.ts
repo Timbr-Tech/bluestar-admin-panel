@@ -761,7 +761,6 @@ const initialState: any = {
   vehicleGroupStates: {
     status: "idle",
     loading: false,
-    pagination: { page: 1, total: "", limit: 10 },
     error: "",
   },
   deleteVehicleGroupStates: {
