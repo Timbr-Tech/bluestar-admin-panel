@@ -52,7 +52,6 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
 
   // Function to handle changes in form values
   const handleValuesChange = (changedValues: any, allValues: any) => {
-    console.log("changedValues", changedValues);
     if (changedValues?.loan?.isActive !== undefined) {
       setIsActive(changedValues?.loan?.isActive);
     }
@@ -111,7 +110,6 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   };
   const [form] = Form.useForm();
 
-  console.log("selectedVehicle", selectedVehicle);
   useEffect(() => {
     if (Object.keys(selectedVehicle).length) {
       const values = selectedVehicle;
@@ -127,6 +125,10 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
       setIsActive(values?.loan?.isActive);
     }
   }, [selectedVehicle]);
+
+  useEffect(() => {
+    dispatch(getVehicleGroup({ page: "1", search: "", limit: 10 }));
+  }, []);
 
   return (
     <div className={styles.formContainer}>
@@ -147,9 +149,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           layout="vertical"
           form={form}
           onFinish={(Values) => {
-            console.log(Values);
+            console.log(Values, "Values");
             if (Object.keys(selectedVehicle).length) {
-              //
               dispatch(
                 updateVehicle({ id: selectedVehicle._id, payload: Values })
               );
@@ -240,7 +241,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             <Form.Item
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               label="Assigned Driver"
@@ -347,7 +348,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   label="Issue Date"
                   name={["insurance", "issueDate"]}
                   rules={[
-                    { required: true, message: "Issue Date is required" },
+                    { required: false, message: "Issue Date is required" },
                   ]}
                 >
                   <CustomDatePicker format="DD-MM-YYYY" />
@@ -357,7 +358,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                 <Form.Item
                   label="Due Date"
                   name={["insurance", "dueDate"]}
-                  rules={[{ required: true, message: "Due Date is required" }]}
+                  rules={[{ required: false, message: "Due Date is required" }]}
                 >
                   <CustomDatePicker format="DD-MM-YYYY" />
                 </Form.Item>
@@ -368,7 +369,11 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   name={["insurance", "premiumAmount"]}
                   rules={[{ required: true, message: "Due Date is required" }]}
                 >
-                  <Input placeholder="Enter premium amount..." />
+                  <Input
+                    placeholder="Enter premium amount..."
+                    type={"number"}
+                    min={0}
+                  />
                 </Form.Item>
               </div>
               <div className={styles.typeContainer}>
@@ -379,7 +384,11 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                     { required: true, message: "Cover amount is required" },
                   ]}
                 >
-                  <Input placeholder="Enter cover amount..." />
+                  <Input
+                    placeholder="Enter cover amount..."
+                    type={"number"}
+                    min={0}
+                  />
                 </Form.Item>
               </div>
               <div className={styles.typeContainer}>
@@ -432,7 +441,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                 <Form.Item
                   label="Registration Date"
                   name={["rto", "date"]}
-                  rules={[{ required: true, message: "Date is required" }]}
+                  rules={[{ required: false, message: "Date is required" }]}
                 >
                   <CustomDatePicker format="DD-MM-YYYY" />
                 </Form.Item>
@@ -469,7 +478,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           <Form.Item
             className={styles.secondaryContainer}
             name="parts"
-            label="parts"
+            label="Parts"
           >
             <Input.Group>
               <div className={styles.typeContainer}>
@@ -478,8 +487,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   name={["parts", "chasisNumber"]}
                   rules={[
                     {
-                      required: true,
-                      message: "chassis number is required",
+                      required: false,
+                      // message: "chassis number is required",
                     },
                   ]}
                 >
@@ -492,8 +501,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   name={["parts", "engineNumber"]}
                   rules={[
                     {
-                      required: true,
-                      message: "Engine  number is required",
+                      required: false,
+                      // message: "Engine  number is required",
                     },
                   ]}
                 >
@@ -504,7 +513,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           </Form.Item>
           <div className={styles.typeContainer}>
             <Form.Item
-              label="Expiry Date"
+              label="Car expiry Date"
               name="expiryDate"
               // getValueProps={(value) => ({
               //   value: value ? dayjs(value) : undefined,
@@ -512,7 +521,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               // getValueFromEvent={(date) => date?.toISOString()}
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: "Expiry date is required",
                 },
               ]}
@@ -677,7 +686,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               rules={[
                 {
                   // required: true,
-                  message: "notes is required",
+                  // message: "notes is required",
                 },
               ]}
             >

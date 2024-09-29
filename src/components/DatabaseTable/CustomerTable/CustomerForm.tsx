@@ -229,7 +229,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               label="Customer Code"
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               name="customerCode"
@@ -274,7 +274,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               label="Pin code"
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               name="pinCode"
@@ -288,7 +288,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               label="State"
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               name="state"
@@ -325,7 +325,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               label="Email Address"
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               name="email"
@@ -345,7 +345,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
                 label="Type"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                   },
                 ]}
                 name="type"
@@ -366,7 +366,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               <Form.Item
                 rules={[
                   {
-                    required: true,
+                    required: false,
                   },
                 ]}
                 label="GSTIN Number"
@@ -380,7 +380,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               <Form.Item
                 rules={[
                   {
-                    required: true,
+                    required: false,
                   },
                 ]}
                 label="Billing Name"
@@ -398,7 +398,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
                 label="Billing Address"
                 rules={[
                   {
-                    required: true,
+                    required: false,
                   },
                 ]}
                 name="billingAddress"

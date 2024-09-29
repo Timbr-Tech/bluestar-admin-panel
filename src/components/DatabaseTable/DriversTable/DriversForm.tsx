@@ -178,7 +178,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               label="Driver ID"
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
             >
@@ -229,7 +229,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
             <Form.Item
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               name="dob"
@@ -341,25 +341,25 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               label="Salary per month"
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
             >
-              <Input type="number" placeholder="Enter driver license..." />
+              <Input type="number" placeholder="Enter driver license..." min={0}/>
             </Form.Item>
           </div>
           <div className={styles.typeContainer}>
             <Form.Item
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               name="dailySalary"
               id="dailySalary"
               label="Daily Wages"
             >
-              <Input type="number" placeholder="Enter daily wage..." />
+              <Input type="number" placeholder="Enter daily wage..." min={0}/>
             </Form.Item>
           </div>
           <Form.Item id="timing" name="timing">
@@ -368,7 +368,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                 <Form.Item
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Please select an start time",
                     },
                   ]}
@@ -425,7 +425,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                 <Form.Item
                   rules={[
                     {
-                      required: true,
+                      required: false,
                       message: "Please select an end time",
                     },
                   ]}
@@ -485,12 +485,12 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
             <Form.Item
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               name="offDay"
               id="offDay"
-              label="offDay"
+              label="Off Day"
             >
               <Select
                 style={{ width: "100%" }}

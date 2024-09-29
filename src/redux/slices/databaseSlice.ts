@@ -11,7 +11,7 @@ export const addBankAccount = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/bank-accounts", body);
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 201) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -90,7 +90,7 @@ export const updateBankAccount = createAsyncThunk(
     const { database } = getState();
     const { pagination, q } = database;
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 200) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -111,7 +111,7 @@ export const addDutyType = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/duty-type", body);
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 201) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -202,7 +202,7 @@ export const addNewTax = createAsyncThunk(
     const { taxesStates } = database;
     const { pagination } = taxesStates;
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 201) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -285,7 +285,7 @@ export const updateTax = createAsyncThunk(
     const { database } = getState();
     const { pagination, q } = database;
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 200) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -320,7 +320,7 @@ export const addNewCustomer = createAsyncThunk(
   "database/addNewCustomer",
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/customer", body);
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 201) {
       notification.success({
         message: "Success",
         description: "New customer added successfully",
@@ -358,7 +358,7 @@ export const updateCustomer = createAsyncThunk(
     const response = await apiClient.patch(`/database/customer/${id}`, payload);
     const { database } = getState();
     const { pagination, q } = database;
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 200) {
       notification.success({
         message: "Success",
         description: "Customer updated successfully",
@@ -459,7 +459,7 @@ export const updateAllowance = createAsyncThunk(
     const { database } = getState();
     const { pagination, q } = database;
 
-    if (response?.status === 201 || response?.status === 200) {
+    if (response?.status === 200) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -493,8 +493,11 @@ export const addNewVehicle = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/vehicle", body);
 
-    dispatch(getVehicle({ page: "1", search: "", limit: 10 }));
-    return response.data;
+    if (response?.status === 201) {
+      dispatch(setOpenSidePanel(false));
+      dispatch(getVehicle({ page: "1", search: "", limit: 10 }));
+      return response.data;
+    }
   }
 );
 
@@ -563,16 +566,15 @@ export const addNewDriver = createAsyncThunk(
     const response = await apiClient.post("/database/driver", body);
 
     const { database } = getState();
-    const { driverStates, pagination } = database;
-    // const { pagination } = driverStates;
+    const { pagination } = database;
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       dispatch(setOpenSidePanel(false));
       dispatch(
         getDrivers({
-          page: pagination?.page,
-          search: pagination?.search,
-          limit: pagination?.limit,
+          page: 1,
+          search: "",
+          limit: 10,
         })
       );
 
@@ -667,7 +669,7 @@ export const addVehicleGroup = createAsyncThunk(
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/database/vehicle-group", body);
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 201) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
@@ -770,7 +772,7 @@ export const updateVehicleGroup = createAsyncThunk(
     const { database } = getState();
     const { pagination, q } = database;
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 200) {
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",

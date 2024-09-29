@@ -70,7 +70,6 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
 
   const columns: TableProps<IVehicleTable>["columns"] = [
     ...VEHICLES,
-    { title: "Status", dataIndex: "status", render: () => <div>Active</div> },
     {
       title: "",
       dataIndex: "action",
