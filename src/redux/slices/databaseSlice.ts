@@ -62,8 +62,8 @@ export const deleteBankAccount = createAsyncThunk(
     const { id } = params;
 
     const response = await apiClient.delete(`/database/bank-accounts/${id}`);
-    console.log(getState().database, "getState().database");
-    const { database } = getState().database;
+    console.log(getState(), "getState()");
+    const { database } = getState();
     const { pagination, q } = database;
 
     console.log(pagination, "pagination");
@@ -89,7 +89,7 @@ export const updateBankAccount = createAsyncThunk(
       `/database/bank-accounts/${id}`,
       payload
     );
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     if (response.status === 201 || response.status === 200) {
@@ -158,7 +158,7 @@ export const updateDutyType = createAsyncThunk(
       `/database/duty-type/${id}`,
       payload
     );
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     if (response?.status === 200) {
@@ -182,7 +182,7 @@ export const deleteDutyType = createAsyncThunk(
     const { id } = params;
 
     const response = await apiClient.delete(`/database/duty-type/${id}`);
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     if (response?.status === 200) {
@@ -200,7 +200,7 @@ export const addNewTax = createAsyncThunk(
   async (body: any, { dispatch, getState }: any) => {
     const response = await apiClient.post("/database/tax", body);
 
-    const { database } = getState().database;
+    const { database } = getState();
     const { taxesStates } = database;
     const { pagination } = taxesStates;
 
@@ -262,7 +262,7 @@ export const deleteTax = createAsyncThunk(
     const { id } = params;
     const response = await apiClient.delete(`/database/tax/${id}`);
 
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     dispatch(
@@ -284,7 +284,7 @@ export const updateTax = createAsyncThunk(
 
     const response = await apiClient.patch(`/database/tax/${id}`, payload);
 
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     if (response.status === 201 || response.status === 200) {
@@ -358,7 +358,7 @@ export const updateCustomer = createAsyncThunk(
     const { payload, id } = body;
 
     const response = await apiClient.patch(`/database/customer/${id}`, payload);
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
     if (response.status === 201 || response.status === 200) {
       notification.success({
@@ -376,7 +376,7 @@ export const deleteCustomer = createAsyncThunk(
   "database/deleteCustomer",
   async (body: any, { dispatch, getState }: any) => {
     const { id } = body;
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
     dispatch(getCustomer({ page: pagination.page, search: q, limit: 10 }));
 
@@ -455,7 +455,7 @@ export const updateAllowance = createAsyncThunk(
       `/database/allowance/${id}`,
       payload
     );
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     if (response?.status === 201 || response?.status === 200) {
@@ -478,7 +478,7 @@ export const deleteAllowance = createAsyncThunk(
     const { id } = params;
 
     const response = await apiClient.delete(`/database/allowance/${id}`);
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
     dispatch(getAllowances({ page: pagination.page, search: q, limit: 10 }));
 
@@ -534,7 +534,7 @@ export const updateVehicle = createAsyncThunk(
   async (body: any, { dispatch, getState }: any) => {
     const { payload, id } = body;
     const response = await apiClient.patch(`/database/vehicle/${id}`, payload);
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
     dispatch(getVehicle({ page: pagination.page, search: q, limit: 10 }));
     return response.data;
@@ -547,7 +547,7 @@ export const deleteVehicle = createAsyncThunk(
   async (body: any, { dispatch, getState }: any) => {
     const { id } = body;
     const response = await apiClient.delete(`/database/vehicle/${id}`);
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     dispatch(getVehicle({ page: pagination.page, search: q, limit: 10 }));
@@ -561,7 +561,7 @@ export const addNewDriver = createAsyncThunk(
   async (body: any, { dispatch, getState }: any) => {
     const response = await apiClient.post("/database/driver", body);
 
-    const { database } = getState().database;
+    const { database } = getState();
     const { driverStates, pagination } = database;
     // const { pagination } = driverStates;
 
@@ -623,7 +623,7 @@ export const updateDriver = createAsyncThunk(
 
     const response = await apiClient.patch(`/database/driver/${id}`, payload);
 
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination } = database;
     dispatch(setOpenSidePanel(false));
     dispatch(
@@ -646,7 +646,7 @@ export const deleteDriver = createAsyncThunk(
 
     const response = await apiClient.delete(`/database/driver/${id}`);
 
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     dispatch(
@@ -723,8 +723,14 @@ export const deleteVehicleGroup = createAsyncThunk(
 
   async (params: any, { dispatch, getState }: any) => {
     const { id } = params;
-    const { database } = getState().database;
+    console.log(id, "id");
+
+    console.log(getState(), "getState");
+
+    const { database } = getState();
     const { pagination, q } = database;
+
+    console.log(id, "id");
 
     const response = await apiClient.delete(`/database/vehicle-group/${id}`);
 
@@ -760,7 +766,7 @@ export const updateVehicleGroup = createAsyncThunk(
       `/database/vehicle-group/${id}`,
       payload
     );
-    const { database } = getState().database;
+    const { database } = getState();
     const { pagination, q } = database;
 
     if (response.status === 201 || response.status === 200) {

@@ -83,6 +83,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   };
 
   const handleDeleteVehicleGroup = () => {
+    console.log(deleteVehicleGroupId, "deleteVehicleGroupId")
     dispatch(deleteVehicleGroup({ id: deleteVehicleGroupId }));
     setOpenDeleteModal(false);
   };
