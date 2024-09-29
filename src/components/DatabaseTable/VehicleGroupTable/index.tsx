@@ -75,7 +75,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton}>
+        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -121,6 +121,14 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     <>
       <Table
         bordered
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              dispatch(getVehicleGroupById({ id: record._id }));
+              handleOpenSidePanel();
+            },
+          };
+        }}
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

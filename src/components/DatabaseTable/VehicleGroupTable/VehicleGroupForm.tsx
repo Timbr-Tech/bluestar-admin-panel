@@ -102,7 +102,11 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               ? "Vehicle Group"
               : "New Vehicle Group"}
           </div>
-          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+          <div className={styles.primaryText}>
+            {Object.keys(selectedVehicleGroup).length
+              ? "View vehicle group details"
+              : "Add details of your vehicle group"}
+          </div>
         </div>
         <Form
           name="VehicleGroupForm"

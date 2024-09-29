@@ -133,8 +133,14 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
       {contextHolder}
       <div className={styles.container}>
         <div className={styles.formHeader}>
-          <div className={styles.header}>New Vehicle</div>
-          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+          <div className={styles.header}>
+            {Object.keys(selectedVehicle).length ? "Vehicle" : "New Vehicle"}
+          </div>
+          <div className={styles.primaryText}>
+            {Object.keys(selectedVehicle).length
+              ? "Add details of your vehicle"
+              : "View vehicle details"}
+          </div>
         </div>
         <Form
           requiredMark={CustomizeRequiredMark}

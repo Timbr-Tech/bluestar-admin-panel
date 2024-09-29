@@ -86,7 +86,11 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
               ? "Bank Account"
               : "New Bank Account"}
           </div>
-          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+          <div className={styles.primaryText}>
+            {Object.keys(selectedBankAccount)?.length
+              ? "View bank account details"
+              : "Add details of your bank account"}
+          </div>
         </div>
         <Form
           onFinishFailed={() => {

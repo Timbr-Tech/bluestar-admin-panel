@@ -90,7 +90,11 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
           <div className={styles.header}>
             {Object.keys(selectedTax)?.length ? "Tax Type" : "New Tax Type"}
           </div>
-          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+          <div className={styles.primaryText}>
+            {Object.keys(selectedTax)?.length
+              ? "View tax details"
+              : "Add new tax details"}
+          </div>
         </div>
         <Form
           requiredMark={CustomizeRequiredMark}

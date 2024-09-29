@@ -72,7 +72,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton}>
+        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -127,6 +127,14 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
     <>
       <Table
         bordered
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              dispatch(getTaxesById({ id: record._id }));
+              handleOpenSidePanel();
+            },
+          };
+        }}
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

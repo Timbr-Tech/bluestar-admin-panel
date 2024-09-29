@@ -65,7 +65,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton}>
+        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -120,6 +120,14 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
     <>
       <Table
         bordered
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              dispatch(getAllowanceById({ id: record._id }));
+              handleOpenSidePanel();
+            },
+          };
+        }}
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

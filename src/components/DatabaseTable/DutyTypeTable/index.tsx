@@ -80,7 +80,7 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton}>
+        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -118,6 +118,15 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
     <>
       <Table
         bordered
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              dispatch(getDutyTypeById({ id: record._id }));
+              handleOpenSidePanel();
+            },
+          };
+        }}
+        rowClassName={styles.rowstyles}
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

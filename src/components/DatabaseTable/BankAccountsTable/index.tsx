@@ -80,7 +80,7 @@ const BankAccountsTable = ({
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton}>
+        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -106,7 +106,9 @@ const BankAccountsTable = ({
   useEffect(() => {
     dispatch(
       getBankAccount({
+        page: pagination.page,
         search: q,
+        limit: pagination.limit,
       })
     );
   }, [q]);
@@ -130,6 +132,14 @@ const BankAccountsTable = ({
           onChange: onChange,
         }}
         bordered
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              dispatch(getBankAccountById({ id: record._id }));
+              handleOpenSidePanel();
+            },
+          };
+        }}
         columns={columns}
         dataSource={bankAccounts?.data}
         loading={bankAccountStates?.loading || deleteBankAccountStates?.loading}

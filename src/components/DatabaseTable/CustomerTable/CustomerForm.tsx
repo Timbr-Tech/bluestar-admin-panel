@@ -179,7 +179,11 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
           <div className={styles.header}>
             {Object.keys(selectedCustomer).length ? "Customer" : "New Customer"}
           </div>
-          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+          <div className={styles.primaryText}>
+            {Object.keys(selectedCustomer).length
+              ? "View customer details"
+              : "Add details of new customer"}
+          </div>
         </div>
         <Form
           requiredMark={CustomizeRequiredMark}

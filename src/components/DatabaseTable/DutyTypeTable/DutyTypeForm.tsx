@@ -68,7 +68,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   console.log(vehicleGroupDataArray, "vehicleGroupDataArray");
 
   useEffect(() => {
-    console.log("Called")
+    console.log("Called");
     if (Object.keys(selectedDutyType)) {
       const tempArr = selectedDutyType?.data?.pricing?.map((data: any) => {
         return {
@@ -95,7 +95,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
         };
       });
 
-      console.log(tempArr, "tempArr")
+      console.log(tempArr, "tempArr");
 
       setVehicleGroupDataArray(tempArr);
     }
@@ -229,7 +229,11 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
               ? "Duty Type"
               : "New Duty Type"}
           </div>
-          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+          <div className={styles.primaryText}>
+            {Object.keys(selectedDutyType).length
+              ? "View duty type details"
+              : "Add details of your duty type"}
+          </div>
         </div>
         <div className={styles.form}>
           <div className={styles.typeContainer}>

@@ -71,7 +71,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton}>
+        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -113,6 +113,14 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
     <>
       <Table
         bordered
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              dispatch(getCustomerById({ id: record._id }));
+              handleOpenSidePanel();
+            },
+          };
+        }}
         rowSelection={{
           type: "checkbox",
           onChange: onChange,

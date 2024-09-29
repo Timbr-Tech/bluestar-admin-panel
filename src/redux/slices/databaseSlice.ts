@@ -26,6 +26,7 @@ export const addBankAccount = createAsyncThunk(
 export const getBankAccount = createAsyncThunk(
   "database/getBankAccount",
   async (params: any, { dispatch }) => {
+    console.log(params, "params");
     const response = await apiClient.get(`/database/bank-accounts/`, {
       params,
     });
@@ -61,10 +62,19 @@ export const deleteBankAccount = createAsyncThunk(
     const { id } = params;
 
     const response = await apiClient.delete(`/database/bank-accounts/${id}`);
+    console.log(getState().database, "getState().database");
     const { database } = getState().database;
     const { pagination, q } = database;
 
-    dispatch(getBankAccount({ page: pagination.page, search: q, limit: 10 }));
+    console.log(pagination, "pagination");
+
+    dispatch(
+      getBankAccount({
+        page: pagination.page,
+        search: q,
+        limit: pagination.limit,
+      })
+    );
     return response.data;
   }
 );

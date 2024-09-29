@@ -119,7 +119,11 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
               ? "Allowance"
               : "New Allowance"}
           </div>
-          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+          <div className={styles.primaryText}>
+            {Object.keys(selectedAllowance).length
+              ? "See allowance for your drivers"
+              : "Add new allowance"}
+          </div>
         </div>
         <div className={styles.form}>
           <div className={styles.typeContainer}>

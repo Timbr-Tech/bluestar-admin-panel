@@ -138,7 +138,11 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
           <div className={styles.header}>
             {Object.keys(selectedDriver).length ? "Driver" : "New Driver"}
           </div>
-          <div className={styles.primaryText}>Redesign of untitledui.com</div>
+          <div className={styles.primaryText}>
+            {Object.keys(selectedDriver).length
+              ? "View driver details"
+              : "Add details of new driver"}
+          </div>
         </div>
         <Form
           onFinishFailed={(err) => {
