@@ -5,12 +5,15 @@ import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import Modal from "../../Modal";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
+import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import type { MenuProps } from "antd";
+import cn from "classnames";
 import {
   getVehicleGroup,
   getVehicleGroupById,
   deleteVehicleGroup,
+  updateVehicleGroup,
   setPagination,
 } from "../../../redux/slices/databaseSlice";
 import type { TableProps } from "antd";
@@ -22,6 +25,7 @@ interface IVehicleGroupTableData {
   _id: string;
   name: string;
   vehicleCount: number;
+  status: any;
 }
 
 interface IVehicleGroupTable {
@@ -39,7 +43,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     pagination,
   } = useAppSelector((state) => state.database);
   const [deleteVehicleGroupId, setDeleteVehicleGroupId] = useState<string>("");
-
+  const [currentVehicleGroup, setCurrentVehicleGroup] = useState<any>({});
   const handleCloseModal = () => {
     setOpenDeleteModal(false);
   };
@@ -48,6 +52,13 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     if (e.key === "1") {
       dispatch(getVehicleGroupById({ id: deleteVehicleGroupId }));
       handleOpenSidePanel();
+    } else if (e.key === "2") {
+      dispatch(
+        updateVehicleGroup({
+          payload: { isActive: true },
+          id: deleteVehicleGroupId,
+        })
+      );
     }
   };
 
@@ -56,6 +67,13 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
       label: "Edit Vehicle Group",
       key: "1",
       icon: <EditIcon />,
+    },
+    {
+      label: (
+        <>{currentVehicleGroup?.isActive ? "Mark Inactive" : "Mark Active"}</>
+      ),
+      key: "2",
+      icon: <Clipboard />,
     },
   ];
 
@@ -75,7 +93,13 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.editButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentVehicleGroup(record);
+          }}
+        >
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -101,6 +125,8 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   useEffect(() => {
     dispatch(
       getVehicleGroup({
+        page: 1,
+        limit: "",
         search: q,
       })
     );
@@ -134,7 +160,25 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
           onChange: onChange,
         }}
         columns={columns}
-        dataSource={vehicleGroupData?.data}
+        dataSource={vehicleGroupData?.data?.map((data: any) => {
+          return {
+            ...data,
+            status: (
+              <div
+                className={cn(styles.status, {
+                  [styles.active]: data?.isActive,
+                })}
+              >
+                <div
+                  className={cn(styles.dot, {
+                    [styles.active]: data?.isActive,
+                  })}
+                />
+                {data?.isActive ? "Active" : "Inactive"}
+              </div>
+            ),
+          };
+        })}
         loading={
           vehicleGroupStates?.loading || deleteVehicleGroupStates?.loading
         }

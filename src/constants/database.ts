@@ -84,6 +84,10 @@ export const VEHICLE_GROUPS = [
     title: "Total vehicles",
     dataIndex: "vehicleCount",
   },
+  {
+    title: "Status",
+    dataIndex: "status",
+  },
 ];
 
 export const CUSTOMERS = [
