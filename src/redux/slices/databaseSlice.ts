@@ -66,8 +66,6 @@ export const deleteBankAccount = createAsyncThunk(
     const { database } = getState();
     const { pagination, q } = database;
 
-    console.log(pagination, "pagination");
-
     dispatch(
       getBankAccount({
         page: pagination.page,
@@ -212,7 +210,7 @@ export const addNewTax = createAsyncThunk(
       });
       dispatch(
         getTaxes({
-          page: pagination.page,
+          page: 1,
           search: pagination.search,
           limit: 10,
         })
@@ -378,11 +376,14 @@ export const deleteCustomer = createAsyncThunk(
     const { id } = body;
     const { database } = getState();
     const { pagination, q } = database;
-    dispatch(getCustomer({ page: pagination.page, search: q, limit: 10 }));
 
     const response = await apiClient.delete(`/database/customer/${id}`);
 
-    return response.data;
+    if (response.status === 200) {
+      dispatch(getCustomer({ page: pagination.page, search: q, limit: 10 }));
+
+      return response.data;
+    }
   }
 );
 

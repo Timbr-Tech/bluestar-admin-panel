@@ -84,10 +84,10 @@ export const VEHICLE_GROUPS = [
     title: "Total vehicles",
     dataIndex: "vehicleCount",
   },
-  {
-    title: "Status",
-    dataIndex: "status",
-  },
+  // {
+  //   title: "Status",
+  //   dataIndex: "status",
+  // },
 ];
 
 export const CUSTOMERS = [
@@ -102,6 +102,10 @@ export const CUSTOMERS = [
   {
     title: "GSTIN number",
     dataIndex: "gstNumber",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
   },
 ];
 

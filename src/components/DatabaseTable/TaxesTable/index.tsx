@@ -13,6 +13,7 @@ import {
   getTaxes,
   deleteTax,
   getTaxesById,
+  updateTax,
 } from "../../../redux/slices/databaseSlice";
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
@@ -33,6 +34,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
   const { taxes, taxesStates, deleteTaxesState, q, pagination } =
     useAppSelector((state) => state.database);
   const dispatch = useAppDispatch();
+  const [currentTax, setCurrentTax] = useState<any>({});
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [taxId, setTaxId] = useState("");
 
@@ -40,6 +42,13 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
     if (e.key === "1") {
       dispatch(getTaxesById({ id: taxId }));
       handleOpenSidePanel();
+    } else if (e.key === "2") {
+      dispatch(
+        updateTax({
+          payload: { isActive: currentTax?.isActive ? false : true },
+          id: currentTax?._id,
+        })
+      );
     }
   };
 
@@ -54,10 +63,9 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
       icon: <EditIcon />,
     },
     {
-      label: "Mark Inactive",
+      label: <>{currentTax?.isActive ? "Mark Inactive" : "Mark Active"}</>,
       key: "2",
       icon: <Clipboard />,
-      disabled: true,
     },
   ];
 
@@ -72,7 +80,10 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.editButton} onClick={(e) => {
+          e.stopPropagation()
+          setCurrentTax(record)
+        }}>
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -144,9 +155,17 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
           return {
             ...data,
             status: (
-              <div className={cn(styles.status, { [styles.active]: true })}>
-                <div className={cn(styles.dot, { [styles.active]: true })} />
-                {"Active"}
+              <div
+                className={cn(styles.status, {
+                  [styles.active]: data?.isActive,
+                })}
+              >
+                <div
+                  className={cn(styles.dot, {
+                    [styles.active]: data?.isActive,
+                  })}
+                />
+                {data?.isActive ? "Active" : "Inactive"}
               </div>
             ),
           };

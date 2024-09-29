@@ -6,8 +6,10 @@ import {
   getCustomer,
   getCustomerById,
   deleteCustomer,
-  getBankAccount,
+  updateCustomer,
 } from "../../../redux/slices/databaseSlice";
+import cn from "classnames";
+import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import type { MenuProps } from "antd";
 import Modal from "../../Modal";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
@@ -22,6 +24,7 @@ interface ICustomerTableData {
   name: string;
   phoneNumber: string;
   gstNumber: string;
+  status: any;
 }
 
 interface ICustomerTable {
@@ -31,6 +34,7 @@ interface ICustomerTable {
 const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [currentCustomer, setCurrentCustomer] = useState<any>({});
   const [customerId, setCustomerId] = useState("");
 
   const { customers, customersStates, q, deleteCustomersStates, pagination } =
@@ -45,6 +49,13 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
     if (e.key === "1") {
       dispatch(getCustomerById({ id: customerId }));
       handleOpenSidePanel();
+    } else if (e.key === "2") {
+      dispatch(
+        updateCustomer({
+          payload: { isActive: currentCustomer?.isActive ? false : true },
+          id: currentCustomer?._id,
+        })
+      );
     }
   };
 
@@ -57,6 +68,11 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
       label: "Edit Customer",
       key: "1",
       icon: <EditIcon />,
+    },
+    {
+      label: <>{currentCustomer?.isActive ? "Mark Inactive" : "Mark Active"}</>,
+      key: "2",
+      icon: <Clipboard />,
     },
   ];
 
@@ -71,7 +87,13 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
       title: "",
       dataIndex: "action",
       render: (_, record) => (
-        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.editButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentCustomer(record);
+          }}
+        >
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -127,7 +149,24 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
         }}
         columns={columns}
         dataSource={customers?.data?.map((data: any) => {
-          return { ...data, gstNumber: data?.taxDetails?.gstNumber };
+          return {
+            ...data,
+            gstNumber: data?.taxDetails?.gstNumber,
+            status: (
+              <div
+                className={cn(styles.status, {
+                  [styles.active]: data?.isActive,
+                })}
+              >
+                <div
+                  className={cn(styles.dot, {
+                    [styles.active]: data?.isActive,
+                  })}
+                />
+                {data?.isActive ? "Active" : "Inactive"}
+              </div>
+            ),
+          };
         })}
         loading={customersStates?.loading || deleteCustomersStates?.loading}
         pagination={false}

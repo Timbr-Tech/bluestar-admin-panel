@@ -25,7 +25,7 @@ interface IVehicleGroupTableData {
   _id: string;
   name: string;
   vehicleCount: number;
-  status: any;
+  // status: any;
 }
 
 interface IVehicleGroupTable {
@@ -55,8 +55,8 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     } else if (e.key === "2") {
       dispatch(
         updateVehicleGroup({
-          payload: { isActive: true },
-          id: deleteVehicleGroupId,
+          payload: { isActive: currentVehicleGroup?.isActive ? false : true },
+          id: currentVehicleGroup?._id,
         })
       );
     }
@@ -83,7 +83,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   };
 
   const handleDeleteVehicleGroup = () => {
-    console.log(deleteVehicleGroupId, "deleteVehicleGroupId")
+    console.log(deleteVehicleGroupId, "deleteVehicleGroupId");
     dispatch(deleteVehicleGroup({ id: deleteVehicleGroupId }));
     setOpenDeleteModal(false);
   };
@@ -164,20 +164,20 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
         dataSource={vehicleGroupData?.data?.map((data: any) => {
           return {
             ...data,
-            status: (
-              <div
-                className={cn(styles.status, {
-                  [styles.active]: data?.isActive,
-                })}
-              >
-                <div
-                  className={cn(styles.dot, {
-                    [styles.active]: data?.isActive,
-                  })}
-                />
-                {data?.isActive ? "Active" : "Inactive"}
-              </div>
-            ),
+            // status: (
+            //   <div
+            //     className={cn(styles.status, {
+            //       [styles.active]: data?.isActive,
+            //     })}
+            //   >
+            //     <div
+            //       className={cn(styles.dot, {
+            //         [styles.active]: data?.isActive,
+            //       })}
+            //     />
+            //     {data?.isActive ? "Active" : "Inactive"}
+            //   </div>
+            // ),
           };
         })}
         loading={
