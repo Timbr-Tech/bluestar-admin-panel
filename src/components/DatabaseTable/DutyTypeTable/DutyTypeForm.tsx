@@ -4,7 +4,6 @@ import { useAppSelector, useAppDispatch } from "../../../hooks/store";
 import type { RadioChangeEvent } from "antd";
 import {
   getVehicleGroupOptions,
-  getVehicleGroup,
   updateDutyType,
   addDutyType,
 } from "../../../redux/slices/databaseSlice";
@@ -52,7 +51,6 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   const [dutyType, setDutyType] = useState("");
   const [name, setName] = useState("");
   const {
-    vehicleGroupData,
     vehicleGroupOptionStates,
     selectedDutyType,
     updatedDutyTypeStates,
@@ -65,11 +63,8 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
     dispatch(getVehicleGroupOptions({ page: "1", size: "2" }));
   }, []);
 
-  console.log(vehicleGroupDataArray, "vehicleGroupDataArray");
-
   useEffect(() => {
-    console.log("Called");
-    if (Object.keys(selectedDutyType)) {
+    if (Object.keys(selectedDutyType).length) {
       const tempArr = selectedDutyType?.data?.pricing?.map((data: any) => {
         return {
           name: data?.vehicleGroup?.name,
