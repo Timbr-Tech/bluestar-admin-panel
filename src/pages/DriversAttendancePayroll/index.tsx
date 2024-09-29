@@ -25,6 +25,7 @@ import {
 } from "@ant-design/icons";
 import row from "antd/es/row";
 import { useState } from "react";
+import { render } from "react-dom";
 
 const MarkedAttendance = () => {
   const [open, setOpen] = useState(false);
@@ -130,7 +131,24 @@ const columns: TableColumnsType<any> = [
     key: "age",
     sorter: true,
   },
-  { title: "date 1", dataIndex: "attendance", key: "1" },
+  {
+    title: "date 1",
+    dataIndex: "attendance",
+    key: "1",
+
+    render: (value, row) => (
+      <div
+        style={{
+          background: value === "P" ? "green" : "red",
+          color: "white",
+          padding: "1rem",
+          margin: "-1rem",
+        }}
+      >
+        {value}
+      </div>
+    ),
+  },
   { title: "date 2", dataIndex: "attendance", key: "2" },
   { title: "date 2", dataIndex: "attendance", key: "2" },
   { title: "date 2", dataIndex: "attendance", key: "2" },
@@ -202,9 +220,9 @@ const DriversAttendancePayroll = () => {
   return (
     <div className={cn("container", styles.container)}>
       <div className={styles.headingContainer}>
-        <div className={styles.heading}>Database</div>
+        <div className={styles.heading}>Drivers Attendance and Payroll</div>
         <div className={styles.text}>
-          Manage your source of truth from here.
+          Manage your drivers attendance and payrolls here
         </div>
       </div>
       <div className={styles.attendanceTable}>
