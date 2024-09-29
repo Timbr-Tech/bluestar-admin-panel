@@ -59,8 +59,11 @@ const MarkedAttendance = () => {
             style={{
               width: "100%",
               marginTop: "0.5rem",
+              overflow: "scroll",
             }}
+            multiple
             allowClear
+            maxTagCount="responsive"
             onChange={handleChange}
           />
           <Flex
@@ -127,9 +130,7 @@ const columns: TableColumnsType<any> = [
     render: (value, row) => {
       return (
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-          <Avatar style={{ backgroundColor: "grey", verticalAlign: "middle" }}>
-            {value[0]}
-          </Avatar>
+          <Avatar>{value[0]}</Avatar>
           {value}
         </div>
       );
@@ -154,6 +155,9 @@ const columns: TableColumnsType<any> = [
           color: "white",
           padding: "1rem",
           margin: "-1rem",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         {value}
