@@ -3,4 +3,31 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  .headingContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 0 40px;
+
+    .heading {
+      color: #101828;
+      font-size: var(--Font-size-display-sm, 30px);
+      font-weight: 600;
+      line-height: 38px;
+    }
+
+    .text {
+      color: #475467;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-height-text-md, 24px);
+    }
+  }
+  .attendanceTable {
+    padding: 0 40px;
+  }
+}
+.extraTabComponent {
+  display: flex;
+  gap: 1rem;
 }
