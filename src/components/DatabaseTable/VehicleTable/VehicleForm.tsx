@@ -506,10 +506,10 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             <Form.Item
               label="Expiry Date"
               name="expiryDate"
-              getValueProps={(value) => ({
-                value: value ? dayjs(value) : undefined,
-              })}
-              getValueFromEvent={(date) => date?.toISOString()}
+              // getValueProps={(value) => ({
+              //   value: value ? dayjs(value) : undefined,
+              // })}
+              // getValueFromEvent={(date) => date?.toISOString()}
               rules={[
                 {
                   required: true,
