@@ -2,6 +2,7 @@
 import cn from "classnames";
 import styles from "./index.module.scss";
 import {
+  Avatar,
   Button,
   DatePicker,
   Dropdown,
@@ -123,6 +124,16 @@ const columns: TableColumnsType<any> = [
     dataIndex: "name",
     key: "name",
     fixed: "left",
+    render: (value, row) => {
+      return (
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+          <Avatar style={{ backgroundColor: "grey", verticalAlign: "middle" }}>
+            {value[0]}
+          </Avatar>
+          {value}
+        </div>
+      );
+    },
   },
   {
     title: "Age",
