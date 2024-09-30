@@ -15,7 +15,7 @@ export const addBankAccount = createAsyncThunk(
       dispatch(setOpenSidePanel(false));
       notification.success({
         message: "Success",
-        description: "New bank account added successfully",
+        description: "New bank account added successfully.",
       });
       dispatch(getBankAccount({ page: 1, limit: 10 }));
       return response.data;
