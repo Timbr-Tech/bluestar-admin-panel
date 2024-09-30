@@ -275,8 +275,9 @@ const columnsPayroll: TableColumnsType<any> = [
     render: (value, row) => (
       <div
         style={{
-          background: value === "P" ? "green" : "red",
-          color: "white",
+          background: value === "P" ? "#DCFAE6" : "#FEE4E2",
+          color: value === "P" ? "#079455" : "#D92D20",
+          
           padding: "1rem",
           margin: "-1rem",
           display: "flex",
