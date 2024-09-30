@@ -200,13 +200,15 @@ const columns: TableColumnsType<any> = [
     render: (value, row) => (
       <div
         style={{
-          background: value === "P" ? "green" : "red",
-          color: "white",
-          padding: "1rem",
+          background: value === "P" ? "#DCFAE6" : "#FEE4E2",
+          color: value === "P" ? "#079455" : "#D92D20",
+          padding: "2rem",
           margin: "-1rem",
+          fontWeight: "bold",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          zIndex: 22,
         }}
       >
         {value}
@@ -318,6 +320,9 @@ const columnsPayroll: TableColumnsType<any> = [
 const dataSource = [
   { key: "1", name: "Olivia", age: 32, attendance: "P" },
   { key: "2", name: "Ethan", age: 40, attendance: "A" },
+  { key: "1", name: "Olivia", age: 32, attendance: "P" },
+  { key: "1", name: "Olivia", age: 32, attendance: "P" },
+  { key: "1", name: "Olivia", age: 32, attendance: "A" },
 ];
 
 const handleChange = (value: string) => {
