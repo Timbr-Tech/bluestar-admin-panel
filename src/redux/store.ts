@@ -1,4 +1,5 @@
 /* eslint-disable */
+import attendanceSlice from "./slices/attendanceSlice";
 import authSlice from "./slices/authSlice";
 import bookingSlice from "./slices/bookingSlice";
 import databaseSlice from "./slices/databaseSlice";
@@ -9,6 +10,7 @@ const store = configureStore({
     auth: authSlice,
     database: databaseSlice,
     booking: bookingSlice,
+    attendance: attendanceSlice,
   },
 });
 
