@@ -1,6 +1,7 @@
 /* eslint-disable */
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Tooltip } from "antd";
+import cn from "classnames";
 import { ReactComponent as Dashboard } from "../../icons/homeLine.svg";
 import { ReactComponent as Database } from "../../icons/database.svg";
 import { ReactComponent as Drivers } from "../../icons/drivers.svg";
@@ -12,6 +13,8 @@ import { RouteName } from "../../constants/routes";
 import styles from "./index.module.scss";
 
 const Sidebar = () => {
+  const location = useLocation();
+
   return (
     <div className={styles.container}>
       <Link to={RouteName.HOME}>
@@ -22,42 +25,84 @@ const Sidebar = () => {
       <div className={styles.iconsContainer}>
         <Tooltip placement="right" title={"Dashboard"}>
           <Link to={RouteName.DASHBOARD}>
-            <div className={styles.icon}>
-              <Dashboard className={styles.svgIcon} />
+            <div
+              className={cn(styles.icon, {
+                [styles.selected]: location.pathname.startsWith(
+                  RouteName.DASHBOARD
+                ),
+              })}
+            >
+              <Dashboard
+                className={cn(styles.svgIcon, {
+                  [styles.selected]: location.pathname.startsWith(
+                    RouteName.DASHBOARD
+                  ),
+                })}
+              />
             </div>
           </Link>
         </Tooltip>
         <Tooltip placement="right" title={"Bookings"}>
           <Link to={RouteName.BOOKINGS}>
-            <div className={styles.icon}>
+            <div
+              className={cn(styles.icon, {
+                [styles.selected]: location.pathname.startsWith(
+                  RouteName.BOOKINGS
+                ),
+              })}
+            >
               <BookingsIcon className={styles.svgIcon} />
             </div>
           </Link>
         </Tooltip>
         <Tooltip placement="right" title={"Database"}>
           <Link to={`${RouteName.DATABASE}/duty_types`}>
-            <div className={styles.icon}>
+            <div
+              className={cn(styles.icon, {
+                [styles.selected]: location.pathname.startsWith(
+                  RouteName.DATABASE
+                ),
+              })}
+            >
               <Database className={styles.svgIcon} />
             </div>
           </Link>
         </Tooltip>
         <Tooltip placement="right" title={"Drivers attendance & Payroll"}>
           <Link to={RouteName.DRIVERS}>
-            <div className={styles.icon}>
+            <div
+              className={cn(styles.icon, {
+                [styles.selected]: location.pathname.startsWith(
+                  RouteName.DRIVERS
+                ),
+              })}
+            >
               <Drivers className={styles.svgIcon} />
             </div>
           </Link>
         </Tooltip>
         <Tooltip placement="right" title={"Vehicle Expense"}>
           <Link to={RouteName.VEHICLE_EXPENSE}>
-            <div className={styles.icon}>
+            <div
+              className={cn(styles.icon, {
+                [styles.selected]: location.pathname.startsWith(
+                  RouteName.VEHICLE_EXPENSE
+                ),
+              })}
+            >
               <VehicleRename className={styles.svgIcon} />
             </div>
           </Link>
         </Tooltip>
         <Tooltip placement="right" title={"Availability"}>
           <Link to={RouteName.AVAILABILITY}>
-            <div className={styles.icon}>
+            <div
+              className={cn(styles.icon, {
+                [styles.selected]: location.pathname.startsWith(
+                  RouteName.AVAILABILITY
+                ),
+              })}
+            >
               <Availability className={styles.svgIcon} />
             </div>
           </Link>
