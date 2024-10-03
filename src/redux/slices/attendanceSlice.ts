@@ -4,6 +4,7 @@ import apiClient from "../../utils/configureAxios";
 
 const initialState = {
   isViewDrawerOpen: false,
+  isSlipDrawerOpen: false,
   attendance: [],
   filters: {
     status: "",
@@ -60,6 +61,13 @@ export const attendanceSlice = createSlice({
     setIsViewDrawerClose: (state) => {
       state.isViewDrawerOpen = false;
     },
+    setIsSlipDrawerOpen: (state) => {
+      state.isSlipDrawerOpen = true;
+    },
+
+    setIsSlipDrawerClose: (state) => {
+      state.isSlipDrawerOpen = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -88,8 +96,10 @@ export const attendanceSlice = createSlice({
 });
 export const { actions, reducer } = attendanceSlice;
 export const {
-  setIsViewDrawerOpen,
-  setIsViewDrawerClose,
+  setIsSlipDrawerOpen,
+  setIsSlipDrawerClose,
   setAttendanceFilter,
+  setIsViewDrawerClose,
+  setIsViewDrawerOpen,
 } = actions;
 export default attendanceSlice.reducer;
