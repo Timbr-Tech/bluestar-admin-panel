@@ -4,10 +4,8 @@
 
   .headingContainer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 2px;
     position: sticky;
     top: 0px;
     padding: 2.5rem 1.25rem;
@@ -37,4 +35,35 @@
       gap: 0.5rem;
     }
   }
+
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 24px;
+
+    .searchContainer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e4e7ec;
+      .inputContainer {
+        max-width: 25rem;
+      }
+    }
+  }
+}
+
+.clearText {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: #475467;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
 }

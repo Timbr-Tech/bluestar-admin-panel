@@ -144,6 +144,15 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
         scroll={{
           x: 756,
         }}
+        onHeaderRow={(columns) => {
+          return {
+            style: {
+              backgroundColor: "#1890ff",
+              color: "white",
+              fontWeight: "bold",
+            },
+          };
+        }}
         footer={() => (
           <CustomPagination
             total={pagination?.total ?? 0}

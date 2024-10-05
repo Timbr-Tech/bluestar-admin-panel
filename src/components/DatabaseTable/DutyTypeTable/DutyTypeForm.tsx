@@ -325,6 +325,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
           )}
         </div>
       </div>
+      {/* <div className={styles.bottomContainer}></div> */}
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
         <Button

@@ -60,18 +60,22 @@ export const DUTY_TYPES = [
   {
     title: "Name",
     dataIndex: "name",
+    className: "custom-header", // CSS class for header
   },
   {
     title: "Type",
     dataIndex: "type",
+    className: "custom-column",
   },
   {
     title: "Max. Kilometers",
     dataIndex: "max_kilometers",
+    className: "custom-column",
   },
   {
     title: "Max. Hours",
     dataIndex: "max_hours",
+    className: "custom-column",
   },
 ];
 
@@ -79,10 +83,12 @@ export const VEHICLE_GROUPS = [
   {
     title: "Name",
     dataIndex: "name",
+    className: "custom-header", // CSS class for header
   },
   {
     title: "Total vehicles",
     dataIndex: "vehicleCount",
+    className: "custom-column",
   },
   // {
   //   title: "Status",
@@ -94,18 +100,22 @@ export const CUSTOMERS = [
   {
     title: "Name",
     dataIndex: "name",
+    className: "custom-header", // CSS class for header
   },
   {
     title: "Phone",
     dataIndex: "phoneNumber",
+    className: "custom-column",
   },
   {
     title: "GSTIN number",
     dataIndex: "gstNumber",
+    className: "custom-column",
   },
   {
     title: "Status",
     dataIndex: "status",
+    className: "custom-column",
   },
 ];
 
@@ -113,14 +123,17 @@ export const DRIVERS = [
   {
     title: "Name",
     dataIndex: "name",
+    className: "custom-header", // CSS class for header
   },
   {
     title: "Driver ID",
     dataIndex: "driverId",
+    className: "custom-column",
   },
   {
     title: "Phone",
     dataIndex: "phoneNumber",
+    className: "custom-column",
   },
   {
     title: "Status",
@@ -132,18 +145,22 @@ export const VEHICLES = [
   {
     title: "Model name",
     dataIndex: "modelName",
+    className: "custom-header", // CSS class for header
   },
   {
     title: "Group",
     dataIndex: "group",
+    className: "custom-column",
   },
   {
     title: "Assigned driver",
     dataIndex: "assigned_driver",
+    className: "custom-column",
   },
   {
     title: "Vehicle number",
     dataIndex: "vehicleNumber",
+    className: "custom-column",
   },
 ];
 
@@ -151,22 +168,27 @@ export const BANK_ACCOUNTS = [
   {
     title: "Name",
     dataIndex: "accountName",
+    className: "custom-header", // CSS class for header
   },
   {
     title: "Account number",
     dataIndex: "accountNumber",
+    className: "custom-column",
   },
   {
     title: "Bank name",
     dataIndex: "bankName",
+    className: "custom-column",
   },
   {
     title: "Bank branch",
     dataIndex: "branchName",
+    className: "custom-column",
   },
   {
     title: "IFSC code",
     dataIndex: "ifsc",
+    className: "custom-column",
   },
 ];
 
@@ -191,13 +213,13 @@ export const DUTY_TYPES_TYPE = [
 ];
 
 export const TAXES_TABLE = [
-  { title: "Tax name", dataIndex: "name" },
+  { title: "Tax name", dataIndex: "name", className: "custom-header" },
   { title: "Percentage", dataIndex: "percentage" },
   { title: "Status", dataIndex: "status" },
 ];
 
 export const ALLOWANCES_TABLE = [
-  { title: "Name", dataIndex: "allowanceType" },
+  { title: "Name", dataIndex: "allowanceType", className: "custom-header" },
   { title: "Allowance Rate", dataIndex: "rate" },
 ];
 
@@ -205,18 +227,22 @@ export const FASTTAG_TABLE = [
   {
     title: "Tag Account",
     dataIndex: "tag_account",
+    className: "custom-header",
   },
   {
     title: "License Plate No.",
     dataIndex: "license_plate",
+    className: "custom-column",
   },
   {
     title: "Total Trips till month",
     dataIndex: "total_trips",
+    className: "custom-column",
   },
   {
     title: "Total Cost incurred this month",
     dataIndex: "total_cost",
+    className: "custom-column",
   },
 ];
 

@@ -8,7 +8,7 @@ import SecondaryBtn from "../../components/SecondaryBtn";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import BookingsTable from "../../components/BookingsTable";
-import { Button, DatePicker, Divider, Drawer, Form, Input, Radio } from "antd";
+import { Button, DatePicker, Drawer, Form, Input, Radio } from "antd";
 import AddNewBookingForm from "../../components/Bookings/AddNewBooking/AddNewBookingForm";
 import {
   setIsAddEditDrawerClose,
