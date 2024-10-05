@@ -6,6 +6,7 @@ import {
 } from "../../../redux/slices/databaseSlice";
 import Modal from "../../Modal";
 import type { TableProps, MenuProps } from "antd";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import { Table, Dropdown } from "antd";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
@@ -165,9 +166,12 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
         loading={driverStates?.loading || deleteDriverStates?.loading}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
-            <div className={styles.primaryText}>Delete tax</div>
+            <div className={styles.primaryText}>Delete driver</div>
             <div className={styles.secondaryText}>
               Are you sure you want to delete this driver? This action cannot be
               undone.

@@ -8,11 +8,13 @@ import {
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import Modal from "../../Modal";
 import type { MenuProps } from "antd";
 import { Table, TableProps, Dropdown } from "antd";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import cn from "classnames";
 import CustomPagination from "../../Common/Pagination";
 import styles from "./index.module.scss";
 
@@ -40,6 +42,9 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
   } = useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [dutyTypeId, setDutyTypeId] = useState<string>("");
+  const [dutyType, setDutyType] = useState({ name: "" });
+  const [openDropdown, setOpenDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleDeleteDutyType = () => {
     dispatch(deleteDutyType({ id: dutyTypeId }));
@@ -74,17 +79,42 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
     dispatch(getAllDutyTypes({ page: "1", search: q, limit: 10 }));
   }, [q]);
 
+  // const handleClickOutside = (event: any) => {
+  //   if (
+  //     dropdownRef.current &&
+  //     !dropdownRef.current.contains(event.target as Node)
+  //   ) {
+  //     setOpenDropdown(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   // Add event listener to detect outside clicks
+  //   document.addEventListener("mousedown", handleClickOutside);
+
+  //   return () => {
+  //     // Remove event listener on cleanup to prevent memory leaks
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
+
   const columns: TableProps<IDutyTypeTableData>["columns"] = [
     ...DUTY_TYPES,
     {
       title: "",
       dataIndex: "action",
+      className: "action-column",
       render: (_, record) => (
-        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.editButton}
+          onClick={(e) => e.stopPropagation()}
+          ref={dropdownRef}
+        >
           <button
             onClick={() => {
               setOpenDeleteModal(true);
               setDutyTypeId(record._id);
+              setDutyType(record);
             }}
             className={styles.deleteBtn}
           >
@@ -92,8 +122,12 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
           </button>
           <Dropdown menu={menuProps} trigger={["click"]}>
             <button
-              className={styles.button}
-              onClick={() => setDutyTypeId(record._id)}
+              className={cn(styles.button, {
+                [styles.selected]: dutyTypeId === record._id && openDropdown,
+              })}
+              onClick={() => {
+                setDutyTypeId(record._id);
+              }}
             >
               <DotsHorizontal />
             </button>
@@ -170,12 +204,17 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
         )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
-            <div className={styles.primaryText}>Delete vehicle</div>
+            <div className={styles.primaryText}>Delete duty type</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this duty type? This action cannot
-              be undone.
+              Are you sure you want to delete this duty type?
+              <div className={styles.selectedSecondaryText}>
+                {dutyType?.name}
+              </div>
             </div>
           </div>
           <div className={styles.bottomBtns}>

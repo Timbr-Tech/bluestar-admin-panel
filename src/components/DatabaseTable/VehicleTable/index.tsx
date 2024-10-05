@@ -7,6 +7,7 @@ import {
   getVehicleById,
 } from "../../../redux/slices/databaseSlice";
 import { VEHICLES } from "../../../constants/database";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import Modal from "../../Modal";
@@ -153,6 +154,9 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
         )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete vehicle</div>

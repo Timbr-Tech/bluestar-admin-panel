@@ -444,11 +444,22 @@
   }
 }
 
+.deleteContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  background: #fee4e2;
+}
+
 .modalContainer {
   display: flex;
   flex-direction: column;
   gap: 32px;
   width: 350px;
+  padding-top: 16px;
 
   .textContainer {
     display: flex;
@@ -479,6 +490,7 @@
 
   .bottomBtns {
     display: flex;
+    font-family: "Inter", sans-serif !important;
     gap: 12px;
 
     .cancelBtn {

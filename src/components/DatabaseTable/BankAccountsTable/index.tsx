@@ -9,6 +9,7 @@ import {
 import type { MenuProps } from "antd";
 import { Table, Dropdown } from "antd";
 import type { TableProps } from "antd";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import Modal from "../../Modal";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
@@ -165,6 +166,9 @@ const BankAccountsTable = ({
         )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete bank account</div>

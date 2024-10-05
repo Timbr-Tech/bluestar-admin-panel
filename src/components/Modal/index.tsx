@@ -23,7 +23,7 @@ const Modal: React.FC<ModalProps> = ({ show, onClose, children }) => {
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modalContent}>
         <button className={styles.modalClose} onClick={onClose}>
-          <CloseIcon />
+          <CloseIcon width={'24px'} height={'24px'} />
         </button>
         {children}
       </div>

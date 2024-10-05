@@ -8,6 +8,7 @@ import {
   deleteCustomer,
   updateCustomer,
 } from "../../../redux/slices/databaseSlice";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import cn from "classnames";
 import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import type { MenuProps } from "antd";
@@ -191,6 +192,9 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
         )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete customer</div>

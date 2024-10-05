@@ -7,6 +7,7 @@ import Modal from "../../Modal";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import type { MenuProps } from "antd";
 import cn from "classnames";
 import {
@@ -228,6 +229,9 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
         )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete vehicle group</div>

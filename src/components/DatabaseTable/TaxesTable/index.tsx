@@ -4,6 +4,7 @@ import { Table, TableProps, Dropdown } from "antd";
 import type { MenuProps } from "antd";
 import Modal from "../../Modal";
 import cn from "classnames";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
@@ -197,6 +198,9 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
       />
 
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete tax</div>

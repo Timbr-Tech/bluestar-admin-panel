@@ -11,7 +11,7 @@ import {
   Table,
   Tag,
 } from "antd";
-
+import { ReactComponent as DeleteIconRed } from "../../icons/trash-red.svg";
 import styles from "./index.module.scss";
 import { BOOKINGS_STATUS } from "../../constants/bookings";
 import {
@@ -329,6 +329,9 @@ const BookingsTable = () => {
       </div>
       {/* delete booking */}
       <Modal show={deleteModal} onClose={() => handleCloseModal()}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete booking</div>

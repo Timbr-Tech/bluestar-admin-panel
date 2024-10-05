@@ -5,6 +5,7 @@ import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { Table, TableProps, Dropdown } from "antd";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import type { MenuProps } from "antd";
 import {
   getAllowances,
@@ -157,9 +158,12 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
         )}
       />
       <Modal show={openDeleteModal} onClose={handleCloseModal}>
+        <div className={styles.deleteContainer}>
+          <DeleteIconRed />
+        </div>
         <div className={styles.modalContainer}>
           <div className={styles.textContainer}>
-            <div className={styles.primaryText}>Delete tax</div>
+            <div className={styles.primaryText}>Delete allowance</div>
             <div className={styles.secondaryText}>
               Are you sure you want to delete this Allowance? This action cannot
               be undone.
