@@ -3,6 +3,7 @@ import { Select, Radio, Spin, Button } from "antd";
 import { useAppSelector, useAppDispatch } from "../../../hooks/store";
 import type { RadioChangeEvent } from "antd";
 import {
+  getVehicleGroup,
   getVehicleGroupOptions,
   updateDutyType,
   addDutyType,
@@ -51,16 +52,16 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   const [dutyType, setDutyType] = useState("");
   const [name, setName] = useState("");
   const {
-    vehicleGroupOptionStates,
+    vehicleGroupStates,
     selectedDutyType,
     updatedDutyTypeStates,
     dutyTypeStates,
-    vehicleGroupOption,
+    vehicleGroupData,
   } = useAppSelector((state) => state.database);
   const [vehicleGroupDataArray, setVehicleGroupDataArray] = useState<any[]>([]);
 
   useEffect(() => {
-    dispatch(getVehicleGroupOptions({ page: "1", size: "2" }));
+    dispatch(getVehicleGroup({ page: "1", size: "10" }));
   }, []);
 
   useEffect(() => {
@@ -80,7 +81,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
       setName(selectedDutyType?.data?.name);
       setValue(selectedDutyType?.data?.secondaryType);
     } else {
-      const tempArr = vehicleGroupOption?.data?.map((data: any) => {
+      const tempArr = vehicleGroupData?.data?.map((data: any) => {
         return {
           name: data?.name,
           vehicleGroupId: data?._id,
@@ -94,7 +95,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
 
       setVehicleGroupDataArray(tempArr);
     }
-  }, [vehicleGroupOption, selectedDutyType]);
+  }, [vehicleGroupData, selectedDutyType]);
 
   const handleSelectChange = (value: any) => {
     setDutyType(value);
@@ -199,7 +200,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   return (
     <div className={styles.formContainer}>
       {contextHolder}
-      {(vehicleGroupOptionStates.loading || dutyTypeStates.loading) && (
+      {(vehicleGroupStates.loading || dutyTypeStates.loading) && (
         <div
           style={{
             position: "absolute",
@@ -267,7 +268,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                 <div className={styles.radioContainer}>
                   <div className={styles.text}>Is Point to Point (P2P)?</div>
                   <div className={styles.secondary}>
-                    Save my login details for next time.
+                    Direct service between origin and destination.
                   </div>
                 </div>
               </Radio>
@@ -275,7 +276,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                 <div className={styles.radioContainer}>
                   <div className={styles.text}>Is Garage to Garage (G2G)?</div>
                   <div className={styles.secondary}>
-                    Save my login details for next time.
+                    Service starts and ends at the garage facility.
                   </div>
                 </div>
               </Radio>
@@ -333,6 +334,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
           htmlType="submit"
           loading={updatedDutyTypeStates?.loading}
           onClick={handleSave}
+          className="primary-btn"
         >
           Save
         </Button>

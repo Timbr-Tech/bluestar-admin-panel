@@ -2,6 +2,7 @@
 import { Button, Form, Input, notification, Spin } from "antd";
 import styles from "../DutyTypeTable/index.module.scss";
 import { useEffect, useState } from "react";
+import SecondaryBtn from "../../SecondaryBtn";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import {
   addVehicleGroup,
@@ -233,8 +234,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
         </Form>
       </div>
       <div className={styles.bottomContainer}>
-        <Button onClick={handleCloseSidePanel}>Cancel</Button>
-
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
         <Button
           type="primary"
           htmlType="submit"
@@ -244,7 +244,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
           loading={
             updateVehicleGroupStates.loading || vehicleGroupStates.loading
           }
-          // onClick={handleSubmitForm}
+          className="primary-btn"
         >
           Save
         </Button>

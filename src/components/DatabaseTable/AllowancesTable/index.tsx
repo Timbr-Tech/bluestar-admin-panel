@@ -64,6 +64,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
     {
       title: "",
       dataIndex: "action",
+      className: "action-column",
       render: (_, record) => (
         <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
           <button

@@ -78,6 +78,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
     {
       title: "",
       dataIndex: "action",
+      className: "action-column",
       render: (_, record) => (
         <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
           <button

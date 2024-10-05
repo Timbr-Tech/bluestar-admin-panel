@@ -79,11 +79,15 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
     {
       title: "",
       dataIndex: "action",
+      className: "action-column",
       render: (_, record) => (
-        <div className={styles.editButton} onClick={(e) => {
-          e.stopPropagation()
-          setCurrentTax(record)
-        }}>
+        <div
+          className={styles.editButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentTax(record);
+          }}
+        >
           <button
             onClick={() => {
               setOpenDeleteModal(true);

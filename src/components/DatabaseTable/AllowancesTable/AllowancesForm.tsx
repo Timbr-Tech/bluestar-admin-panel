@@ -176,6 +176,7 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
           htmlType="submit"
           onClick={handleAddNewAllowance}
           loading={allowanceStates?.loading || updateAllowancesStates?.loading}
+          className="primary-btn"
         >
           Save
         </Button>

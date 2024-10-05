@@ -489,6 +489,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             form.submit();
           }}
           loading={customersStates?.loading || updateCustomersStates?.loading}
+          className="primary-btn"
         >
           Save
         </Button>

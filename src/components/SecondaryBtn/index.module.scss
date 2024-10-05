@@ -8,12 +8,20 @@
     0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   padding: 6px 14px;
   cursor: pointer;
-  height: 32px;
+  height: 40px;
 
   .text {
     color: #344054;
     font-size: 14px;
     font-weight: 600;
     line-height: 20px;
+  }
+
+  &:hover {
+    background: #f9fafb;
+
+    .text {
+      color: #182230;
+    }
   }
 }

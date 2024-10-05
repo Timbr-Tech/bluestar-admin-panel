@@ -169,6 +169,7 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
           onClick={() => {
             form.submit();
           }}
+          className="primary-btn"
         >
           Save
         </Button>

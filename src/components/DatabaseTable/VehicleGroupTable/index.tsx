@@ -18,7 +18,7 @@ import {
 } from "../../../redux/slices/databaseSlice";
 import type { TableProps } from "antd";
 import styles from "./index.module.scss";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CustomPagination from "../../Common/Pagination";
 
 interface IVehicleGroupTableData {
@@ -34,6 +34,7 @@ interface IVehicleGroupTable {
 
 const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   const dispatch = useAppDispatch();
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const {
     vehicleGroupData,
@@ -47,6 +48,25 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
   const handleCloseModal = () => {
     setOpenDeleteModal(false);
   };
+
+  const handleClickOutside = (event: any) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setDeleteVehicleGroupId("");
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener to detect outside clicks
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      // Remove event listener on cleanup to prevent memory leaks
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     if (e.key === "1") {
@@ -93,9 +113,11 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     {
       title: "",
       dataIndex: "action",
+      className: "action-column",
       render: (_, record) => (
         <div
           className={styles.editButton}
+          ref={dropdownRef}
           onClick={(e) => {
             e.stopPropagation();
             setCurrentVehicleGroup(record);
@@ -112,7 +134,9 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
           </button>
           <Dropdown menu={menuProps} trigger={["click"]}>
             <button
-              className={styles.button}
+              className={cn(styles.button, {
+                [styles.selected]: deleteVehicleGroupId === record._id,
+              })}
               onClick={() => setDeleteVehicleGroupId(record._id)}
             >
               <DotsHorizontal />

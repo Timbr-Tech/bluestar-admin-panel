@@ -10,6 +10,7 @@ import {
   message,
   notification,
 } from "antd";
+import SecondaryBtn from "../../SecondaryBtn";
 import type { UploadProps } from "antd";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { ADDRESS_TYPE } from "../../../constants/database";
@@ -345,7 +346,11 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                 },
               ]}
             >
-              <Input type="number" placeholder="Enter driver license..." min={0}/>
+              <Input
+                type="number"
+                placeholder="Enter driver license..."
+                min={0}
+              />
             </Form.Item>
           </div>
           <div className={styles.typeContainer}>
@@ -359,7 +364,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               id="dailySalary"
               label="Daily Wages"
             >
-              <Input type="number" placeholder="Enter daily wage..." min={0}/>
+              <Input type="number" placeholder="Enter daily wage..." min={0} />
             </Form.Item>
           </div>
           <Form.Item id="timing" name="timing">
@@ -535,15 +540,14 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
         </Form>
       </div>
       <div className={styles.bottomContainer}>
-        <Button onClick={handleCloseSidePanel}>Cancel</Button>
+        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
         <Button
           type="primary"
           htmlType="submit"
           onClick={() => {
             form.submit();
-            // openNotificationWithIcon("success");
-            // handleCloseSidePanel();
           }}
+          className="primary-btn"
         >
           Save
         </Button>

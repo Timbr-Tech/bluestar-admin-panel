@@ -9,6 +9,7 @@ import {
   Input,
   DatePicker,
   AutoComplete,
+  Button,
 } from "antd";
 import { Fragment, useEffect, useState } from "react";
 import type { UploadProps } from "antd";
@@ -700,14 +701,16 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
       </div>
       <div className={styles.bottomContainer}>
         <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <PrimaryBtn
-          btnText="Save"
+        <Button
+          type="primary"
+          htmlType="submit"
           onClick={() => {
             form.submit();
-            // openNotificationWithIcon("success");
-            // handleCloseSidePanel();
           }}
-        />
+          className="primary-btn"
+        >
+          Save
+        </Button>
       </div>
     </div>
   );

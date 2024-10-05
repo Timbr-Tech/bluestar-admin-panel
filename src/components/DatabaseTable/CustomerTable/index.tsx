@@ -86,6 +86,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
     {
       title: "",
       dataIndex: "action",
+      className: "action-column",
       render: (_, record) => (
         <div
           className={styles.editButton}

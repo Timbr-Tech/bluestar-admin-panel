@@ -203,6 +203,7 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
           onClick={() => {
             form.submit();
           }}
+          className="primary-btn"
           loading={updateBankAccountState.loading || bankAccountStates.loading}
         >
           Save
