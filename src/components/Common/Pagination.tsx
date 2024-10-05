@@ -1,7 +1,9 @@
 /* eslint-disable */
 
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
+import { ReactComponent as ArrowLeft } from "../../icons/arrow-left.svg";
+import { ReactComponent as ArrowRight } from "../../icons/arrow-right.svg";
 import { Button, Pagination, PaginationProps } from "antd";
+import styles from "./index.module.scss";
 import React from "react";
 
 const itemRender: PaginationProps["itemRender"] = (
@@ -11,15 +13,16 @@ const itemRender: PaginationProps["itemRender"] = (
 ) => {
   if (type === "prev") {
     return (
-      <Button>
-        <ArrowLeftOutlined /> Previous
+      <Button className={styles.button}>
+        <ArrowLeft />
+        <div>Previous</div>
       </Button>
     );
   }
   if (type === "next") {
     return (
-      <Button>
-        Next <ArrowRightOutlined />
+      <Button className={styles.button}>
+        <div>Next</div> <ArrowRight />
       </Button>
     );
   }

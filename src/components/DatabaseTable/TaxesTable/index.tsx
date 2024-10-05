@@ -180,21 +180,25 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
         scroll={{
           x: 756,
         }}
-        footer={() => (
-          <CustomPagination
-            total={pagination?.total ?? 0}
-            current={pagination?.page ?? 1}
-            pageSize={pagination.limit ?? 10}
-            onPageChange={(page: number) => {
-              dispatch(
-                getTaxes({
-                  search: q,
-                  page: page,
-                })
-              );
-            }}
-          />
-        )}
+        footer={
+          taxes?.data?.length !== 0
+            ? () => (
+                <CustomPagination
+                  total={pagination?.total ?? 0}
+                  current={pagination?.page ?? 1}
+                  pageSize={pagination.limit ?? 10}
+                  onPageChange={(page: number) => {
+                    dispatch(
+                      getTaxes({
+                        search: q,
+                        page: page,
+                      })
+                    );
+                  }}
+                />
+              )
+            : () => <></>
+        }
       />
 
       <Modal show={openDeleteModal} onClose={handleCloseModal}>

@@ -123,7 +123,7 @@ export const DRIVERS = [
   {
     title: "Name",
     dataIndex: "name",
-    className: "custom-header", // CSS class for header
+    className: "custom-driver-header",
   },
   {
     title: "Driver ID",

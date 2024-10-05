@@ -115,6 +115,14 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
     );
   };
 
+  const getInitials = (name: string) => {
+    const names = name.split(" "); // Split the name by spaces
+    const firstInitial = names[0]?.charAt(0).toUpperCase(); // Get the first letter of the first name
+    const lastInitial = names[1]?.charAt(0).toUpperCase(); // Get the first letter of the last name (if exists)
+
+    return firstInitial + (lastInitial || ""); // Combine the initials
+  };
+
   return (
     <>
       <Table
@@ -154,11 +162,19 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
         dataSource={driverList?.data?.map((data: any) => {
           return {
             ...data,
+            name: (
+              <div className={styles.driverNameContainer}>
+                <div
+                  className={styles.driverProfile}
+                >{`${getInitials(data?.name)}`}</div>
+                <div className={styles.driverName}>{data?.name}</div>
+              </div>
+            ),
             driverId: data?.customDriverId,
             status: (
               <div className={cn(styles.status, { [styles.active]: true })}>
                 <div className={cn(styles.dot, { [styles.active]: true })} />
-                {"Active"}
+                <div>{"Active"}</div>
               </div>
             ),
           };

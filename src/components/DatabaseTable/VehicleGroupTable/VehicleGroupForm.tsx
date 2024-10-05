@@ -8,6 +8,7 @@ import {
   addVehicleGroup,
   updateVehicleGroup,
 } from "../../../redux/slices/databaseSlice";
+import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
@@ -134,27 +135,22 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               selectedVehicleGroup?.data?.luggageCapacity || null,
           }}
           autoComplete="off"
+          requiredMark={CustomizeRequiredMark}
         >
           <div className={styles.form}>
             <div className={styles.typeContainer}>
               <Form.Item
-                label="Name"
-                name="name"
                 rules={[
                   {
                     required: true,
                     message: "description is required",
                   },
                 ]}
+                label="Name"
+                name="name"
+                id="name"
               >
-                <Input
-                  // className={styles.input}
-                  // name="name"
-                  type="text"
-                  placeholder="Enter Vehicle Group"
-                  // value={vehicleGroup.name}
-                  // onChange={handleVehicleGroupChange}
-                />
+                <Input type="text" placeholder="Enter Vehicle Group" />
               </Form.Item>
             </div>
             <div className={styles.typeContainer}>

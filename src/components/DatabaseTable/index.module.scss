@@ -1,5 +1,5 @@
 .container {
-  padding: 0 30px;
+  padding: 0 30px 40px 30px;
 
   .tableHeader {
     display: flex;
@@ -33,6 +33,9 @@
       cursor: pointer;
 
       .search {
+        display: flex;
+        align-items: center;
+        height: 44px;
         width: 400px;
       }
     }

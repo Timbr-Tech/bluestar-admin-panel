@@ -123,8 +123,8 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
         monthlySalary: valuesToMaped.monthlySalary,
         dailySalary: valuesToMaped.dailySalary,
         timing: {
-          start: convertIsoToDayjsObject(valuesToMaped.timing.start),
-          end: convertIsoToDayjsObject(valuesToMaped.timing.end),
+          start: convertIsoToDayjsObject(valuesToMaped?.timing?.start),
+          end: convertIsoToDayjsObject(valuesToMaped?.timing?.end),
         },
         offDay: valuesToMaped.offDay,
         notes: valuesToMaped.notes,
@@ -414,7 +414,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                       .second(0)
                       .millisecond(0);
 
-                    return isoDate.toISOString();
+                    return isoDate?.toISOString();
                   }}
                 >
                   <TimePicker
@@ -471,7 +471,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                       .second(0)
                       .millisecond(0);
 
-                    return isoDate.toISOString();
+                    return isoDate?.toISOString();
                   }}
                 >
                   <TimePicker

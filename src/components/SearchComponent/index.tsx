@@ -3,9 +3,9 @@
 import { ChangeEventHandler } from "react";
 import styles from "./index.module.scss";
 import { Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
 interface ISearchComponent {
-  LeadingIcon: any;
+  LeadingIcon?: any;
   value: string;
   placeholder: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
@@ -20,10 +20,11 @@ const SearchComponent = ({
   return (
     <Input
       value={value}
-      prefix={<SearchOutlined />}
+      prefix={<SearchIcon />}
+      suffix={<></>}
       onChange={onChange}
       allowClear
-      className={styles.inputContainer}
+      className={"custom-search"}
       placeholder={placeholder}
     />
   );

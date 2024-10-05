@@ -45,19 +45,21 @@ const DatabaseTable = ({ item, handleOpenSidePanel }: IDatabaseTable) => {
   const vehicleItems = [
     {
       key: "0",
+      disabled: true,
       label: (
         <div className={styles.item}>
           <UploadCloud />
-          Import vehicles
+          Import
         </div>
       ),
     },
     {
       key: "1",
+      disabled: true,
       label: (
         <div className={styles.item}>
           <FileDownloadIcon />
-          Export vehicles
+          Export
         </div>
       ),
     },

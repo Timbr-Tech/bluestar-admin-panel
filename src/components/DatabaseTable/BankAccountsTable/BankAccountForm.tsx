@@ -110,88 +110,86 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
           form={form}
           className={styles.form}
         >
-          <div>
-            <div className={styles.typeContainer}>
-              <Form.Item
-                label="Account Name"
-                id="accountName"
-                name="accountName"
-                rules={[
-                  {
-                    required: true,
-                    min: 3,
-                  },
-                ]}
-              >
-                <Input placeholder="Enter account name..." />
-              </Form.Item>
-            </div>
-            <div className={styles.typeContainer}>
-              <Form.Item
-                label="Account Number"
-                id="accountNumber"
-                name="accountNumber"
-                rules={[
-                  {
-                    required: true,
-                    pattern: new RegExp(/^[0-9]{4,17}$/),
-                    message: "Wrong format!",
-                  },
-                ]}
-              >
-                <Input type="number" placeholder="Enter account number..." />
-              </Form.Item>
-            </div>
-            <div className={styles.typeContainer}>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-                label="IFSC Code"
-                id="ifsc"
-                name="ifsc"
-              >
-                <Input placeholder="Enter IFSC Code..." />
-              </Form.Item>
-            </div>
-            <div className={styles.typeContainer}>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-                label="Bank Name"
-                id="bankName"
-                name="bankName"
-              >
-                <Input placeholder="Enter Bank Name..." />
-              </Form.Item>
-            </div>
-            <div className={styles.typeContainer}>
-              <Form.Item
-                rules={[
-                  {
-                    required: true,
-                  },
-                ]}
-                label="Bank Branch"
-                id="branchName"
-                name="branchName"
-              >
-                <Input placeholder="Enter Bank Branch..." />
-              </Form.Item>
-            </div>
-            <div className={styles.typeContainer}>
-              <Form.Item label="Notes" id="notes" name="notes">
-                <Input.TextArea
-                  className={styles.textarea}
-                  placeholder="Add a note...."
-                />
-              </Form.Item>
-            </div>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              label="Account Name"
+              id="accountName"
+              name="accountName"
+              rules={[
+                {
+                  required: true,
+                  min: 3,
+                },
+              ]}
+            >
+              <Input placeholder="Enter account name..." />
+            </Form.Item>
+          </div>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              label="Account Number"
+              id="accountNumber"
+              name="accountNumber"
+              rules={[
+                {
+                  required: true,
+                  pattern: new RegExp(/^[0-9]{4,17}$/),
+                  message: "Wrong format!",
+                },
+              ]}
+            >
+              <Input type="number" placeholder="Enter account number..." />
+            </Form.Item>
+          </div>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="IFSC Code"
+              id="ifsc"
+              name="ifsc"
+            >
+              <Input placeholder="Enter IFSC Code..." />
+            </Form.Item>
+          </div>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Bank Name"
+              id="bankName"
+              name="bankName"
+            >
+              <Input placeholder="Enter Bank Name..." />
+            </Form.Item>
+          </div>
+          <div className={styles.typeContainer}>
+            <Form.Item
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+              label="Bank Branch"
+              id="branchName"
+              name="branchName"
+            >
+              <Input placeholder="Enter Bank Branch..." />
+            </Form.Item>
+          </div>
+          <div className={styles.typeContainer}>
+            <Form.Item label="Notes" id="notes" name="notes">
+              <Input.TextArea
+                className={styles.textarea}
+                placeholder="Add a note...."
+              />
+            </Form.Item>
           </div>
         </Form>
       </div>
