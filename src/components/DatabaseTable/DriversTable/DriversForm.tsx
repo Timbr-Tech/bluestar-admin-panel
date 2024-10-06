@@ -271,7 +271,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                   name={["ids", "pan"]}
                   label="PAN Number"
                 >
-                  <Input placeholder="Enter Pan..." />
+                  <Input placeholder="Enter PAN..." />
                 </Form.Item>
               </div>
               <div className={styles.typeContainer}>

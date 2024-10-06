@@ -173,3 +173,9 @@
   font-weight: 600;
   line-height: 20px;
 }
+
+.secondaryContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
