@@ -66,7 +66,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
       icon: <EditIcon />,
     },
     {
-      label: <>{currentTax?.isActive ? "Mark Inactive" : "Mark Active"}</>,
+      label: <>{currentTax?.isActive ? "Mark inactive" : "Mark Active"}</>,
       key: "2",
       icon: <Clipboard />,
     },

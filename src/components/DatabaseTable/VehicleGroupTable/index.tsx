@@ -93,7 +93,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     },
     {
       label: (
-        <>{currentVehicleGroup?.isActive ? "Mark Inactive" : "Mark Active"}</>
+        <>{currentVehicleGroup?.isActive ? "Mark inactive" : "Mark Active"}</>
       ),
       key: "2",
       icon: <Clipboard />,

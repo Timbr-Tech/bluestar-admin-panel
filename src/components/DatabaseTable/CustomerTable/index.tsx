@@ -72,7 +72,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
       icon: <EditIcon />,
     },
     {
-      label: <>{currentCustomer?.isActive ? "Mark Inactive" : "Mark Active"}</>,
+      label: <>{currentCustomer?.isActive ? "Mark inactive" : "Mark Active"}</>,
       key: "2",
       icon: <Clipboard />,
     },

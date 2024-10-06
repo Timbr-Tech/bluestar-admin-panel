@@ -115,7 +115,6 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
               ...values,
               percentage: parseFloat(values.percentage),
             };
-            console.log({ valuesToSend });
             handleSave(valuesToSend);
           }}
           form={form}
@@ -129,7 +128,7 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
                 },
               ]}
               name="name"
-              label="Name"
+              label="Tax Name"
             >
               <Input className={styles.input} placeholder="Enter..." />
             </Form.Item>
@@ -142,7 +141,7 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
                 },
               ]}
               name="percentage"
-              label="Percentage"
+              label="Percentage%"
             >
               <Input
                 type="number"
@@ -157,7 +156,7 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
             <Form.Item
               rules={[
                 {
-                  required: true,
+                  required: false,
                 },
               ]}
               name="notes"
