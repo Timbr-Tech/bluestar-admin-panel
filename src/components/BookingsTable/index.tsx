@@ -1,28 +1,19 @@
 /* eslint-disable */
 
-import {
-  Badge,
-  Button,
-  Drawer,
-  Dropdown,
-  MenuProps,
-  Pagination,
-  Space,
-  Table,
-  Tag,
-} from "antd";
+import { Badge, Dropdown, MenuProps, Space, Table, Tag } from "antd";
 import { ReactComponent as DeleteIconRed } from "../../icons/trash-red.svg";
 import styles from "./index.module.scss";
 import { BOOKINGS_STATUS } from "../../constants/bookings";
 import {
-  ArrowLeftOutlined,
-  ArrowRightOutlined,
   CheckCircleTwoTone,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
   FilePdfOutlined,
+  MailOutlined,
   MoreOutlined,
+  PhoneOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import Modal from "../Modal";
@@ -35,20 +26,8 @@ import {
 } from "../../redux/slices/bookingSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
-import pagination, { PaginationProps } from "antd/es/pagination";
-import CustomPagination from "../Common/Pagination";
-import { setPagination } from "../../redux/slices/databaseSlice";
 
-interface IBookingsTableData {
-  key: React.Key;
-  start_date: string;
-  customer: string;
-  passenger: string;
-  vehicle_group: string;
-  duty_type: string;
-  duties: string;
-  status: string;
-}
+import CustomPagination from "../Common/Pagination";
 
 const BookingsTable = () => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -59,6 +38,7 @@ const BookingsTable = () => {
     bookings,
     bookingStates,
     pagination,
+    filters,
   } = useSelector((state: RootState) => state.booking);
 
   const dispatch = useAppDispatch();
@@ -165,16 +145,56 @@ const BookingsTable = () => {
       key: "startDate",
     },
     {
+      title: "Custom booking Id",
+      dataIndex: "customBookingId",
+      key: "customBookingId",
+    },
+    {
+      title: "Alternate option",
+      dataIndex: "assignAlternateVehicles",
+      key: "assignAlternateVehicles",
+      render: (each: any) => (each === false ? "No" : "Yes"),
+    },
+    {
       title: "Customer",
-      dataIndex: "customer",
-      key: "customer",
+      dataIndex: "customerId",
+      key: "customerId",
+      render: (each: any) => {
+        return <span>{each.name}</span>;
+      },
+    },
+    {
+      title: "Booked By",
+      dataIndex: "bookedBy",
+      key: "bookedBy",
+      render: (each: any) => {
+        return (
+          <div>
+            <p>
+              {" "}
+              <UserOutlined /> {each.name}
+            </p>
+            <p>
+              {" "}
+              <PhoneOutlined /> {each.phoneNumber}
+            </p>
+            <p>
+              {" "}
+              <MailOutlined /> {each.email}
+            </p>
+          </div>
+        );
+      },
     },
     {
       title: "Passenger",
-      dataIndex: "passenger",
-      key: "passenger",
+      dataIndex: "passergers",
+      key: "passergers",
       render: (data: any) => {
         if (Array.isArray(data)) {
+          if (data.length <= 0) {
+            return "No passenger data";
+          }
           return (
             <Space>
               {data[0]}
@@ -208,23 +228,35 @@ const BookingsTable = () => {
       key: "duties",
     },
     {
+      title: "Airport Booking",
+      dataIndex: "isAirportBooking",
+      key: "isAirportBooking",
+      render: (each: any) => (each === false ? "No" : "yes"),
+    },
+    {
+      title: "Confirmed Status",
+      dataIndex: "isUnconfirmed",
+      key: "isUnconfirmed",
+      render: (each: any) => (each === false ? "Yes" : "No"),
+    },
+    {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "bookingStatus",
+      key: "bookingStatus",
       render: (data: any) => {
-        if (data === BOOKINGS_STATUS.booked) {
-          return <Tag color="red">{data}</Tag>;
-        }
-        if (data === BOOKINGS_STATUS.billed) {
-          return <Tag color="success">{data}</Tag>;
-        }
-        if (data === BOOKINGS_STATUS.cancelled) {
+        if (data.toLowerCase() === BOOKINGS_STATUS.booked) {
           return <Tag color="">{data}</Tag>;
         }
-        if (data === BOOKINGS_STATUS.completed) {
+        if (data.toLowerCase() === BOOKINGS_STATUS.billed) {
           return <Tag color="success">{data}</Tag>;
         }
-        if (data === BOOKINGS_STATUS["on-going"]) {
+        if (data.toLowerCase() === BOOKINGS_STATUS.cancelled) {
+          return <Tag color="">{data}</Tag>;
+        }
+        if (data.toLowerCase() === BOOKINGS_STATUS.completed) {
+          return <Tag color="success">{data}</Tag>;
+        }
+        if (data.toLowerCase() === BOOKINGS_STATUS["on-going"]) {
           return <Tag color="blue">{data}</Tag>;
         }
       },
@@ -253,7 +285,7 @@ const BookingsTable = () => {
   ];
 
   function formateData() {
-    return bookings.map((each: Object) => {
+    return bookings?.map((each: Object) => {
       return {
         ...each,
         action: "",
@@ -286,18 +318,8 @@ const BookingsTable = () => {
   }
 
   useEffect(() => {
-    dispatch(getBookings({ ...pagination }));
-  }, []);
-  // handleBookingsTablePageChange = (page, pageSize) => {
-  //   const { dispatch } = this.props;
-  //   dispatch({
-  //     type: batchActions.SET_FILTERS,
-  //     payload: {
-  //       page,
-  //       per_page: pageSize,
-  //     },
-  //   });
-  // };
+    dispatch(getBookings({ ...filters }));
+  }, [filters.search, filters.status]);
 
   return (
     <>
@@ -320,8 +342,13 @@ const BookingsTable = () => {
               total={pagination?.total ?? 0}
               current={pagination?.page ?? 1}
               pageSize={pagination.limit ?? 10}
-              onPageChange={() => {
-                // dispatch(setPagination())
+              onPageChange={(page: number) => {
+                dispatch(
+                  getBookings({
+                    search: filters.search,
+                    page: page,
+                  })
+                );
               }}
             />
           )}

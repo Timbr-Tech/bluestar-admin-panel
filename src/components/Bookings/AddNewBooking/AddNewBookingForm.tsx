@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./index.module.scss";
 import {
   AutoCompleteProps,
@@ -14,20 +14,17 @@ import {
   Checkbox,
   Row,
   Col,
-  DatePicker,
   TimePicker,
 } from "antd";
 import { DeleteOutlined, PlusOutlined, SyncOutlined } from "@ant-design/icons";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import weekday from "dayjs/plugin/weekday";
-import localeData from "dayjs/plugin/localeData";
 import CustomDatePicker from "../../Common/CustomDatePicker";
-
-dayjs.extend(customParseFormat);
-dayjs.extend(weekday);
-dayjs.extend(localeData);
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
+import { RootState } from "../../../types/store";
+import {
+  getAllDutyTypes,
+  getVehicleGroup,
+} from "../../../redux/slices/databaseSlice";
 
 const { TextArea } = Input;
 interface AddNewBookingForm {
@@ -62,6 +59,29 @@ const AddNewBookingForm = ({
       email: "",
     },
   ]);
+  const { vehicleGroupSelectOption, dutyTypeOption } = useAppSelector(
+    (state: RootState) => state.database
+  );
+  const dispatch = useAppDispatch();
+
+  const getDutyTypeValue = (searchText: string) => {
+    if (searchText) {
+      dispatch(
+        getAllDutyTypes({
+          search: searchText,
+        })
+      );
+    }
+  };
+  const getVehicleGroupValue = (searchText: string) => {
+    if (searchText) {
+      dispatch(
+        getVehicleGroup({
+          search: searchText,
+        })
+      );
+    }
+  };
   return (
     <Form
       layout="vertical"
@@ -73,7 +93,7 @@ const AddNewBookingForm = ({
       }}
       onFinish={(value) => {
         console.log(value);
-        handleFormSubmit(value);
+        // handleFormSubmit(value);
       }}
       initialValues={initialData}
       requiredMark={CustomizeRequiredMark}
@@ -86,7 +106,7 @@ const AddNewBookingForm = ({
       >
         <Input />
       </Form.Item>
-      <Form.Item label="Customer">
+      <Form.Item rules={[{ required: true }]} label="Customer">
         <AutoComplete
           onSearch={handleSearch}
           placeholder="Select customer"
@@ -120,6 +140,7 @@ const AddNewBookingForm = ({
 
         <Radio>Use this same details for passenger</Radio>
       </Card>
+      {/*  passenger detail */}
       <Card className={styles.PassengerCardContainer}>
         <p>Passenger Details</p>
         {passengers.map((each, index) => (
@@ -156,31 +177,25 @@ const AddNewBookingForm = ({
           <PlusOutlined /> Add more
         </Button>
       </Card>
-      <Form.Item label="Vehicle Group">
-        <Select
-          placeholder="Duty type"
-          style={{ width: `100%` }}
-          onChange={() => {}}
-          options={[
-            { value: "jack", label: "Jack" },
-            { value: "lucy", label: "Lucy" },
-            { value: "Yiminghe", label: "yiminghe" },
-            { value: "disabled", label: "Disabled", disabled: true },
-          ]}
+      <Form.Item rules={[{ required: true }]} label="Duty type">
+        <AutoComplete
+          allowClear
+          options={dutyTypeOption}
+          onSearch={(text) => getDutyTypeValue(text)}
+          placeholder="Select Duty type"
+          fieldNames={{ label: "label", value: "value" }}
+          notFoundContent={<div>No search result</div>}
         />
       </Form.Item>
-      <Form.Item label="Vehicle Group">
-        <Select
-          placeholder="Vehicle Group"
-          style={{ width: `100%` }}
-          onChange={() => {}}
-          options={[
-            { value: "jack", label: "Jack" },
-            { value: "lucy", label: "Lucy" },
-            { value: "Yiminghe", label: "yiminghe" },
-            { value: "disabled", label: "Disabled", disabled: true },
-          ]}
-        ></Select>
+      <Form.Item rules={[{ required: true }]} label="Vehicle Group">
+        <AutoComplete
+          allowClear
+          options={vehicleGroupSelectOption}
+          onSearch={(text) => getVehicleGroupValue(text)}
+          placeholder="Search drivers"
+          fieldNames={{ label: "label", value: "value" }}
+          notFoundContent={<div>No search result</div>}
+        ></AutoComplete>
       </Form.Item>
       <Card
         style={{
@@ -197,10 +212,10 @@ const AddNewBookingForm = ({
 
       <Space></Space>
 
-      <Form.Item label="Reporting Address">
+      <Form.Item rules={[{ required: true }]} label="Reporting Address">
         <TextArea placeholder="Location (Google map link)"></TextArea>
       </Form.Item>
-      <Form.Item label="Drop Address">
+      <Form.Item rules={[{ required: true }]} label="Drop Address">
         <TextArea placeholder="Location (Google map link)"></TextArea>
       </Form.Item>
       <Form.Item label="Booking type">
@@ -309,7 +324,6 @@ const AddNewBookingForm = ({
           <Col span={24}>
             <Form.Item label="Bill to">
               <Select
-                // defaultValue="lucy"
                 placeholder="Company/Customer (Default)"
                 style={{ width: "100%" }}
                 onChange={() => {}}
@@ -339,10 +353,6 @@ const AddNewBookingForm = ({
       <Form.Item label="">
         <Checkbox>Mark as unconfirmed booking</Checkbox>
       </Form.Item>
-      {/* <div className={styles.drawerFooter}>
-        <Button>Cancel</Button>
-        <Button type="primary">Save</Button>
-      </div> */}
     </Form>
   );
 };
