@@ -260,7 +260,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
             label="Unique IDs"
             className={styles.secondaryContainer}
           >
-            <Input.Group>
+            <Input.Group className={"custom-input-group"}>
               <div className={styles.typeContainer}>
                 <Form.Item
                   rules={[
@@ -308,7 +308,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
             label="Address"
             className={styles.secondaryContainer}
           >
-            <Input.Group>
+            <Input.Group className={"custom-input-group"}>
               <div className={styles.typeContainer}>
                 <Form.Item
                   rules={[

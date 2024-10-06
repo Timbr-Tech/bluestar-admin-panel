@@ -239,3 +239,9 @@ th {
 .ant-input-outlined[disabled] {
   color: rgba(0, 0, 0, 1);
 }
+
+.custom-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

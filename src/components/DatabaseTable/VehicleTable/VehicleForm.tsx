@@ -45,8 +45,8 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   const { Dragger } = Upload;
-
   const [api, contextHolder] = notification.useNotification();
+  const [vehicleGroupLabel, setVehicleGroupLabel] = useState<string>("");
 
   const dispatch = useAppDispatch();
   const {
@@ -131,6 +131,14 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
     dispatch(getVehicleGroup({ page: "1", search: "", limit: 10 }));
   }, []);
 
+  const handleVehicleGroupChange = (value: string) => {
+    setVehicleGroupLabel(value);
+  };
+
+  const handleVehicleGroupSelect = (value: string, option: any) => {
+    setVehicleGroupLabel(option.label);
+  };
+
   return (
     <div className={styles.formContainer}>
       {contextHolder}
@@ -158,13 +166,13 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           form={form}
           onFinish={(Values) => {
             console.log(Values, "Values");
-            if (Object.keys(selectedVehicle).length) {
-              dispatch(
-                updateVehicle({ id: selectedVehicle?._id, payload: Values })
-              );
-            } else {
-              dispatch(addNewVehicle(Values));
-            }
+            // if (Object.keys(selectedVehicle).length) {
+            //   dispatch(
+            //     updateVehicle({ id: selectedVehicle?._id, payload: Values })
+            //   );
+            // } else {
+            //   dispatch(addNewVehicle(Values));
+            // }
           }}
           initialValues={{
             loan: {
@@ -237,10 +245,18 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             >
               <AutoComplete
                 allowClear
-                options={vehicleGroupSelectOption}
+                value={vehicleGroupLabel}
+                options={vehicleGroupSelectOption.map(
+                  (option: { value: any; label: any }) => ({
+                    value: option.value,
+                    label: option.label,
+                  })
+                )}
                 onSearch={(text) => getVehicleGroupValue(text)}
                 placeholder="Search drivers"
                 fieldNames={{ label: "label", value: "value" }}
+                onChange={handleVehicleGroupChange}
+                onSelect={handleVehicleGroupSelect}
                 notFoundContent={<div>No search result</div>}
               />
             </Form.Item>
@@ -287,7 +303,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           {/* registration */}
           <div className={styles.secondaryContainer}>
             <Form.Item name="registration" label="Registration">
-              <Input.Group>
+              <Input.Group className={"custom-input-group"}>
                 <Form.Item
                   label="Owner name"
                   name={["registration", "ownerName"]}
@@ -328,7 +344,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             name="insurance"
             label="Insurance"
           >
-            <Input.Group>
+            <Input.Group className={"custom-input-group"}>
               <div className={styles.typeContainer}>
                 <Form.Item
                   label="Company name"
@@ -433,7 +449,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             name="rto"
             label="RTO"
           >
-            <Input.Group>
+            <Input.Group className={"custom-input-group"}>
               <div className={styles.typeContainer}>
                 <Form.Item
                   label="Owner name"
@@ -488,7 +504,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             name="parts"
             label="Parts"
           >
-            <Input.Group>
+            <Input.Group className={"custom-input-group"}>
               <div className={styles.typeContainer}>
                 <Form.Item
                   label="Chasis number"
