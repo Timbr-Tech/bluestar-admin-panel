@@ -24,10 +24,10 @@ import React, { useEffect, useState, useRef } from "react";
 import CustomPagination from "../../Common/Pagination";
 
 interface IVehicleGroupTableData {
+  key: string;
   _id: string;
   name: string;
   vehicleCount: number;
-  // status: any;
 }
 
 interface IVehicleGroupTable {
@@ -45,6 +45,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     deleteVehicleGroupStates,
     pagination,
   } = useAppSelector((state) => state.database);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [vehicleGroup, setVehicleGroup] = useState({ name: "" });
   const [deleteVehicleGroupId, setDeleteVehicleGroupId] = useState<string>("");
   const [currentVehicleGroup, setCurrentVehicleGroup] = useState<any>({});
@@ -165,11 +166,9 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     selectedRowKeys: React.Key[],
     selectedRows: IVehicleGroupTableData[]
   ) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
+    console.log(selectedRowKeys, "selectedRowKeys");
+    setSelectedRowKeys(selectedRowKeys);
+    console.log("Selected Rows: ", selectedRows);
   };
 
   return (
@@ -188,11 +187,13 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
         rowSelection={{
           type: "checkbox",
           onChange: onChange,
+          selectedRowKeys: selectedRowKeys,
         }}
         columns={columns}
         dataSource={vehicleGroupData?.data?.map((data: any) => {
           return {
             ...data,
+            key: data?._id,
             // status: (
             //   <div
             //     className={cn(styles.status, {

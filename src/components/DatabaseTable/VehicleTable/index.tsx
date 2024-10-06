@@ -19,6 +19,7 @@ import React, { useState, useEffect } from "react";
 import CustomPagination from "../../Common/Pagination";
 
 interface IVehicleTable {
+  key: string;
   _id: string;
   modelName: string;
   group: string;
@@ -37,6 +38,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [vehicleId, setVehicleId] = useState<string>("");
   const [vehicleName, setVehicleName] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const handleDeleteVehicle = () => {
     dispatch(deleteVehicle({ id: vehicleId }));
@@ -106,11 +108,9 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
     selectedRowKeys: React.Key[],
     selectedRows: IVehicleTable[]
   ) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
+    console.log(selectedRowKeys, "selectedRowKeys");
+    setSelectedRowKeys(selectedRowKeys);
+    console.log("Selected Rows: ", selectedRows);
   };
 
   return (
@@ -133,6 +133,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
         columns={columns}
         dataSource={vehicleList?.data?.map((data: any) => ({
           ...data,
+          key: data?._id,
           group: "Taxi",
           assigned_driver: data.registration.ownerName,
         }))}

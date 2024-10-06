@@ -20,6 +20,7 @@ import CustomPagination from "../../Common/Pagination";
 import styles from "./index.module.scss";
 
 interface IDutyTypeTableData {
+  key: string;
   _id: string;
   name: string;
   type: string;
@@ -41,6 +42,7 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
     dutyTypeStates,
     pagination,
   } = useAppSelector((state) => state.database);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [dutyTypeId, setDutyTypeId] = useState<string>("");
   const [dutyType, setDutyType] = useState({ name: "" });
@@ -142,11 +144,9 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
     selectedRowKeys: React.Key[],
     selectedRows: IDutyTypeTableData[]
   ) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
+    console.log(selectedRowKeys, "selectedRowKeys")
+    setSelectedRowKeys(selectedRowKeys);
+    console.log("Selected Rows: ", selectedRows);
   };
 
   return (
@@ -166,11 +166,13 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
         rowSelection={{
           type: "checkbox",
           onChange: onChange,
+          selectedRowKeys: selectedRowKeys,
         }}
         columns={columns}
         dataSource={dutyTypeList?.data?.map((data: any) => {
           return {
             ...data,
+            key: data?._id,
             max_kilometers: data?.pricing[0]?.extraKmRate,
             max_hours: data?.pricing[0]?.extraHrRate,
           };

@@ -20,6 +20,7 @@ import React, { useEffect, useState } from "react";
 import CustomPagination from "../../Common/Pagination";
 
 interface IDriversTableData {
+  key: string;
   _id: string;
   name: string;
   driverId: string;
@@ -35,6 +36,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
   const dispatch = useAppDispatch();
   const { driverList, driverStates, deleteDriverStates, q, pagination } =
     useAppSelector((state) => state.database);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [driverId, setDriverId] = useState<string>("");
   const [driver, setDriver] = useState({ name: "" });
@@ -115,11 +117,9 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
     selectedRowKeys: React.Key[],
     selectedRows: IDriversTableData[]
   ) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
+    console.log(selectedRowKeys, "selectedRowKeys");
+    setSelectedRowKeys(selectedRowKeys);
+    console.log("Selected Rows: ", selectedRows);
   };
 
   const getInitials = (name: string) => {
@@ -146,6 +146,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
         rowSelection={{
           type: "checkbox",
           onChange: onChange,
+          selectedRowKeys: selectedRowKeys,
         }}
         columns={columns}
         pagination={false}
@@ -170,6 +171,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
         dataSource={driverList?.data?.map((data: any) => {
           return {
             ...data,
+            key: data?._id,
             name: (
               <div className={styles.driverNameContainer}>
                 <div

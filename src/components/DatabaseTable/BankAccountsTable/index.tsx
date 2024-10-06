@@ -20,6 +20,7 @@ import styles from "./index.module.scss";
 import CustomPagination from "../../Common/Pagination";
 
 interface IBankAccountsTable {
+  key: string;
   _id: string;
   accountName: string;
   accountNumber: string;
@@ -44,6 +45,7 @@ const BankAccountsTable = ({
     q,
     pagination,
   } = useAppSelector((state) => state.database);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteBankAccountId, setDeleteBankAccountId] = useState<string>("");
   const [bankAccountName, setBankAccountName] = useState("");
@@ -121,11 +123,9 @@ const BankAccountsTable = ({
     selectedRowKeys: React.Key[],
     selectedRows: IBankAccountsTable[]
   ) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
+    console.log(selectedRowKeys, "selectedRowKeys");
+    setSelectedRowKeys(selectedRowKeys);
+    console.log("Selected Rows: ", selectedRows);
   };
 
   return (
@@ -146,7 +146,10 @@ const BankAccountsTable = ({
           };
         }}
         columns={columns}
-        dataSource={bankAccounts?.data}
+        dataSource={bankAccounts?.data.map((data: any) => ({
+          ...data,
+          key: data?._id,
+        }))}
         loading={bankAccountStates?.loading || deleteBankAccountStates?.loading}
         pagination={false}
         scroll={{

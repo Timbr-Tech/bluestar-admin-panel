@@ -20,6 +20,7 @@ import styles from "./index.module.scss";
 import CustomPagination from "../../Common/Pagination";
 
 interface IAllowanceData {
+  key: string;
   _id: string;
   allowanceType: string;
   rate: number;
@@ -41,6 +42,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [allowanceId, setAllowanceId] = useState("");
   const [allowanceName, setAllowanceName] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     if (e.key === "1") {
@@ -114,11 +116,9 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
     selectedRowKeys: React.Key[],
     selectedRows: IAllowanceData[]
   ) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
+    console.log(selectedRowKeys, "selectedRowKeys");
+    setSelectedRowKeys(selectedRowKeys);
+    console.log("Selected Rows: ", selectedRows);
   };
 
   return (
@@ -137,9 +137,13 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
         rowSelection={{
           type: "checkbox",
           onChange: onChange,
+          selectedRowKeys: selectedRowKeys,
         }}
         columns={columns}
-        dataSource={allowancesList?.data}
+        dataSource={allowancesList?.data?.map((data: any) => ({
+          ...data,
+          key: data?._id,
+        }))}
         loading={allowanceStates?.loading || deleteAllowancesStates?.loading}
         pagination={false}
         scroll={{

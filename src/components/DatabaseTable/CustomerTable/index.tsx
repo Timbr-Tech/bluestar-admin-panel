@@ -22,6 +22,7 @@ import React, { useState, useEffect } from "react";
 import CustomPagination from "../../Common/Pagination";
 
 interface ICustomerTableData {
+  key: string;
   _id: string;
   name: string;
   phoneNumber: string;
@@ -35,6 +36,7 @@ interface ICustomerTable {
 
 const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   const dispatch = useAppDispatch();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState<any>({});
   const [customerId, setCustomerId] = useState("");
@@ -124,11 +126,9 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
     selectedRowKeys: React.Key[],
     selectedRows: ICustomerTableData[]
   ) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
+    console.log(selectedRowKeys, "selectedRowKeys");
+    setSelectedRowKeys(selectedRowKeys);
+    console.log("Selected Rows: ", selectedRows);
   };
 
   useEffect(() => {
@@ -151,11 +151,13 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
         rowSelection={{
           type: "checkbox",
           onChange: onChange,
+          selectedRowKeys: selectedRowKeys,
         }}
         columns={columns}
         dataSource={customers?.data?.map((data: any) => {
           return {
             ...data,
+            key: data?._id,
             gstNumber: data?.taxDetails?.gstNumber,
             status: (
               <div

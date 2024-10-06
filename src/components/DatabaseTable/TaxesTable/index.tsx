@@ -22,6 +22,7 @@ import styles from "./index.module.scss";
 import CustomPagination from "../../Common/Pagination";
 
 interface ITaxesTableData {
+  key: string;
   _id: string;
   name: string;
   percentage: string;
@@ -38,6 +39,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
   const dispatch = useAppDispatch();
   const [currentTax, setCurrentTax] = useState<any>({});
   const [taxName, setTaxName] = useState("");
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [taxId, setTaxId] = useState("");
 
@@ -135,11 +137,9 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
     selectedRowKeys: React.Key[],
     selectedRows: ITaxesTableData[]
   ) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
+    console.log(selectedRowKeys, "selectedRowKeys");
+    setSelectedRowKeys(selectedRowKeys);
+    console.log("Selected Rows: ", selectedRows);
   };
 
   return (
@@ -158,11 +158,13 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
         rowSelection={{
           type: "checkbox",
           onChange: onChange,
+          selectedRowKeys: selectedRowKeys,
         }}
         columns={columns}
         dataSource={taxes?.data?.map((data: any) => {
           return {
             ...data,
+            key: data?._id,
             status: (
               <div
                 className={cn(styles.status, {
