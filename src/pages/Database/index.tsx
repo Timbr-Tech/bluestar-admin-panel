@@ -125,7 +125,7 @@ const Database = () => {
       <DatabaseTable item={item} handleOpenSidePanel={handleOpenSidePanel} />
       {openSidePanel && (
         <div
-          className={cn(styles.formContainer, { [styles.open]: openSidePanel })}
+          className={cn(styles.sidebar, { [styles.open]: openSidePanel })}
         >
           <button className={styles.closeBtn} onClick={handleCloseSidePanel}>
             <CrossIcon />
