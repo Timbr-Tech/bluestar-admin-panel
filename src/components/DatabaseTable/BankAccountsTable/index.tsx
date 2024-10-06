@@ -146,7 +146,7 @@ const BankAccountsTable = ({
           };
         }}
         columns={columns}
-        dataSource={bankAccounts?.data.map((data: any) => ({
+        dataSource={bankAccounts?.data?.map((data: any) => ({
           ...data,
           key: data?._id,
         }))}
