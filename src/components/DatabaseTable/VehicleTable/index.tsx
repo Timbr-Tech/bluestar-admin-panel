@@ -68,7 +68,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
   };
 
   useEffect(() => {
-    dispatch(getVehicle({ search: q }));
+    dispatch(getVehicle({ page: 1, limit: "10", search: q }));
   }, [q]);
 
   const columns: TableProps<IVehicleTable>["columns"] = [

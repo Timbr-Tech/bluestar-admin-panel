@@ -42,7 +42,10 @@ dayjs.extend(weekday);
 dayjs.extend(localeData);
 
 const convertIsoToDayjsObject = (isoString: string) => {
+  console.log(isoString, "isoString");
   const dayjsObject = dayjs(isoString);
+
+  console.log(dayjsObject.isValid(), "dayjsObject.isValid()");
 
   if (!dayjsObject.isValid()) {
     throw new Error("Invalid ISO string");
@@ -358,7 +361,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
             >
               <Input
                 type="number"
-                placeholder="Enter driver license..."
+                placeholder="Enter salary per month..."
                 min={0}
               />
             </Form.Item>
