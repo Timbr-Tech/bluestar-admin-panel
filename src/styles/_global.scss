@@ -245,3 +245,15 @@ th {
   flex-direction: column;
   gap: 16px;
 }
+
+/* Styling the indeterminate state of the checkbox */
+.ant-checkbox-indeterminate .ant-checkbox-inner {
+  background-color: #7f56d9; /* Custom background color for indeterminate state */
+  border-color: #7f56d9; /* Custom border color */
+}
+
+/* Optionally, change the check mark (the small dash) color */
+.ant-checkbox-indeterminate .ant-checkbox-inner::after {
+  background-color: #fff; /* Customize the indeterminate dash color */
+  height: 2px;
+}
