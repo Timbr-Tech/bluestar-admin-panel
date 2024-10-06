@@ -37,6 +37,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
     useAppSelector((state) => state.database);
   const dispatch = useAppDispatch();
   const [currentTax, setCurrentTax] = useState<any>({});
+  const [taxName, setTaxName] = useState("");
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [taxId, setTaxId] = useState("");
 
@@ -94,6 +95,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
             onClick={() => {
               setOpenDeleteModal(true);
               setTaxId(record._id);
+              setTaxName(record?.name);
             }}
             className={styles.deleteBtn}
           >
@@ -211,8 +213,8 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete tax</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this tax? This action cannot be
-              undone.
+              Are you sure you want to delete this tax?{" "}
+              <div className={styles.selectedSecondaryText}>{taxName}</div>
             </div>
           </div>
           <div className={styles.bottomBtns}>

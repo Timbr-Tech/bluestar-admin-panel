@@ -46,7 +46,7 @@ const BankAccountsTable = ({
   } = useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteBankAccountId, setDeleteBankAccountId] = useState<string>("");
-
+  const [bankAccountName, setBankAccountName] = useState("");
   const handleDeleteBankAccount = () => {
     dispatch(deleteBankAccount({ id: deleteBankAccountId }));
     setOpenDeleteModal(false);
@@ -88,6 +88,7 @@ const BankAccountsTable = ({
             onClick={() => {
               setOpenDeleteModal(true);
               setDeleteBankAccountId(record._id);
+              setBankAccountName(record?.accountName);
             }}
             className={styles.deleteBtn}
           >
@@ -175,8 +176,10 @@ const BankAccountsTable = ({
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete bank account</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this bank account? This action
-              cannot be undone.
+              Are you sure you want to delete this bank account?{" "}
+              <div className={styles.selectedSecondaryText}>
+                {bankAccountName}
+              </div>
             </div>
           </div>
           <div className={styles.bottomBtns}>

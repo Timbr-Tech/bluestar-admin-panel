@@ -45,6 +45,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     deleteVehicleGroupStates,
     pagination,
   } = useAppSelector((state) => state.database);
+  const [vehicleGroup, setVehicleGroup] = useState({ name: "" });
   const [deleteVehicleGroupId, setDeleteVehicleGroupId] = useState<string>("");
   const [currentVehicleGroup, setCurrentVehicleGroup] = useState<any>({});
   const handleCloseModal = () => {
@@ -129,6 +130,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
             onClick={() => {
               setOpenDeleteModal(true);
               setDeleteVehicleGroupId(record._id);
+              setVehicleGroup(record);
             }}
             className={styles.deleteBtn}
           >
@@ -238,8 +240,10 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete vehicle group</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this vehicle group? This action
-              cannot be undone.
+              Are you sure you want to delete this vehicle group?{" "}
+              <div className={styles.selectedSecondaryText}>
+                {vehicleGroup?.name}
+              </div>
             </div>
           </div>
           <div className={styles.bottomBtns}>

@@ -40,6 +40,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [allowanceId, setAllowanceId] = useState("");
+  const [allowanceName, setAllowanceName] = useState("");
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     if (e.key === "1") {
@@ -73,6 +74,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
             onClick={() => {
               setOpenDeleteModal(true);
               setAllowanceId(record._id);
+              setAllowanceName(record?.allowanceType);
             }}
             className={styles.deleteBtn}
           >
@@ -167,8 +169,10 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete allowance</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this Allowance? This action cannot
-              be undone.
+              Are you sure you want to delete this Allowance?{" "}
+              <div className={styles.selectedSecondaryText}>
+                {allowanceName}
+              </div>
             </div>
           </div>
           <div className={styles.bottomBtns}>

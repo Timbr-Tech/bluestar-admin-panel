@@ -5,7 +5,7 @@ import {
   getVehicle,
   deleteVehicle,
   getVehicleById,
-  setViewContentDatabase
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import { VEHICLES } from "../../../constants/database";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
@@ -36,6 +36,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
     useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [vehicleId, setVehicleId] = useState<string>("");
+  const [vehicleName, setVehicleName] = useState("");
 
   const handleDeleteVehicle = () => {
     dispatch(deleteVehicle({ id: vehicleId }));
@@ -82,6 +83,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
             onClick={() => {
               setOpenDeleteModal(true);
               setVehicleId(record._id);
+              setVehicleName(record?.modelName);
             }}
             className={styles.deleteBtn}
           >
@@ -163,8 +165,8 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete vehicle</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this vehicle? This action cannot
-              be undone.
+              Are you sure you want to delete this vehicle?{" "}
+              <div className={styles.selectedSecondaryText}>{vehicleName}</div>
             </div>
           </div>
           <div className={styles.bottomBtns}>

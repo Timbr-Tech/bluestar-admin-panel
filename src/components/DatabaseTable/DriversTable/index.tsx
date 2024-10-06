@@ -37,7 +37,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
     useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [driverId, setDriverId] = useState<string>("");
-
+  const [driver, setDriver] = useState({ name: "" });
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     if (e.key === "1") {
       dispatch(getDriverById({ id: driverId }));
@@ -87,6 +87,12 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
             onClick={() => {
               setOpenDeleteModal(true);
               setDriverId(record._id);
+
+              const item = driverList?.data?.find(
+                (driver: { _id: string }) => driver._id === record?._id
+              );
+
+              setDriver(item);
             }}
             className={styles.deleteBtn}
           >
@@ -191,8 +197,8 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete driver</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this driver? This action cannot be
-              undone.
+              Are you sure you want to delete this driver?{" "}
+              <div className={styles.selectedSecondaryText}>{driver?.name}</div>
             </div>
           </div>
           <div className={styles.bottomBtns}>

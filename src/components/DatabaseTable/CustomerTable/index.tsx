@@ -38,7 +38,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState<any>({});
   const [customerId, setCustomerId] = useState("");
-
+  const [customer, setCustomer] = useState({ name: "" });
   const { customers, customersStates, q, deleteCustomersStates, pagination } =
     useAppSelector((state) => state.database);
 
@@ -101,6 +101,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
             onClick={() => {
               setOpenDeleteModal(true);
               setCustomerId(record._id);
+              setCustomer(record);
             }}
             className={styles.deleteBtn}
           >
@@ -201,8 +202,10 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete customer</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this customer? This action cannot
-              be undone.
+              Are you sure you want to delete this customer?{" "}
+              <div className={styles.selectedSecondaryText}>
+                {customer?.name}
+              </div>
             </div>
           </div>
           <div className={styles.bottomBtns}>
