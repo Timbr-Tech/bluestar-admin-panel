@@ -139,11 +139,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
           onChange: onChange,
         }}
         columns={columns}
-        dataSource={allowancesList?.data.map((data: any) => {
-          return {
-            ...data,
-          };
-        })}
+        dataSource={allowancesList?.data}
         loading={allowanceStates?.loading || deleteAllowancesStates?.loading}
         pagination={false}
         scroll={{
