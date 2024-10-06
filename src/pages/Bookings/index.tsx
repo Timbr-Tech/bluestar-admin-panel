@@ -39,7 +39,15 @@ const BookingsTabs = () => {
         }}
       >
         {BOOKINGS_TABS?.map((item) => (
-          <Radio.Button value={item.type}>{item.name}</Radio.Button>
+          <Radio.Button
+            onClick={() => {
+              dispatch(setBookingFilter({ status: item.type }));
+            }}
+            key={item.type}
+            value={item.type}
+          >
+            {item.name}
+          </Radio.Button>
         ))}
       </Radio.Group>
     </div>
@@ -54,7 +62,7 @@ const Bookings = () => {
   const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // setSearchTerm(value);
-    dispatch(setBookingFilter({ q: value }));
+    dispatch(setBookingFilter({ search: value }));
   };
 
   const {
@@ -63,10 +71,6 @@ const Bookings = () => {
     filters,
     currentSelectedBooking,
   } = useSelector((state: RootState) => state.booking);
-
-  useEffect(() => {
-    dispatch(getBookings({ ...filters }));
-  }, [filters]);
 
   const [form] = Form.useForm();
   const [formStep, setFormSetp] = useState(0);
@@ -97,7 +101,7 @@ const Bookings = () => {
         <div className={styles.searchContainer}>
           <Input
             prefix={<SearchOutlined />}
-            value={filters.q}
+            value={filters.search}
             onChange={searchHandler}
             className={styles.inputContainer}
             placeholder="Search by name, number, duty type, city or booking id"
@@ -153,7 +157,7 @@ const Bookings = () => {
             <AddNewBookingForm
               form={form}
               handleFormSubmit={(value) => {
-                console.log(value);
+                console.log("value", value);
               }}
               isEditable={isEditingBooking}
               initialData={currentSelectedBooking}

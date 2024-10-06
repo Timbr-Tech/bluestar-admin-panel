@@ -125,14 +125,23 @@ export const addDutyType = createAsyncThunk(
 
 export const getAllDutyTypes = createAsyncThunk(
   "database/getAllDutyTypes",
-  async (params: any) => {
-    const { page, limit, search } = params;
+  async (params: any, { dispatch, getState }) => {
+    // const { page, limit, search } = params;
 
-    const response = await apiClient.get(
-      `/database/duty-type?page=${page}&limit=${limit}&search=${search}`
-    );
+    // const response = await apiClient.get(
+    //   `/database/duty-type?page=${page}&limit=${limit}&search=${search}`
+    // );
+    const response = await apiClient.get(`/database/duty-type`, { params });
+    if (response.status === 200) {
+      let option: Array<object> = response?.data?.data?.map((each: any) => ({
+        value: each._id,
+        label: each.name,
+      }));
 
-    return response.data;
+      dispatch(setDutyTypeOption(option));
+
+      return response.data;
+    }
   }
 );
 
@@ -141,7 +150,6 @@ export const getDutyTypeById = createAsyncThunk(
   async (params: any) => {
     const { id } = params;
     const response = await apiClient.get(`/database/duty-type/${id}`);
-
     return response.data;
   }
 );
@@ -922,6 +930,7 @@ const initialState: any = {
   // Duty Type
   dutyTypeList: {},
   selectedDutyType: {},
+  dutyTypeOption: [],
   dutyTypeStates: {
     state: "idle",
     loading: false,
@@ -965,6 +974,12 @@ export const databaseSlice = createSlice({
       return {
         ...state,
         vehicleGroupSelectOption: action.payload,
+      };
+    },
+    setDutyTypeOption: (state, action: PayloadAction<Array<object>>) => {
+      return {
+        ...state,
+        dutyTypeOption: action.payload,
       };
     },
     setPagination: (state, action: PayloadAction<object>) => {
@@ -1729,6 +1744,7 @@ export const {
   setOpenSidePanel,
   setDriverOption,
   setVehicleGroupOption,
+  setDutyTypeOption,
   setPagination,
   setResetSelectedStates,
 } = actions;
