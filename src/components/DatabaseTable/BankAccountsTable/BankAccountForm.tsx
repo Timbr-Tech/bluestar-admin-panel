@@ -3,7 +3,9 @@ import { Form, Input, notification, Spin, Button } from "antd";
 import {
   addBankAccount,
   updateBankAccount,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import styles from "../DutyTypeTable/index.module.scss";
 import SecondaryBtn from "../../SecondaryBtn";
@@ -19,8 +21,12 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
   const [api, contextHolder] = notification.useNotification();
-  const { selectedBankAccount, bankAccountStates, updateBankAccountState } =
-    useAppSelector((state) => state.database);
+  const {
+    selectedBankAccount,
+    bankAccountStates,
+    updateBankAccountState,
+    viewContentDatabase,
+  } = useAppSelector((state) => state.database);
 
   const dispatch = useAppDispatch();
 
@@ -83,16 +89,21 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
         <div className={styles.formHeader}>
           <div className={styles.header}>
             {Object.keys(selectedBankAccount)?.length
-              ? "Bank Account"
+              ? viewContentDatabase
+                ? "Bank Account"
+                : "Edit Bank Account"
               : "New Bank Account"}
           </div>
           <div className={styles.primaryText}>
             {Object.keys(selectedBankAccount)?.length
-              ? "View bank account details"
+              ? viewContentDatabase
+                ? "View bank account details"
+                : "Update or modify bank account details"
               : "Add details of your bank account"}
           </div>
         </div>
         <Form
+          disabled={viewContentDatabase}
           onFinishFailed={() => {
             //for errors
           }}
@@ -193,20 +204,34 @@ const BankAccountForm = ({ handleCloseSidePanel }: IBankAccountForm) => {
           </div>
         </Form>
       </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <Button
-          type="primary"
-          htmlType="submit"
-          onClick={() => {
-            form.submit();
-          }}
-          className="primary-btn"
-          loading={updateBankAccountState.loading || bankAccountStates.loading}
-        >
-          Save
-        </Button>
-      </div>
+      {viewContentDatabase ? (
+        <div className={styles.bottomContainer}>
+          <PrimaryBtn
+            btnText={"Edit"}
+            onClick={() => {
+              dispatch(setViewContentDatabase(false));
+            }}
+            LeadingIcon={EditIcon}
+          />
+        </div>
+      ) : (
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => {
+              form.submit();
+            }}
+            className="primary-btn"
+            loading={
+              updateBankAccountState.loading || bankAccountStates.loading
+            }
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

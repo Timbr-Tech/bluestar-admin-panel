@@ -5,6 +5,7 @@ import {
   getBankAccount,
   getBankAccountById,
   deleteBankAccount,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import type { MenuProps } from "antd";
 import { Table, Dropdown } from "antd";
@@ -139,6 +140,7 @@ const BankAccountsTable = ({
             onClick: () => {
               dispatch(getBankAccountById({ id: record._id }));
               handleOpenSidePanel();
+              dispatch(setViewContentDatabase(true));
             },
           };
         }}

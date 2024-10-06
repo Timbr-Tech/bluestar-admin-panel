@@ -4,14 +4,15 @@ import { useAppSelector, useAppDispatch } from "../../../hooks/store";
 import type { RadioChangeEvent } from "antd";
 import {
   getVehicleGroup,
-  getVehicleGroupOptions,
   updateDutyType,
   addDutyType,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { notification } from "antd";
 import { omit } from "lodash";
+import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { DUTY_TYPES_TYPE } from "../../../constants/database";
 import { ReactComponent as HelpCircle } from "../../../icons/help-circle.svg";
 import { SetStateAction, useEffect, useState } from "react";
@@ -57,6 +58,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
     updatedDutyTypeStates,
     dutyTypeStates,
     vehicleGroupData,
+    viewContentDatabase,
   } = useAppSelector((state) => state.database);
   const [vehicleGroupDataArray, setVehicleGroupDataArray] = useState<any[]>([]);
 
@@ -222,12 +224,16 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
         <div className={styles.formHeader}>
           <div className={styles.header}>
             {Object.keys(selectedDutyType).length
-              ? "Duty Type"
+              ? viewContentDatabase
+                ? "Duty Type"
+                : "Edit Duty Type"
               : "New Duty Type"}
           </div>
           <div className={styles.primaryText}>
             {Object.keys(selectedDutyType).length
-              ? "View duty type details"
+              ? viewContentDatabase
+                ? "View duty type details"
+                : "Update or modify duty type details"
               : "Add details of your duty type"}
           </div>
         </div>
@@ -241,6 +247,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
             <Select
               style={{ width: "100%" }}
               onChange={handleSelectChange}
+              disabled={viewContentDatabase}
               value={dutyType}
               placeholder="Select One"
               dropdownRender={(menu) => <>{menu}</>}
@@ -257,13 +264,18 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
             </div>
             <input
               className={styles.input}
+              disabled={viewContentDatabase}
               value={name}
               onChange={handleNameChange}
               placeholder="Enter Duty type name"
             />
           </div>
           <div className={styles.radio}>
-            <Radio.Group onChange={onChange} value={value}>
+            <Radio.Group
+              onChange={onChange}
+              value={value}
+              disabled={viewContentDatabase}
+            >
               <Radio value={"P2P"}>
                 <div className={styles.radioContainer}>
                   <div className={styles.text}>Is Point to Point (P2P)?</div>
@@ -297,6 +309,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                       <div className={styles.rowItem}>
                         <input
                           className={styles.input}
+                          disabled={viewContentDatabase}
                           value={row?.baseRate}
                           onChange={(e) => handlePricingValueChange(e, index)}
                           name={"baseRate"}
@@ -305,6 +318,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                       <div className={styles.rowItem}>
                         <input
                           className={styles.input}
+                          disabled={viewContentDatabase}
                           value={row?.extraKmRate}
                           name={"extraKmRate"}
                           onChange={(e) => handlePricingValueChange(e, index)}
@@ -313,6 +327,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
                       <div className={styles.rowItem}>
                         <input
                           className={styles.input}
+                          disabled={viewContentDatabase}
                           value={row?.extraHrRate}
                           name={"extraHrRate"}
                           onChange={(e) => handlePricingValueChange(e, index)}
@@ -326,19 +341,30 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
           )}
         </div>
       </div>
-      {/* <div className={styles.bottomContainer}></div> */}
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={updatedDutyTypeStates?.loading}
-          onClick={handleSave}
-          className="primary-btn"
-        >
-          Save
-        </Button>
-      </div>
+      {viewContentDatabase ? (
+        <div className={styles.bottomContainer}>
+          <PrimaryBtn
+            btnText={"Edit"}
+            onClick={() => {
+              dispatch(setViewContentDatabase(false));
+            }}
+            LeadingIcon={EditIcon}
+          />
+        </div>
+      ) : (
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={updatedDutyTypeStates?.loading}
+            onClick={handleSave}
+            className="primary-btn"
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

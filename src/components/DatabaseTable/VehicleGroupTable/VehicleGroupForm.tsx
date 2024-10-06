@@ -7,7 +7,10 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import {
   addVehicleGroup,
   updateVehicleGroup,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import PrimaryBtn from "../../PrimaryBtn";
+import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 
 type NotificationType = "success" | "info" | "warning" | "error";
@@ -18,8 +21,12 @@ interface IVehicleGroupForm {
 
 const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
   const [api, contextHolder] = notification.useNotification();
-  const { selectedVehicleGroup, updateVehicleGroupStates, vehicleGroupStates } =
-    useAppSelector((state) => state.database);
+  const {
+    selectedVehicleGroup,
+    updateVehicleGroupStates,
+    vehicleGroupStates,
+    viewContentDatabase,
+  } = useAppSelector((state) => state.database);
 
   const dispatch = useAppDispatch();
 
@@ -59,9 +66,6 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
     } else {
       dispatch(addVehicleGroup(values));
     }
-
-    // openNotificationWithIcon("success");
-    // handleCloseSidePanel();
   };
   const [form] = Form.useForm();
 
@@ -101,12 +105,16 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
         <div className={styles.formHeader}>
           <div className={styles.header}>
             {Object.keys(selectedVehicleGroup).length
-              ? "Vehicle Group"
+              ? viewContentDatabase
+                ? "Vehicle Group"
+                : "Edit Vehicle Group"
               : "New Vehicle Group"}
           </div>
           <div className={styles.primaryText}>
             {Object.keys(selectedVehicleGroup).length
-              ? "View vehicle group details"
+              ? viewContentDatabase
+                ? "View vehicle group details"
+                : "Update or modify vehicle group details"
               : "Add details of your vehicle group"}
           </div>
         </div>
@@ -136,6 +144,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
           }}
           autoComplete="off"
           requiredMark={CustomizeRequiredMark}
+          disabled={viewContentDatabase}
         >
           <div className={styles.form}>
             <div className={styles.typeContainer}>
@@ -192,8 +201,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
               >
                 <Input
                   type="number"
-                  min={0}
-                  // name="seatingCapacity"
+                  min={0} // name="seatingCapacity"
                   // className={styles.input}
                   placeholder="Enter value ..."
                   // value={vehicleGroup.seatingCapacity}
@@ -229,22 +237,34 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
           </div>
         </Form>
       </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <Button
-          type="primary"
-          htmlType="submit"
-          onClick={() => {
-            form.submit();
-          }}
-          loading={
-            updateVehicleGroupStates.loading || vehicleGroupStates.loading
-          }
-          className="primary-btn"
-        >
-          Save
-        </Button>
-      </div>
+      {viewContentDatabase ? (
+        <div className={styles.bottomContainer}>
+          <PrimaryBtn
+            btnText={"Edit"}
+            onClick={() => {
+              dispatch(setViewContentDatabase(false));
+            }}
+            LeadingIcon={EditIcon}
+          />
+        </div>
+      ) : (
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => {
+              form.submit();
+            }}
+            loading={
+              updateVehicleGroupStates.loading || vehicleGroupStates.loading
+            }
+            className="primary-btn"
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

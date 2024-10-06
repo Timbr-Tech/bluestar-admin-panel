@@ -6,7 +6,9 @@ import { useState, useMemo, useEffect, SetStateAction } from "react";
 import {
   addNewAllowance,
   updateAllowance,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { ALLOWANCES_TYPES, Allowance } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
@@ -21,8 +23,12 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
   const [allowanceType, setAllowanceType] = useState<string>("");
   const [api, contextHolder] = notification.useNotification();
   const dispatch = useAppDispatch();
-  const { selectedAllowance, updateAllowancesStates, allowanceStates } =
-    useAppSelector((state) => state.database);
+  const {
+    selectedAllowance,
+    updateAllowancesStates,
+    allowanceStates,
+    viewContentDatabase,
+  } = useAppSelector((state) => state.database);
   const [rate, setRate] = useState<number>(
     selectedAllowance?.data?.rate ? selectedAllowance?.data?.rate : 0
   );
@@ -116,12 +122,16 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
         <div className={styles.formHeader}>
           <div className={styles.header}>
             {Object.keys(selectedAllowance).length
-              ? "Allowance"
+              ? viewContentDatabase
+                ? "Allowance"
+                : "Edit Allowance"
               : "New Allowance"}
           </div>
           <div className={styles.primaryText}>
             {Object.keys(selectedAllowance).length
-              ? "See allowance for your drivers"
+              ? viewContentDatabase
+                ? "See allowance for your drivers"
+                : "Update or modify allowance details"
               : "Add new allowance"}
           </div>
         </div>
@@ -131,6 +141,7 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
               <p>Allowance Type</p>
             </div>
             <Select
+              disabled={viewContentDatabase}
               style={{ width: "100%" }}
               onChange={handleAllowanceType}
               placeholder="Select One"
@@ -159,6 +170,7 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
                 <sup>*</sup>
               </div>
               <input
+                disabled={viewContentDatabase}
                 type="number"
                 className={styles.input}
                 placeholder="Enter amount..."
@@ -169,18 +181,32 @@ const AllowancesForm = ({ handleCloseSidePanel }: IAllowancesForm) => {
           )}
         </div>
       </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <Button
-          type="primary"
-          htmlType="submit"
-          onClick={handleAddNewAllowance}
-          loading={allowanceStates?.loading || updateAllowancesStates?.loading}
-          className="primary-btn"
-        >
-          Save
-        </Button>
-      </div>
+      {viewContentDatabase ? (
+        <div className={styles.bottomContainer}>
+          <PrimaryBtn
+            btnText={"Edit"}
+            onClick={() => {
+              dispatch(setViewContentDatabase(false));
+            }}
+            LeadingIcon={EditIcon}
+          />
+        </div>
+      ) : (
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={handleAddNewAllowance}
+            loading={
+              allowanceStates?.loading || updateAllowancesStates?.loading
+            }
+            className="primary-btn"
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

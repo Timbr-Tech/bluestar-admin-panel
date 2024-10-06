@@ -4,6 +4,7 @@ import {
   getAllDutyTypes,
   getDutyTypeById,
   deleteDutyType,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
@@ -156,6 +157,7 @@ const DutyTypeTable = ({ handleOpenSidePanel }: IDutyTypeTable) => {
           return {
             onClick: () => {
               dispatch(getDutyTypeById({ id: record._id }));
+              dispatch(setViewContentDatabase(true));
               handleOpenSidePanel();
             },
           };

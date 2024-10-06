@@ -110,10 +110,11 @@
           padding: 8px;
           border-radius: 8px;
           border: 1px solid #d0d5dd;
-          background-color: #fff;
+          background-color: #fff !important;
           outline: none;
-          box-shadow: 0px 1px 2px 0px
-            var(--Colors-Effects-Shadows-shadow-xs, rgba(16, 24, 40, 0.05));
+        }
+        input:disabled {
+          background: #fff !important;
         }
 
         input[type="number"]::-webkit-outer-spin-button,

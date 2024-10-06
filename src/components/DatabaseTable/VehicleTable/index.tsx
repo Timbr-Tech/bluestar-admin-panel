@@ -5,6 +5,7 @@ import {
   getVehicle,
   deleteVehicle,
   getVehicleById,
+  setViewContentDatabase
 } from "../../../redux/slices/databaseSlice";
 import { VEHICLES } from "../../../constants/database";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
@@ -119,6 +120,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
             onClick: () => {
               dispatch(getVehicleById({ id: record._id }));
               handleOpenSidePanel();
+              dispatch(setViewContentDatabase(true));
             },
           };
         }}

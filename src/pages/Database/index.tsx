@@ -21,6 +21,7 @@ import {
   setPagination,
   setQueryForSearch,
   setResetSelectedStates,
+  setViewContentDatabase,
 } from "../../redux/slices/databaseSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
@@ -70,6 +71,7 @@ const Database = () => {
   const handleCloseSidePanel = () => {
     dispatch(setOpenSidePanel(false));
     dispatch(setResetSelectedStates());
+    dispatch(setViewContentDatabase(false));
   };
 
   const handleOpenSidePanel = () => {

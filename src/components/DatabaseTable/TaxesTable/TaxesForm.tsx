@@ -1,10 +1,15 @@
 /* eslint-disable */
 import styles from "../DutyTypeTable/index.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import { addNewTax, updateTax } from "../../../redux/slices/databaseSlice";
+import {
+  addNewTax,
+  updateTax,
+  setViewContentDatabase,
+} from "../../../redux/slices/databaseSlice";
 import { Form, Input, notification, Spin, Button } from "antd";
 import { useState, useEffect } from "react";
 import SecondaryBtn from "../../SecondaryBtn";
+import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import PrimaryBtn from "../../PrimaryBtn";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 
@@ -22,9 +27,8 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
     notes: "",
   });
   const dispatch = useAppDispatch();
-  const { selectedTax, taxesStates, updateTaxesState } = useAppSelector(
-    (state) => state.database
-  );
+  const { selectedTax, taxesStates, updateTaxesState, viewContentDatabase } =
+    useAppSelector((state) => state.database);
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const value = e.target.value;
@@ -88,15 +92,22 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>
-            {Object.keys(selectedTax)?.length ? "Tax Type" : "New Tax Type"}
+            {Object.keys(selectedTax)?.length
+              ? viewContentDatabase
+                ? "Tax"
+                : "Edit Tax"
+              : "New Tax"}
           </div>
           <div className={styles.primaryText}>
             {Object.keys(selectedTax)?.length
-              ? "View tax details"
+              ? viewContentDatabase
+                ? "View tax details"
+                : "Update or modify tax details"
               : "Add new tax details"}
           </div>
         </div>
         <Form
+          disabled={viewContentDatabase}
           requiredMark={CustomizeRequiredMark}
           layout="vertical"
           onFinish={(values) => {
@@ -160,20 +171,32 @@ const TaxesForm = ({ handleCloseSidePanel }: ITaxesForm) => {
           </div>
         </Form>
       </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={taxesStates?.loading || updateTaxesState?.loading}
-          onClick={() => {
-            form.submit();
-          }}
-          className="primary-btn"
-        >
-          Save
-        </Button>
-      </div>
+      {viewContentDatabase ? (
+        <div className={styles.bottomContainer}>
+          <PrimaryBtn
+            btnText={"Edit"}
+            onClick={() => {
+              dispatch(setViewContentDatabase(false));
+            }}
+            LeadingIcon={EditIcon}
+          />
+        </div>
+      ) : (
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={taxesStates?.loading || updateTaxesState?.loading}
+            onClick={() => {
+              form.submit();
+            }}
+            className="primary-btn"
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

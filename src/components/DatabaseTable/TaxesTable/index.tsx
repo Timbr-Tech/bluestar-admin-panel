@@ -15,6 +15,7 @@ import {
   deleteTax,
   getTaxesById,
   updateTax,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
@@ -148,6 +149,7 @@ const TaxesTable = ({ handleOpenSidePanel }: ITaxesTable) => {
             onClick: () => {
               dispatch(getTaxesById({ id: record._id }));
               handleOpenSidePanel();
+              dispatch(setViewContentDatabase(true));
             },
           };
         }}

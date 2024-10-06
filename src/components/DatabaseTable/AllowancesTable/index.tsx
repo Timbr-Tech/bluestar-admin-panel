@@ -11,6 +11,7 @@ import {
   getAllowances,
   getAllowanceById,
   deleteAllowance,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import Modal from "../../Modal";
 import React, { useState, useEffect } from "react";
@@ -127,6 +128,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
             onClick: () => {
               dispatch(getAllowanceById({ id: record._id }));
               handleOpenSidePanel();
+              dispatch(setViewContentDatabase(true));
             },
           };
         }}

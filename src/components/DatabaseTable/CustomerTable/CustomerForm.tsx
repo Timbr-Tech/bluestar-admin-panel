@@ -17,7 +17,9 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import {
   addNewCustomer,
   updateCustomer,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { STATES, CUSTOMER_TAX_TYPES } from "../../../constants/database";
 import { useState, useEffect } from "react";
@@ -32,8 +34,12 @@ type NotificationType = "success" | "info" | "warning" | "error";
 
 const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
   const dispatch = useAppDispatch();
-  const { selectedCustomer, customersStates, updateCustomersStates } =
-    useAppSelector((state) => state.database);
+  const {
+    selectedCustomer,
+    customersStates,
+    updateCustomersStates,
+    viewContentDatabase,
+  } = useAppSelector((state) => state.database);
   const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
   const [customerPaylod, setCustomerPayload] = useState({
@@ -177,16 +183,23 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>
-            {Object.keys(selectedCustomer).length ? "Customer" : "New Customer"}
+            {Object.keys(selectedCustomer).length
+              ? viewContentDatabase
+                ? "Customer"
+                : "Edit Customer"
+              : "New Customer"}
           </div>
           <div className={styles.primaryText}>
             {Object.keys(selectedCustomer).length
-              ? "View customer details"
+              ? viewContentDatabase
+                ? "View customer details"
+                : "Update or modify customer details"
               : "Add details of new customer"}
           </div>
         </div>
         <Form
           requiredMark={CustomizeRequiredMark}
+          disabled={viewContentDatabase}
           layout="vertical"
           form={form}
           className={styles.form}
@@ -480,20 +493,32 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
           </div>
         </Form>
       </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <Button
-          type="primary"
-          htmlType="submit"
-          onClick={() => {
-            form.submit();
-          }}
-          loading={customersStates?.loading || updateCustomersStates?.loading}
-          className="primary-btn"
-        >
-          Save
-        </Button>
-      </div>
+      {viewContentDatabase ? (
+        <div className={styles.bottomContainer}>
+          <PrimaryBtn
+            btnText={"Edit"}
+            onClick={() => {
+              dispatch(setViewContentDatabase(false));
+            }}
+            LeadingIcon={EditIcon}
+          />
+        </div>
+      ) : (
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => {
+              form.submit();
+            }}
+            loading={customersStates?.loading || updateCustomersStates?.loading}
+            className="primary-btn"
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

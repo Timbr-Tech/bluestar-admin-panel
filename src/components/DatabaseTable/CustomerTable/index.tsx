@@ -7,6 +7,7 @@ import {
   getCustomerById,
   deleteCustomer,
   updateCustomer,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import cn from "classnames";
@@ -141,6 +142,7 @@ const CustomerTable = ({ handleOpenSidePanel }: ICustomerTable) => {
           return {
             onClick: () => {
               dispatch(getCustomerById({ id: record._id }));
+              dispatch(setViewContentDatabase(true));
               handleOpenSidePanel();
             },
           };

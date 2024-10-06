@@ -11,6 +11,7 @@ import {
   notification,
 } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
+import PrimaryBtn from "../../PrimaryBtn";
 import type { UploadProps } from "antd";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { ADDRESS_TYPE } from "../../../constants/database";
@@ -21,7 +22,9 @@ import {
   addBankAccount,
   addNewDriver,
   updateDriver,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { useEffect } from "react";
 import { RootState } from "../../../types/store";
@@ -52,7 +55,7 @@ type NotificationType = "success" | "info" | "warning" | "error";
 const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
   const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
-  const { selectedDriver } = useAppSelector(
+  const { selectedDriver, viewContentDatabase } = useAppSelector(
     (state: RootState) => state.database
   );
   const props: UploadProps = {
@@ -137,11 +140,17 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>
-            {Object.keys(selectedDriver).length ? "Driver" : "New Driver"}
+            {Object.keys(selectedDriver).length
+              ? viewContentDatabase
+                ? "Driver"
+                : "Edit Driver"
+              : "New Driver"}
           </div>
           <div className={styles.primaryText}>
             {Object.keys(selectedDriver).length
-              ? "View driver details"
+              ? viewContentDatabase
+                ? "View driver details"
+                : "Update or modify driver details"
               : "Add details of new driver"}
           </div>
         </div>
@@ -170,6 +179,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
           requiredMark={CustomizeRequiredMark}
           layout="vertical"
           form={form}
+          disabled={viewContentDatabase}
           className={styles.form}
         >
           <div className={styles.typeContainer}>
@@ -539,19 +549,31 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
           </div>
         </Form>
       </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <Button
-          type="primary"
-          htmlType="submit"
-          onClick={() => {
-            form.submit();
-          }}
-          className="primary-btn"
-        >
-          Save
-        </Button>
-      </div>
+      {viewContentDatabase ? (
+        <div className={styles.bottomContainer}>
+          <PrimaryBtn
+            btnText={"Edit"}
+            onClick={() => {
+              dispatch(setViewContentDatabase(false));
+            }}
+            LeadingIcon={EditIcon}
+          />
+        </div>
+      ) : (
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => {
+              form.submit();
+            }}
+            className="primary-btn"
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

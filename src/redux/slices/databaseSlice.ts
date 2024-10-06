@@ -797,6 +797,7 @@ const initialState: any = {
     page: 1,
     limit: 10,
   },
+  viewContentDatabase: false,
 
   // Vehicle Group
 
@@ -953,6 +954,12 @@ export const databaseSlice = createSlice({
       return {
         ...state,
         openSidePanel: action.payload,
+      };
+    },
+    setViewContentDatabase: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        viewContentDatabase: action.payload,
       };
     },
     setDriverOption: (state, action: PayloadAction<Array<object>>) => {
@@ -1731,6 +1738,7 @@ export const {
   setVehicleGroupOption,
   setPagination,
   setResetSelectedStates,
+  setViewContentDatabase,
 } = actions;
 
 export default databaseSlice.reducer;

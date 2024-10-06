@@ -235,3 +235,7 @@ th {
 .ant-space-gap-col-small {
   column-gap: 2px;
 }
+
+.ant-input-outlined[disabled] {
+  color: rgba(0, 0, 0, 1);
+}

@@ -3,6 +3,7 @@ import {
   getDrivers,
   getDriverById,
   deleteDriver,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import Modal from "../../Modal";
 import type { TableProps, MenuProps } from "antd";
@@ -131,6 +132,7 @@ const DriversTable = ({ handleOpenSidePanel }: IDriversTable) => {
           return {
             onClick: () => {
               dispatch(getDriverById({ id: record._id }));
+              dispatch(setViewContentDatabase(true));
               handleOpenSidePanel();
             },
           };

@@ -15,6 +15,7 @@ import {
   getVehicleGroupById,
   deleteVehicleGroup,
   updateVehicleGroup,
+  setViewContentDatabase,
   setPagination,
 } from "../../../redux/slices/databaseSlice";
 import type { TableProps } from "antd";
@@ -177,6 +178,7 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
           return {
             onClick: () => {
               dispatch(getVehicleGroupById({ id: record._id }));
+              dispatch(setViewContentDatabase(true));
               handleOpenSidePanel();
             },
           };

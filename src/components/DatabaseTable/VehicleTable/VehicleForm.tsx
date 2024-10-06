@@ -13,22 +13,22 @@ import {
 } from "antd";
 import { Fragment, useEffect, useState } from "react";
 import type { UploadProps } from "antd";
-import { useAppDispatch } from "../../../hooks/store";
+import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import {
   addNewVehicle,
   getDrivers,
   getVehicleGroup,
   updateVehicle,
+  setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
+import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { FuelType } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import dayjs from "dayjs";
-import { useSelector } from "react-redux";
-
 import { RootState } from "../../../types/store";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import weekday from "dayjs/plugin/weekday";
@@ -49,6 +49,12 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   const [api, contextHolder] = notification.useNotification();
 
   const dispatch = useAppDispatch();
+  const {
+    driverOption: options,
+    vehicleGroupSelectOption,
+    selectedVehicle,
+    viewContentDatabase,
+  } = useAppSelector((state: RootState) => state.database);
   const [isActive, setIsActive] = useState(false); // Track checkbox value in state
 
   // Function to handle changes in form values
@@ -75,21 +81,15 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
         console.log(info.file, info.fileList);
       }
       if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
+        message.success(`${info?.file?.name} file uploaded successfully.`);
       } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+        message.error(`${info?.file?.name} file upload failed.`);
       }
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
     },
   };
-
-  const {
-    driverOption: options,
-    vehicleGroupSelectOption,
-    selectedVehicle,
-  } = useSelector((state: RootState) => state.database);
 
   const getPanelValue = (searchText: string) => {
     if (searchText) {
@@ -116,12 +116,12 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
       const values = selectedVehicle;
       form.setFieldsValue(values);
       form.setFieldValue("vehicleGroupId", {
-        value: selectedVehicle.vehicleGroupId._id,
-        label: selectedVehicle.vehicleGroupId.name,
+        value: selectedVehicle?.vehicleGroupId?._id,
+        label: selectedVehicle?.vehicleGroupId?.name,
       });
       form.setFieldValue("driverId", {
-        value: selectedVehicle.driverId._id,
-        label: selectedVehicle.driverId.name,
+        value: selectedVehicle?.driverId?._id,
+        label: selectedVehicle?.driverId?.name,
       });
       setIsActive(values?.loan?.isActive);
     }
@@ -137,23 +137,30 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
       <div className={styles.container}>
         <div className={styles.formHeader}>
           <div className={styles.header}>
-            {Object.keys(selectedVehicle).length ? "Vehicle" : "New Vehicle"}
+            {Object.keys(selectedVehicle).length
+              ? viewContentDatabase
+                ? "Vehicle"
+                : "Edit Vehicle"
+              : "New Vehicle"}
           </div>
           <div className={styles.primaryText}>
             {Object.keys(selectedVehicle).length
-              ? "Add details of your vehicle"
-              : "View vehicle details"}
+              ? viewContentDatabase
+                ? "View vehicle details"
+                : "Update or modify vehicle details"
+              : "Add details of your vehicle"}
           </div>
         </div>
         <Form
           requiredMark={CustomizeRequiredMark}
+          disabled={viewContentDatabase}
           layout="vertical"
           form={form}
           onFinish={(Values) => {
             console.log(Values, "Values");
             if (Object.keys(selectedVehicle).length) {
               dispatch(
-                updateVehicle({ id: selectedVehicle._id, payload: Values })
+                updateVehicle({ id: selectedVehicle?._id, payload: Values })
               );
             } else {
               dispatch(addNewVehicle(Values));
@@ -699,19 +706,31 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           </div>
         </Form>
       </div>
-      <div className={styles.bottomContainer}>
-        <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
-        <Button
-          type="primary"
-          htmlType="submit"
-          onClick={() => {
-            form.submit();
-          }}
-          className="primary-btn"
-        >
-          Save
-        </Button>
-      </div>
+      {viewContentDatabase ? (
+        <div className={styles.bottomContainer}>
+          <PrimaryBtn
+            btnText={"Edit"}
+            onClick={() => {
+              dispatch(setViewContentDatabase(false));
+            }}
+            LeadingIcon={EditIcon}
+          />
+        </div>
+      ) : (
+        <div className={styles.bottomContainer}>
+          <SecondaryBtn btnText="Cancel" onClick={handleCloseSidePanel} />
+          <Button
+            type="primary"
+            htmlType="submit"
+            onClick={() => {
+              form.submit();
+            }}
+            className="primary-btn"
+          >
+            Save
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
