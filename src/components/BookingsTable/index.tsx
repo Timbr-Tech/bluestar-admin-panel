@@ -24,6 +24,7 @@ import {
   getBookings,
   setIsEditingBooking,
 } from "../../redux/slices/bookingSlice";
+import BookingsStates from "../States/BookingsStates";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 
@@ -244,21 +245,22 @@ const BookingsTable = () => {
       dataIndex: "bookingStatus",
       key: "bookingStatus",
       render: (data: any) => {
-        if (data.toLowerCase() === BOOKINGS_STATUS.booked) {
-          return <Tag color="">{data}</Tag>;
-        }
-        if (data.toLowerCase() === BOOKINGS_STATUS.billed) {
-          return <Tag color="success">{data}</Tag>;
-        }
-        if (data.toLowerCase() === BOOKINGS_STATUS.cancelled) {
-          return <Tag color="">{data}</Tag>;
-        }
-        if (data.toLowerCase() === BOOKINGS_STATUS.completed) {
-          return <Tag color="success">{data}</Tag>;
-        }
-        if (data.toLowerCase() === BOOKINGS_STATUS["on-going"]) {
-          return <Tag color="blue">{data}</Tag>;
-        }
+        return <BookingsStates status={data.toLowerCase()} />;
+        // if (data.toLowerCase() === BOOKINGS_STATUS.booked) {
+        //   return <Tag color="">{data}</Tag>;
+        // }
+        // if (data.toLowerCase() === BOOKINGS_STATUS.billed) {
+        //   return <Tag color="success">{data}</Tag>;
+        // }
+        // if (data.toLowerCase() === BOOKINGS_STATUS.cancelled) {
+        //   return <Tag color="">{data}</Tag>;
+        // }
+        // if (data.toLowerCase() === BOOKINGS_STATUS.completed) {
+        //   return <Tag color="success">{data}</Tag>;
+        // }
+        // if (data.toLowerCase() === BOOKINGS_STATUS["on-going"]) {
+        //   return <Tag color="blue">{data}</Tag>;
+        // }
       },
     },
     {
@@ -285,9 +287,9 @@ const BookingsTable = () => {
   ];
 
   function formateData() {
-    return bookings?.map((each: Object) => {
+    return bookings?.map((booking: any) => {
       return {
-        ...each,
+        ...booking,
         action: "",
       };
     });

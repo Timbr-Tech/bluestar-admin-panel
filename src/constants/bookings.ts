@@ -30,3 +30,4 @@ export const BOOKINGS_TABLE = [
   { title: "Status", dataIndex: "status" },
   { title: "", dataIndex: "action" },
 ];
+
