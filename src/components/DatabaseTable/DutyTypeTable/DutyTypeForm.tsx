@@ -2,12 +2,6 @@
 import { Select, Radio, Spin, Button } from "antd";
 import { useAppSelector, useAppDispatch } from "../../../hooks/store";
 import type { RadioChangeEvent } from "antd";
-import {
-  getVehicleGroup,
-  getVehicleGroupOptions,
-  updateDutyType,
-  addDutyType,
-} from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { notification } from "antd";
@@ -16,6 +10,11 @@ import { DUTY_TYPES_TYPE } from "../../../constants/database";
 import { ReactComponent as HelpCircle } from "../../../icons/help-circle.svg";
 import { SetStateAction, useEffect, useState } from "react";
 import styles from "./index.module.scss";
+import {
+  getVehicleGroup,
+  updateDutyType,
+  addDutyType,
+} from "../../../apis/database";
 
 interface IDutyForm {
   handleCloseSidePanel: () => void;

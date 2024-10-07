@@ -14,15 +14,13 @@ import type { UploadProps } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import {
-  addNewCustomer,
-  updateCustomer,
-} from "../../../redux/slices/databaseSlice";
+
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { STATES, CUSTOMER_TAX_TYPES } from "../../../constants/database";
 import { useState, useEffect } from "react";
 import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
+import { updateCustomer, addNewCustomer } from "../../../apis/database";
 
 interface ICustomerForm {
   handleCloseSidePanel: () => void;

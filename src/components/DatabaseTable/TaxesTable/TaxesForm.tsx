@@ -1,12 +1,12 @@
 /* eslint-disable */
 import styles from "../DutyTypeTable/index.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import { addNewTax, updateTax } from "../../../redux/slices/databaseSlice";
 import { Form, Input, notification, Spin, Button } from "antd";
 import { useState, useEffect } from "react";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
+import { updateTax, addNewTax } from "../../../apis/database";
 
 interface ITaxesForm {
   handleCloseSidePanel: () => void;

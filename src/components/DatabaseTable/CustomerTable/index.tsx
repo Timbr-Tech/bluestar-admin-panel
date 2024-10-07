@@ -2,12 +2,7 @@
 import { CUSTOMERS } from "../../../constants/database";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import {
-  getCustomer,
-  getCustomerById,
-  deleteCustomer,
-  updateCustomer,
-} from "../../../redux/slices/databaseSlice";
+
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import cn from "classnames";
 import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
@@ -19,6 +14,12 @@ import { Table, TableProps, Dropdown } from "antd";
 import styles from "./index.module.scss";
 import React, { useState, useEffect } from "react";
 import CustomPagination from "../../Common/Pagination";
+import {
+  deleteCustomer,
+  getCustomerById,
+  updateCustomer,
+  getCustomer,
+} from "../../../apis/database";
 
 interface ICustomerTableData {
   _id: string;

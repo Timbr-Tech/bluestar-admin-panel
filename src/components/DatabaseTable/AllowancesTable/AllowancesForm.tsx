@@ -3,13 +3,10 @@ import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { Select, notification, Button, Spin } from "antd";
 import { useState, useMemo, useEffect, SetStateAction } from "react";
-import {
-  addNewAllowance,
-  updateAllowance,
-} from "../../../redux/slices/databaseSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { ALLOWANCES_TYPES, Allowance } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
+import { updateAllowance, addNewAllowance } from "../../../apis/database";
 
 interface IAllowancesForm {
   handleCloseSidePanel: () => void;

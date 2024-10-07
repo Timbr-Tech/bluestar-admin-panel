@@ -17,11 +17,7 @@ import { ADDRESS_TYPE } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import dayjs from "dayjs";
-import {
-  addBankAccount,
-  addNewDriver,
-  updateDriver,
-} from "../../../redux/slices/databaseSlice";
+
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { useEffect } from "react";
 import { RootState } from "../../../types/store";
@@ -33,6 +29,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import CustomDatePicker from "../../Common/CustomDatePicker";
+import { updateDriver, addNewDriver } from "../../../apis/database";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(weekday);

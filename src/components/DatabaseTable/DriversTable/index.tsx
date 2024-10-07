@@ -1,9 +1,4 @@
 /* eslint-disable */
-import {
-  getDrivers,
-  getDriverById,
-  deleteDriver,
-} from "../../../redux/slices/databaseSlice";
 import Modal from "../../Modal";
 import type { TableProps, MenuProps } from "antd";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
@@ -17,6 +12,11 @@ import styles from "./index.module.scss";
 import cn from "classnames";
 import React, { useEffect, useState } from "react";
 import CustomPagination from "../../Common/Pagination";
+import {
+  getDriverById,
+  deleteDriver,
+  getDrivers,
+} from "../../../apis/database";
 
 interface IDriversTableData {
   _id: string;

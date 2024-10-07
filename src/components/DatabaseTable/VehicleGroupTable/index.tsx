@@ -10,16 +10,15 @@ import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import type { MenuProps } from "antd";
 import cn from "classnames";
-import {
-  getVehicleGroup,
-  getVehicleGroupById,
-  deleteVehicleGroup,
-  updateVehicleGroup,
-  setPagination,
-} from "../../../redux/slices/databaseSlice";
 import type { TableProps } from "antd";
 import styles from "./index.module.scss";
 import React, { useEffect, useState, useRef } from "react";
+import {
+  getVehicleGroupById,
+  updateVehicleGroup,
+  deleteVehicleGroup,
+  getVehicleGroup,
+} from "../../../apis/database";
 import CustomPagination from "../../Common/Pagination";
 
 interface IVehicleGroupTableData {

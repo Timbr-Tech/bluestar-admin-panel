@@ -1,11 +1,7 @@
 /* eslint-disable */
 import { BANK_ACCOUNTS } from "../../../constants/database";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import {
-  getBankAccount,
-  getBankAccountById,
-  deleteBankAccount,
-} from "../../../redux/slices/databaseSlice";
+
 import type { MenuProps } from "antd";
 import { Table, Dropdown } from "antd";
 import type { TableProps } from "antd";
@@ -17,6 +13,11 @@ import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import React, { useEffect, useState } from "react";
 import styles from "./index.module.scss";
 import CustomPagination from "../../Common/Pagination";
+import {
+  deleteBankAccount,
+  getBankAccountById,
+  getBankAccount,
+} from "../../../apis/database";
 
 interface IBankAccountsTable {
   _id: string;

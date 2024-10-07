@@ -7,16 +7,16 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { Table, TableProps, Dropdown } from "antd";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import type { MenuProps } from "antd";
-import {
-  getAllowances,
-  getAllowanceById,
-  deleteAllowance,
-} from "../../../redux/slices/databaseSlice";
 import Modal from "../../Modal";
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
 
 import CustomPagination from "../../Common/Pagination";
+import {
+  getAllowanceById,
+  deleteAllowance,
+  getAllowances,
+} from "../../../apis/database";
 
 interface IAllowanceData {
   _id: string;

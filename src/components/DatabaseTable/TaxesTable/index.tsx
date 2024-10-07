@@ -10,15 +10,16 @@ import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal
 import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import {
-  getTaxes,
-  deleteTax,
-  getTaxesById,
-  updateTax,
-} from "../../../redux/slices/databaseSlice";
+
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
 import CustomPagination from "../../Common/Pagination";
+import {
+  getTaxesById,
+  updateTax,
+  deleteTax,
+  getTaxes,
+} from "../../../apis/database";
 
 interface ITaxesTableData {
   _id: string;

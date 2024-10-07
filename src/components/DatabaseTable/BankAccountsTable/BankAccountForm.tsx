@@ -1,15 +1,12 @@
 /* eslint-disable */
 import { Form, Input, notification, Spin, Button } from "antd";
-import {
-  addBankAccount,
-  updateBankAccount,
-} from "../../../redux/slices/databaseSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import styles from "../DutyTypeTable/index.module.scss";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { useEffect } from "react";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
+import { updateBankAccount, addBankAccount } from "../../../apis/database";
 
 interface IBankAccountForm {
   handleCloseSidePanel: () => void;

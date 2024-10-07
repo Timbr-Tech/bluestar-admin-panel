@@ -14,12 +14,6 @@ import {
 import { Fragment, useEffect, useState } from "react";
 import type { UploadProps } from "antd";
 import { useAppDispatch } from "../../../hooks/store";
-import {
-  addNewVehicle,
-  getDrivers,
-  getVehicleGroup,
-  updateVehicle,
-} from "../../../redux/slices/databaseSlice";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
@@ -34,6 +28,12 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
 import CustomDatePicker from "../../Common/CustomDatePicker";
+import {
+  getDrivers,
+  getVehicleGroup,
+  updateVehicle,
+  addNewVehicle,
+} from "../../../apis/database";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(weekday);

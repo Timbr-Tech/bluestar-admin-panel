@@ -1,11 +1,6 @@
 /* eslint-disable */
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import {
-  getVehicle,
-  deleteVehicle,
-  getVehicleById,
-} from "../../../redux/slices/databaseSlice";
 import { VEHICLES } from "../../../constants/database";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
@@ -16,6 +11,11 @@ import { Table, TableProps, Dropdown } from "antd";
 import styles from "./index.module.scss";
 import React, { useState, useEffect } from "react";
 import CustomPagination from "../../Common/Pagination";
+import {
+  deleteVehicle,
+  getVehicleById,
+  getVehicle,
+} from "../../../apis/database";
 
 interface IVehicleTable {
   _id: string;

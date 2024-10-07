@@ -1,10 +1,5 @@
 /* eslint-disable */
 import { DUTY_TYPES } from "../../../constants/database";
-import {
-  getAllDutyTypes,
-  getDutyTypeById,
-  deleteDutyType,
-} from "../../../redux/slices/databaseSlice";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
@@ -17,6 +12,11 @@ import React, { useState, useEffect, useRef } from "react";
 import cn from "classnames";
 import CustomPagination from "../../Common/Pagination";
 import styles from "./index.module.scss";
+import {
+  deleteDutyType,
+  getDutyTypeById,
+  getAllDutyTypes,
+} from "../../../apis/database";
 
 interface IDutyTypeTableData {
   _id: string;

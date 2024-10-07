@@ -23,8 +23,9 @@ import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { RootState } from "../../../types/store";
 import {
   getAllDutyTypes,
+  getCustomer,
   getVehicleGroup,
-} from "../../../redux/slices/databaseSlice";
+} from "../../../apis/database";
 
 const { TextArea } = Input;
 interface AddNewBookingForm {
@@ -59,15 +60,23 @@ const AddNewBookingForm = ({
       email: "",
     },
   ]);
-  const { vehicleGroupSelectOption, dutyTypeOption } = useAppSelector(
-    (state: RootState) => state.database
-  );
+  const { vehicleGroupSelectOption, dutyTypeOption, customersOption } =
+    useAppSelector((state: RootState) => state.database);
   const dispatch = useAppDispatch();
 
   const getDutyTypeValue = (searchText: string) => {
     if (searchText) {
       dispatch(
         getAllDutyTypes({
+          search: searchText,
+        })
+      );
+    }
+  };
+  const getCustomerList = (searchText: string) => {
+    if (searchText) {
+      dispatch(
+        getCustomer({
           search: searchText,
         })
       );
@@ -82,6 +91,7 @@ const AddNewBookingForm = ({
       );
     }
   };
+  const [useThisPassenger, setUseThisPassenger] = useState<boolean>(false);
   return (
     <Form
       layout="vertical"
@@ -100,84 +110,142 @@ const AddNewBookingForm = ({
       className={styles.form}
     >
       <Form.Item
-        name="bookingId"
-        label="Booking Id"
+        name="customBookingId"
+        label="Custom booking Id"
         rules={[{ required: true }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item rules={[{ required: true }]} label="Customer">
+      <Form.Item
+        name={"customerId"}
+        rules={[{ required: true }]}
+        label="Customer"
+      >
         <AutoComplete
-          onSearch={handleSearch}
           placeholder="Select customer"
-          options={options}
+          allowClear
+          options={customersOption}
+          onSearch={(text) => getCustomerList(text)}
+          fieldNames={{ label: "label", value: "value" }}
+          notFoundContent={<div>No search result</div>}
         />
       </Form.Item>
 
       <Card className={styles.BookedByCardContainer}>
-        <p>Booked By</p>
+        {/* <p>Booked By</p> */}
         <Form.Item
-          name="bookedByName"
-          label="Booked by name"
-          rules={[{ required: true }]}
+          name="bookedBy"
+          id="bookedBy"
+          label="Booked By"
+          className={styles.secondaryContainer}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="bookedByPhoneNumber"
-          label="Booked by phone Number"
-          rules={[{ required: true }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="bookedByEmail"
-          label="Booked by Email"
-          rules={[{ required: true, type: "email" }]}
-        >
-          <Input type="email" />
-        </Form.Item>
-
-        <Radio>Use this same details for passenger</Radio>
-      </Card>
-      {/*  passenger detail */}
-      <Card className={styles.PassengerCardContainer}>
-        <p>Passenger Details</p>
-        {passengers.map((each, index) => (
-          <Card className={styles.PassengerCard} key={each.email + each.name}>
-            <Form.Item name={`passengerName-${index}`} label="Passenger name">
-              <Input />
-            </Form.Item>
+          <Input.Group>
             <Form.Item
-              name={`passengerPhoneNumber-${index}`}
-              label="passenger phone number"
+              name={["bookedBy", "name"]}
+              label="Booked by name"
+              rules={[{ required: true }]}
             >
               <Input />
             </Form.Item>
-            {passengers.length > 1 && (
-              <Button
-                shape="circle"
-                className={styles.deletePassengerButton}
-                icon={<DeleteOutlined />}
-                onClick={() => {
-                  setPassengers((prev) =>
-                    passengers.filter((each, idx) => idx !== index)
-                  );
-                }}
-              />
-            )}
-          </Card>
-        ))}
+            <Form.Item
+              name={["bookedBy", "phoneNumber"]}
+              label="Phone Number"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name={["bookedBy", "email"]}
+              label="Email"
+              rules={[{ required: true, type: "email" }]}
+            >
+              <Input type="email" />
+            </Form.Item>
+          </Input.Group>
+        </Form.Item>
 
-        <Button
+        <Radio
+          value={useThisPassenger}
+          checked={useThisPassenger}
           onClick={() => {
-            setPassengers((prev) => [...prev, { name: "", email: "" }]);
+            setUseThisPassenger(!useThisPassenger);
+            const currentPassengers = form.getFieldValue("passengers") || [];
+            const bookedBy = form.getFieldValue("bookedBy") || [];
+            // Set the new passengers array with the new data
+            form.setFieldsValue({
+              passengers: [
+                {
+                  name: bookedBy.name,
+                  phone: bookedBy.phoneNumber,
+                },
+              ],
+            });
+          }}
+          style={{
+            marginTop: "0.8rem",
           }}
         >
-          <PlusOutlined /> Add more
-        </Button>
+          Use this same details for passenger
+        </Radio>
       </Card>
-      <Form.Item rules={[{ required: true }]} label="Duty type">
+      {/*  passenger detail */}
+      <div className={styles.PassengerCardContainer}>
+        <p>Passenger Details</p>
+        <Form.List name="passengers">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }, index) => (
+                <Card key={key} className="PassengerCard">
+                  <Form.Item
+                    {...restField}
+                    name={[name, "name"]}
+                    label="Passenger name"
+                    rules={[{ required: true, message: "Please input name" }]}
+                  >
+                    <Input placeholder="Passenger name" />
+                  </Form.Item>
+
+                  <Form.Item
+                    {...restField}
+                    name={[name, "phone"]}
+                    label="Passenger phone number"
+                    rules={[
+                      { required: true, message: "Please input phone number" },
+                    ]}
+                  >
+                    <Input placeholder="Passenger phone number" />
+                  </Form.Item>
+
+                  {fields.length > 1 && (
+                    <Button
+                      shape="circle"
+                      icon={<DeleteOutlined />}
+                      onClick={() => remove(name)}
+                      className="deletePassengerButton"
+                    />
+                  )}
+                </Card>
+              ))}
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add Passenger
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+      </div>
+      <Form.Item
+        name="dutyTypeId"
+        rules={[{ required: true }]}
+        label="Duty type"
+      >
         <AutoComplete
           allowClear
           options={dutyTypeOption}
@@ -187,7 +255,12 @@ const AddNewBookingForm = ({
           notFoundContent={<div>No search result</div>}
         />
       </Form.Item>
-      <Form.Item rules={[{ required: true }]} label="Vehicle Group">
+      <Form.Item
+        name="VehicleGroupId"
+        id="VehicleGroupId"
+        rules={[{ required: true }]}
+        label="Vehicle Group"
+      >
         <AutoComplete
           allowClear
           options={vehicleGroupSelectOption}

@@ -4,11 +4,8 @@ import styles from "../DutyTypeTable/index.module.scss";
 import { useEffect, useState } from "react";
 import SecondaryBtn from "../../SecondaryBtn";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import {
-  addVehicleGroup,
-  updateVehicleGroup,
-} from "../../../redux/slices/databaseSlice";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
+import { updateVehicleGroup, addVehicleGroup } from "../../../apis/database";
 
 type NotificationType = "success" | "info" | "warning" | "error";
 
