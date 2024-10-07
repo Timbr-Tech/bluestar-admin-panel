@@ -2,7 +2,6 @@
 import { useState } from "react";
 import styles from "./index.module.scss";
 import {
-  AutoCompleteProps,
   Form,
   Input,
   AutoComplete,
@@ -42,24 +41,6 @@ const AddNewBookingForm = ({
   handleFormSubmit,
   form,
 }: AddNewBookingForm) => {
-  const [options, setOptions] = useState<AutoCompleteProps["options"]>([]);
-  const handleSearch = (value: string) => {
-    setOptions(() => {
-      if (!value || value.includes("@")) {
-        return [];
-      }
-      return ["gmail.com", "163.com", "qq.com"].map((domain) => ({
-        label: `${value}@${domain}`,
-        value: `${value}@${domain}`,
-      }));
-    });
-  };
-  const [passengers, setPassengers] = useState([
-    {
-      name: "",
-      email: "",
-    },
-  ]);
   const { vehicleGroupSelectOption, dutyTypeOption, customersOption } =
     useAppSelector((state: RootState) => state.database);
   const dispatch = useAppDispatch();
@@ -168,18 +149,20 @@ const AddNewBookingForm = ({
           value={useThisPassenger}
           checked={useThisPassenger}
           onClick={() => {
+            if (!useThisPassenger) {
+              const currentPassengers = form.getFieldValue("passengers") || [];
+              const bookedBy = form.getFieldValue("bookedBy") || [];
+              // Set the new passengers array with the new data
+              form.setFieldsValue({
+                passengers: [
+                  {
+                    name: bookedBy.name,
+                    phone: bookedBy.phoneNumber,
+                  },
+                ],
+              });
+            }
             setUseThisPassenger(!useThisPassenger);
-            const currentPassengers = form.getFieldValue("passengers") || [];
-            const bookedBy = form.getFieldValue("bookedBy") || [];
-            // Set the new passengers array with the new data
-            form.setFieldsValue({
-              passengers: [
-                {
-                  name: bookedBy.name,
-                  phone: bookedBy.phoneNumber,
-                },
-              ],
-            });
           }}
           style={{
             marginTop: "0.8rem",
@@ -285,10 +268,32 @@ const AddNewBookingForm = ({
 
       <Space></Space>
 
-      <Form.Item rules={[{ required: true }]} label="Reporting Address">
+      <Form.Item
+        rules={[
+          { required: true, message: "Please provide a Google Maps link!" },
+          {
+            pattern:
+              /^(https:\/\/(www\.)?google\.(com|[a-z]{2})\/maps\/.+|https:\/\/maps\.app\.goo\.gl\/.+)/,
+            message: "Please enter a valid Google Maps URL!",
+          },
+        ]}
+        name="reportingAddress"
+        label="Reporting Address"
+      >
         <TextArea placeholder="Location (Google map link)"></TextArea>
       </Form.Item>
-      <Form.Item rules={[{ required: true }]} label="Drop Address">
+      <Form.Item
+        name="dropAddress"
+        rules={[
+          { required: true, message: "Please provide a Google Maps link!" },
+          {
+            pattern:
+              /^(https:\/\/(www\.)?google\.(com|[a-z]{2})\/maps\/.+|https:\/\/maps\.app\.goo\.gl\/.+)/,
+            message: "Please enter a valid Google Maps URL!",
+          },
+        ]}
+        label="Drop Address"
+      >
         <TextArea placeholder="Location (Google map link)"></TextArea>
       </Form.Item>
       <Form.Item label="Booking type">
