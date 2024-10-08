@@ -1,8 +1,7 @@
 /* eslint-disable */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./index.module.scss";
 import {
-  AutoCompleteProps,
   Form,
   Input,
   AutoComplete,
@@ -15,53 +14,36 @@ import {
   Row,
   Col,
   TimePicker,
+  InputNumber,
 } from "antd";
 import { DeleteOutlined, PlusOutlined, SyncOutlined } from "@ant-design/icons";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import CustomDatePicker from "../../Common/CustomDatePicker";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { RootState } from "../../../types/store";
+
+import { addNewBooking } from "../../../apis/booking";
 import {
   getAllDutyTypes,
+  getCustomer,
   getVehicleGroup,
 } from "../../../redux/slices/databaseSlice";
 
 const { TextArea } = Input;
 interface AddNewBookingForm {
-  initialData?: {
-    bookingId: string;
-  };
+  initialData?: any;
   isEditable?: boolean;
-  handleFormSubmit: (value?: any) => void;
+  // handleFormSubmit: (value?: any) => void;
   form: any;
 }
 const AddNewBookingForm = ({
   initialData,
   isEditable = true,
-  handleFormSubmit,
+  // handleFormSubmit,
   form,
 }: AddNewBookingForm) => {
-  const [options, setOptions] = useState<AutoCompleteProps["options"]>([]);
-  const handleSearch = (value: string) => {
-    setOptions(() => {
-      if (!value || value.includes("@")) {
-        return [];
-      }
-      return ["gmail.com", "163.com", "qq.com"].map((domain) => ({
-        label: `${value}@${domain}`,
-        value: `${value}@${domain}`,
-      }));
-    });
-  };
-  const [passengers, setPassengers] = useState([
-    {
-      name: "",
-      email: "",
-    },
-  ]);
-  const { vehicleGroupSelectOption, dutyTypeOption } = useAppSelector(
-    (state: RootState) => state.database
-  );
+  const { vehicleGroupSelectOption, dutyTypeOption, customersOption } =
+    useAppSelector((state: RootState) => state.database);
   const dispatch = useAppDispatch();
 
   const getDutyTypeValue = (searchText: string) => {
@@ -82,6 +64,40 @@ const AddNewBookingForm = ({
       );
     }
   };
+  const [useThisPassenger, setUseThisPassenger] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (Object.keys(initialData).length) {
+      form.setFieldsValue({
+        _id: initialData?._id,
+        customBookingId: initialData?.customBookingId,
+        customerId: initialData?.customerId,
+        bookedBy: initialData?.bookedBy,
+        passergers: initialData?.passergers,
+        dutyTypeId: initialData?.dutyTypeId,
+        assignAlternateVehicles: initialData?.assignAlternateVehicles,
+        reportingAddress: initialData?.reportingAddress,
+        dropAddress: initialData?.dropAddress,
+        isAirportBooking: initialData?.isAirportBooking,
+        // duration: initialData?.duration, // yaha fat raha h
+        operatorNotes: initialData?.operatorNotes,
+        driverNotes: initialData?.driverNotes,
+        isUnconfirmed: initialData?.isUnconfirmed,
+        isDeleted: initialData?.isDeleted,
+        bookingStatus: initialData?.bookingStatus,
+        address: initialData?.address,
+      });
+    }
+  }, [initialData]);
+  const getCustomerList = (searchText: string) => {
+    if (searchText) {
+      dispatch(
+        getCustomer({
+          search: searchText,
+        })
+      );
+    }
+  };
   return (
     <Form
       layout="vertical"
@@ -91,11 +107,12 @@ const AddNewBookingForm = ({
       onFinishFailed={(errorInfo) => {
         console.log("Failed:", errorInfo);
       }}
-      onFinish={(value) => {
-        console.log(value);
+      onFinish={(values) => {
+        console.log(values);
         // handleFormSubmit(value);
+        dispatch(addNewBooking(values));
       }}
-      initialValues={initialData}
+      // initialValues={initialData}
       requiredMark={CustomizeRequiredMark}
       className={styles.form}
     >
@@ -108,9 +125,9 @@ const AddNewBookingForm = ({
       </Form.Item>
       <Form.Item rules={[{ required: true }]} label="Customer">
         <AutoComplete
-          onSearch={handleSearch}
+          onSearch={getCustomerList}
           placeholder="Select customer"
-          options={options}
+          options={customersOption}
         />
       </Form.Item>
 
@@ -138,46 +155,90 @@ const AddNewBookingForm = ({
           <Input type="email" />
         </Form.Item>
 
-        <Radio>Use this same details for passenger</Radio>
+        <Radio
+          value={useThisPassenger}
+          checked={useThisPassenger}
+          onClick={() => {
+            if (!useThisPassenger) {
+              const currentPassengers = form.getFieldValue("passergers") || [];
+              const bookedBy = form.getFieldValue("bookedBy") || [];
+              // Set the new passergers array with the new data
+              form.setFieldsValue({
+                passergers: [
+                  {
+                    name: bookedBy.name,
+                    phoneNumber: bookedBy.phoneNumber,
+                  },
+                ],
+              });
+            }
+            setUseThisPassenger(!useThisPassenger);
+          }}
+          style={{
+            marginTop: "0.8rem",
+          }}
+        >
+          Use this same details for passenger
+        </Radio>
       </Card>
       {/*  passenger detail */}
       <Card className={styles.PassengerCardContainer}>
         <p>Passenger Details</p>
-        {passengers.map((each, index) => (
-          <Card className={styles.PassengerCard} key={each.email + each.name}>
-            <Form.Item name={`passengerName-${index}`} label="Passenger name">
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name={`passengerPhoneNumber-${index}`}
-              label="passenger phone number"
-            >
-              <Input />
-            </Form.Item>
-            {passengers.length > 1 && (
-              <Button
-                shape="circle"
-                className={styles.deletePassengerButton}
-                icon={<DeleteOutlined />}
-                onClick={() => {
-                  setPassengers((prev) =>
-                    passengers.filter((each, idx) => idx !== index)
-                  );
-                }}
-              />
-            )}
-          </Card>
-        ))}
+        <Form.List name="passergers">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }, index) => (
+                <Card key={key} className="PassengerCard">
+                  <Form.Item
+                    {...restField}
+                    name={[name, "name"]}
+                    label="Passenger name"
+                    rules={[{ required: true, message: "Please input name" }]}
+                  >
+                    <Input placeholder="Passenger name" />
+                  </Form.Item>
 
-        <Button
-          onClick={() => {
-            setPassengers((prev) => [...prev, { name: "", email: "" }]);
-          }}
-        >
-          <PlusOutlined /> Add more
-        </Button>
+                  <Form.Item
+                    {...restField}
+                    name={[name, "phoneNumber"]}
+                    label="Passenger phone number"
+                    rules={[
+                      { required: true, message: "Please input phone number" },
+                    ]}
+                  >
+                    <Input placeholder="Passenger phone number" />
+                  </Form.Item>
+
+                  {fields.length > 1 && (
+                    <Button
+                      shape="circle"
+                      icon={<DeleteOutlined />}
+                      onClick={() => remove(name)}
+                      className="deletePassengerButton"
+                    />
+                  )}
+                </Card>
+              ))}
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add Passenger
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
       </Card>
-      <Form.Item rules={[{ required: true }]} label="Duty type">
+      <Form.Item
+        name="dutyTypeId"
+        rules={[{ required: true }]}
+        label="Duty type"
+      >
         <AutoComplete
           allowClear
           options={dutyTypeOption}
@@ -197,18 +258,21 @@ const AddNewBookingForm = ({
           notFoundContent={<div>No search result</div>}
         ></AutoComplete>
       </Form.Item>
-      <Card
-        style={{
-          margin: "1rem 0rem",
-        }}
-      >
-        <Checkbox>
-          <p>Assign Alternate Vehicle Numbers for multiple duties per day </p>
-          <p>
-            Alternate vehicle numbers will only show on generated duty slips
-          </p>
-        </Checkbox>
-      </Card>
+
+      <Form.Item valuePropName="checked" name="assignAlternateVehicles">
+        <Card
+          style={{
+            margin: "1rem 0rem",
+          }}
+        >
+          <Checkbox>
+            <p>Assign Alternate Vehicle Numbers for multiple duties per day </p>
+            <p>
+              Alternate vehicle numbers will only show on generated duty slips
+            </p>
+          </Checkbox>
+        </Card>
+      </Form.Item>
 
       <Space></Space>
 
@@ -218,84 +282,131 @@ const AddNewBookingForm = ({
       <Form.Item rules={[{ required: true }]} label="Drop Address">
         <TextArea placeholder="Location (Google map link)"></TextArea>
       </Form.Item>
-      <Form.Item label="Booking type">
-        <Radio.Group
-          className={styles.bookingType}
-          onChange={() => {}}
-          value={""}
+      <Form.Item
+        style={{
+          margin: "1rem 0rem",
+        }}
+        label="Booking type"
+      >
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Please select booking type",
+            },
+          ]}
+          name="bookingType"
         >
-          <Radio className={styles.item} value={1}>
-            <b>Local booking</b>
-            <p>Local rates would apply</p>
-          </Radio>
-          <Radio className={styles.item} value={2}>
-            <b>Outstation booking</b>
-            <p>Outstation rates would apply</p>
-          </Radio>
-        </Radio.Group>
+          <Radio.Group className={styles.bookingType}>
+            <Radio className={styles.item} value={"Local"}>
+              <b>Local booking</b>
+              <p>Local rates would apply</p>
+            </Radio>
+            <Radio className={styles.item} value={"Outstation"}>
+              <b>Outstation booking</b>
+              <p>Outstation rates would apply</p>
+            </Radio>
+          </Radio.Group>
+        </Form.Item>
       </Form.Item>
-      <Form.Item label="">
+      <Form.Item name="isAirportBooking" valuePropName="checked">
         <Checkbox>This is an airport booking</Checkbox>
       </Form.Item>
 
-      <Card>
+      <Card
+        style={{
+          margin: "1rem 0rem",
+        }}
+      >
         <b>Duration Details </b>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item label="Start Date">
-              <CustomDatePicker format="DD-MM-YYYY" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label="End Date">
-              <CustomDatePicker format="DD-MM-YYYY" />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item label="Reporting Time">
-              <TimePicker
-                use12Hours
-                format="h:mm:ss A"
-                style={{
-                  width: "100%",
-                }}
-                onChange={() => {}}
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label="Est Drop Time">
-              <TimePicker
-                use12Hours
-                format="h:mm:ss A"
-                style={{
-                  width: "100%",
-                }}
-                onChange={() => {}}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24}>
-            <Form.Item label="Start from garage before (in mins)">
-              <TimePicker
-                format="mm"
-                style={{
-                  width: "100%",
-                }}
-                onChange={() => {}}
-              />
-            </Form.Item>
-          </Col>
+        <Input.Group>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                name={["duration", "startTime"]}
+                label="Start Date"
+              >
+                <CustomDatePicker
+                  showHour={true}
+                  showMinute={true}
+                  showTime={true}
+                  format="DD-MM-YYYY"
+                  use12Hours
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                name={["duration", "endTime"]}
+                label="End Date"
+              >
+                <CustomDatePicker
+                  showHour={true}
+                  showMinute={true}
+                  showTime={true}
+                  use12Hours
+                  format="DD-MM-YYYY"
+                />
+              </Form.Item>
+            </Col>
 
-          {/*  */}
-        </Row>
+            {/* <Col span={12}>
+              <Form.Item label="Reporting Time">
+                <TimePicker
+                  use12Hours
+                  format="h:mm:ss A"
+                  style={{
+                    width: "100%",
+                  }}
+                  onChange={() => {}}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Est Drop Time">
+                <TimePicker
+                  use12Hours
+                  format="h:mm:ss A"
+                  style={{
+                    width: "100%",
+                  }}
+                  onChange={() => {}}
+                />
+              </Form.Item>
+            </Col> */}
+
+            <Col span={24}>
+              <Form.Item
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+                name={["duration", "startBefore"]}
+                label="Start from garage before (in mins)"
+              >
+                <TimePicker
+                  format="mm"
+                  style={{
+                    width: "100%",
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Input.Group>
       </Card>
-
-      <Card style={{ marginTop: "1rem" }}>
+      <Card>
         <div className={styles.pricingDetails}>
           <b>Pricing Details</b>
           <span>
@@ -303,54 +414,99 @@ const AddNewBookingForm = ({
             Fetch from Contract
           </span>
         </div>
+        <div>
+          <Input.Group>
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item
+                  name={["pricingDetails", "baseRate"]}
+                  label="Base Rate"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    style={{
+                      width: "100%",
+                    }}
+                    min={0}
+                    placeholder="Prefilled based on Duty Type"
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name={["pricingDetails", "extraKmRate"]}
+                  label="Per Extra KM Rate"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    style={{
+                      width: "100%",
+                    }}
+                    min={0}
+                    placeholder="Per Extra KM Rate"
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  name={["pricingDetails", "extraHrRate"]}
+                  label="Per Extra Hour Rate"
+                >
+                  <InputNumber
+                    style={{
+                      width: "100%",
+                    }}
+                    min={0}
+                    placeholder="Per Extra Hour Rate"
+                  />
+                </Form.Item>
+              </Col>
 
-        <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item label="Base Rate">
-              <Input type="text" placeholder="Prefilled based on Duty Type" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label="Per Extra KM Rate">
-              <Input type="text" placeholder="Per Extra KM Rate" />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label="Per Extra Hour Rate">
-              <Input type="text" placeholder="Per Extra Hour Rate" />
-            </Form.Item>
-          </Col>
-
-          <Col span={24}>
-            <Form.Item label="Bill to">
-              <Select
-                placeholder="Company/Customer (Default)"
-                style={{ width: "100%" }}
-                onChange={() => {}}
-                options={[
-                  { value: "jack", label: "Jack" },
-                  { value: "lucy", label: "Lucy" },
-                  { value: "Yiminghe", label: "yiminghe" },
-                  { value: "disabled", label: "Disabled", disabled: true },
-                ]}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
+              {/* <Col span={24}>
+                <Form.Item label="Bill to">
+                  <Select
+                    placeholder="Company/Customer (Default)"
+                    style={{ width: "100%" }}
+                    onChange={() => {}}
+                    options={[
+                      { value: "jack", label: "Jack" },
+                      { value: "lucy", label: "Lucy" },
+                      { value: "Yiminghe", label: "yiminghe" },
+                      { value: "disabled", label: "Disabled", disabled: true },
+                    ]}
+                  />
+                </Form.Item>
+              </Col> */}
+            </Row>
+          </Input.Group>
+        </div>
       </Card>
       <div
         style={{
           marginTop: "1rem",
         }}
       >
-        <Form.Item label="Operator Notes">
+        <Form.Item name="operatorNotes" label="Operator Notes">
           <TextArea placeholder="Add a note...."></TextArea>
         </Form.Item>
-        <Form.Item label="Driver Notes">
+        <Form.Item name="driverNotes" label="Driver Notes">
           <TextArea placeholder="Add a note...."></TextArea>
         </Form.Item>
       </div>
-      <Form.Item label="">
+      <Form.Item valuePropName="checked" name="isUnconfirmed" label="">
         <Checkbox>Mark as unconfirmed booking</Checkbox>
       </Form.Item>
     </Form>

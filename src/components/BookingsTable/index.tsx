@@ -1,6 +1,15 @@
 /* eslint-disable */
 
-import { Badge, Dropdown, MenuProps, Space, Table, Tag } from "antd";
+import {
+  Badge,
+  Dropdown,
+  MenuProps,
+  Popover,
+  Space,
+  Table,
+  TableColumnsType,
+  Tag,
+} from "antd";
 import { ReactComponent as DeleteIconRed } from "../../icons/trash-red.svg";
 import styles from "./index.module.scss";
 import { BOOKINGS_STATUS } from "../../constants/bookings";
@@ -10,9 +19,11 @@ import {
   EditOutlined,
   EyeOutlined,
   FilePdfOutlined,
+  HeatMapOutlined,
   MailOutlined,
   MoreOutlined,
   PhoneOutlined,
+  PushpinOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
@@ -29,6 +40,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 
 import CustomPagination from "../Common/Pagination";
+import row from "antd/es/row";
+import { each } from "lodash";
+import { title } from "process";
 
 const BookingsTable = () => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -139,7 +153,7 @@ const BookingsTable = () => {
     return items;
   }
 
-  const columns = [
+  const columns: TableColumnsType<any> = [
     {
       title: "Start date",
       dataIndex: "startDate",
@@ -168,19 +182,17 @@ const BookingsTable = () => {
       title: "Booked By",
       dataIndex: "bookedBy",
       key: "bookedBy",
+      width: "200px",
       render: (each: any) => {
         return (
           <div>
             <p>
-              {" "}
               <UserOutlined /> {each.name}
             </p>
             <p>
-              {" "}
               <PhoneOutlined /> {each.phoneNumber}
             </p>
             <p>
-              {" "}
               <MailOutlined /> {each.email}
             </p>
           </div>
@@ -196,20 +208,37 @@ const BookingsTable = () => {
           if (data.length <= 0) {
             return "No passenger data";
           }
+          if (data.length == 1) {
+            return data[0].name;
+          }
           return (
             <Space>
-              {data[0]}
-              <Badge
-                className="site-badge-count-109"
-                count={`+${data.length - 1}`}
-                color="#47546770"
-              />
+              {data[0].name}
+
+              <Popover
+                content={() => {
+                  return (
+                    <>
+                      {data?.map((each) => (
+                        <div>
+                          <p>
+                            <UserOutlined /> {each.name}
+                          </p>
+                          <p>
+                            <PhoneOutlined /> {each.phoneNumber}
+                          </p>
+                          <hr />
+                        </div>
+                      ))}
+                    </>
+                  );
+                }}
+                title="Passenger List"
+              >
+                <Badge color="yellow" count={`+${data.length - 1}`} />
+              </Popover>
             </Space>
           );
-        } else {
-          {
-            return data;
-          }
         }
       },
     },
@@ -220,13 +249,34 @@ const BookingsTable = () => {
     },
     {
       title: "Duty type",
-      dataIndex: "dutyType",
-      key: "dutyType",
+      dataIndex: "dutyTypeId",
+      key: "dutyTypeId",
+      render: (each) => {
+        return <span>{each?.name}</span>;
+      },
     },
     {
       title: "Duties",
       dataIndex: "duties",
       key: "duties",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      render: (data) => {
+        return (
+          <>
+            <a href={data?.dropAddress} target="_blank">
+              <PushpinOutlined /> Drop address
+            </a>
+            <br />
+            <a href={data?.reportingAddress} target="_blank">
+              <PushpinOutlined /> Reporting address
+            </a>
+          </>
+        );
+      },
     },
     {
       title: "Airport Booking",
@@ -267,6 +317,8 @@ const BookingsTable = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      fixed: "right",
+      width: 100,
       render: (data: any, row: any) => {
         return (
           <div className={styles.columnsAction}>
@@ -287,9 +339,13 @@ const BookingsTable = () => {
   ];
 
   function formateData() {
-    return bookings?.map((booking: any) => {
+    return bookings?.map((each: any) => {
       return {
-        ...booking,
+        ...each,
+        address: {
+          dropAddress: each?.dropAddress,
+          reportingAddress: each?.reportingAddress,
+        },
         action: "",
       };
     });
@@ -336,9 +392,7 @@ const BookingsTable = () => {
           dataSource={formateData()}
           columns={columns}
           pagination={false}
-          scroll={{
-            x: 756,
-          }}
+          scroll={{ x: "max-content" }}
           footer={() => (
             <CustomPagination
               total={pagination?.total ?? 0}

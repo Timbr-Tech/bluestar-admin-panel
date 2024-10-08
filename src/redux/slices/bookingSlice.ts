@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../utils/configureAxios";
+import { addNewBooking } from "../../apis/booking";
 
 const initialState = {
   isAddEditDrawerOpen: false,
@@ -52,7 +53,7 @@ export const bookingSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Create a New Vehicle Group
+      // get bookings
       .addCase(getBookings.pending, (state) => {
         state.bookingStates.status = "loading";
         state.bookingStates.loading = true;
@@ -69,6 +70,23 @@ export const bookingSlice = createSlice({
         };
       })
       .addCase(getBookings.rejected, (state) => {
+        state.bookingStates.status = "failed";
+        state.bookingStates.loading = false;
+        state.bookingStates.error = "Error";
+      })
+      // add new bookimg
+
+      .addCase(addNewBooking.pending, (state) => {
+        state.bookingStates.status = "loading";
+        state.bookingStates.loading = true;
+        state.bookingStates.error = "";
+      })
+      .addCase(addNewBooking.fulfilled, (state) => {
+        state.bookingStates.status = "succeeded";
+        state.bookingStates.loading = false;
+        state.bookingStates.error = "";
+      })
+      .addCase(addNewBooking.rejected, (state) => {
         state.bookingStates.status = "failed";
         state.bookingStates.loading = false;
         state.bookingStates.error = "Error";

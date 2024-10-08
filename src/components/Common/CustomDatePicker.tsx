@@ -25,15 +25,18 @@ const CustomDatePicker = ({
         onChange(undefined);
       } else {
         // Ensure date is a valid Day.js object
+        console.error("Invalid date selected 1");
         const dayjsDate = dayjs(date);
 
-        if (dayjsDate.isValid()) {
+        if (dayjsDate?.isValid()) {
+          console.error("Invalid date selected 2");
           // Use the timezone function
           console.log("dayjsDate:", dayjsDate);
           const indiaDate = dayjsDate.tz("Asia/Kolkata"); // Apply timezone
           onChange(indiaDate.toISOString());
         } else {
           console.error("Invalid date selected");
+          console.error("Invalid date selected 3");
           onChange(undefined);
         }
       }
@@ -43,7 +46,7 @@ const CustomDatePicker = ({
   return (
     <AntDatePicker
       {...rest}
-      value={value ? dayjs(value) : dayjs()}
+      value={value ? dayjs(value) : undefined}
       onChange={handleChange}
       format={format}
       style={{ width: "100%", ...rest.style }}
