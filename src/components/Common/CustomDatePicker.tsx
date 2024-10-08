@@ -46,7 +46,7 @@ const CustomDatePicker = ({
   return (
     <AntDatePicker
       {...rest}
-      value={value ? dayjs(value) : undefined}
+      value={value ? dayjs(value) : dayjs()}
       onChange={handleChange}
       format={format}
       style={{ width: "100%", ...rest.style }}

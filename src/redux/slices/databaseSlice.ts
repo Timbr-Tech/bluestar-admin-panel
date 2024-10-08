@@ -353,6 +353,12 @@ export const getCustomer = createAsyncThunk(
           limit: response.data.limit,
         })
       );
+      let option: Array<object> = response?.data?.data?.map((each: any) => ({
+        value: each._id,
+        label: each.name,
+      }));
+
+      dispatch(setCustomerOption(option));
       return response.data;
     }
   }
@@ -839,6 +845,7 @@ const initialState: any = {
   // Customer
   customers: {},
   selectedCustomer: {},
+  customersOption: [],
   customersStates: {
     status: "idle",
     loading: false,
@@ -975,6 +982,12 @@ export const databaseSlice = createSlice({
       return {
         ...state,
         driverOption: action.payload,
+      };
+    },
+    setCustomerOption: (state, action: PayloadAction<Array<object>>) => {
+      return {
+        ...state,
+        customersOption: action.payload,
       };
     },
     setVehicleGroupOption: (state, action: PayloadAction<Array<object>>) => {
@@ -1750,6 +1763,7 @@ export const {
   setQueryForSearch,
   setOpenSidePanel,
   setDriverOption,
+  setCustomerOption,
   setVehicleGroupOption,
   setDutyTypeOption,
   setPagination,

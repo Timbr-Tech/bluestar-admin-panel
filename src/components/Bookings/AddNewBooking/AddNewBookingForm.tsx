@@ -21,7 +21,6 @@ import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import CustomDatePicker from "../../Common/CustomDatePicker";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { RootState } from "../../../types/store";
-
 import { addNewBooking } from "../../../apis/booking";
 import {
   getAllDutyTypes,
@@ -50,6 +49,15 @@ const AddNewBookingForm = ({
     if (searchText) {
       dispatch(
         getAllDutyTypes({
+          search: searchText,
+        })
+      );
+    }
+  };
+  const getCustomerList = (searchText: string) => {
+    if (searchText) {
+      dispatch(
+        getCustomer({
           search: searchText,
         })
       );
@@ -89,15 +97,6 @@ const AddNewBookingForm = ({
       });
     }
   }, [initialData]);
-  const getCustomerList = (searchText: string) => {
-    if (searchText) {
-      dispatch(
-        getCustomer({
-          search: searchText,
-        })
-      );
-    }
-  };
   return (
     <Form
       layout="vertical"
@@ -117,42 +116,58 @@ const AddNewBookingForm = ({
       className={styles.form}
     >
       <Form.Item
-        name="bookingId"
-        label="Booking Id"
+        name="customBookingId"
+        label="Custom booking Id"
         rules={[{ required: true }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item rules={[{ required: true }]} label="Customer">
+      <Form.Item
+        name={"customerId"}
+        rules={[{ required: true }]}
+        label="Customer"
+      >
         <AutoComplete
-          onSearch={getCustomerList}
           placeholder="Select customer"
+          allowClear
           options={customersOption}
+          onSearch={(text) => getCustomerList(text)}
+          fieldNames={{ label: "label", value: "value" }}
+          notFoundContent={<div>No search result</div>}
         />
       </Form.Item>
 
       <Card className={styles.BookedByCardContainer}>
-        <p>Booked By</p>
+        {/* <p>Booked By</p> */}
         <Form.Item
-          name="bookedByName"
-          label="Booked by name"
-          rules={[{ required: true }]}
+          name="bookedBy"
+          id="bookedBy"
+          label="Booked By"
+          className={styles.secondaryContainer}
         >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="bookedByPhoneNumber"
-          label="Booked by phone Number"
-          rules={[{ required: true }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="bookedByEmail"
-          label="Booked by Email"
-          rules={[{ required: true, type: "email" }]}
-        >
-          <Input type="email" />
+          <Input.Group>
+            <Form.Item
+              name={["bookedBy", "name"]}
+              label="Booked by name"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name={["bookedBy", "phoneNumber"]}
+              label="Phone Number"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name={["bookedBy", "email"]}
+              label="Email"
+              rules={[{ required: true, type: "email" }]}
+            >
+              <Input type="email" />
+            </Form.Item>
+          </Input.Group>
         </Form.Item>
 
         <Radio
@@ -182,7 +197,7 @@ const AddNewBookingForm = ({
         </Radio>
       </Card>
       {/*  passenger detail */}
-      <Card className={styles.PassengerCardContainer}>
+      <div className={styles.PassengerCardContainer}>
         <p>Passenger Details</p>
         <Form.List name="passergers">
           {(fields, { add, remove }) => (
@@ -233,7 +248,7 @@ const AddNewBookingForm = ({
             </>
           )}
         </Form.List>
-      </Card>
+      </div>
       <Form.Item
         name="dutyTypeId"
         rules={[{ required: true }]}
@@ -248,7 +263,12 @@ const AddNewBookingForm = ({
           notFoundContent={<div>No search result</div>}
         />
       </Form.Item>
-      <Form.Item rules={[{ required: true }]} label="Vehicle Group">
+      <Form.Item
+        name="VehicleGroupId"
+        id="VehicleGroupId"
+        rules={[{ required: true }]}
+        label="Vehicle Group"
+      >
         <AutoComplete
           allowClear
           options={vehicleGroupSelectOption}
@@ -276,10 +296,32 @@ const AddNewBookingForm = ({
 
       <Space></Space>
 
-      <Form.Item rules={[{ required: true }]} label="Reporting Address">
+      <Form.Item
+        rules={[
+          { required: true, message: "Please provide a Google Maps link!" },
+          {
+            pattern:
+              /^(https:\/\/(www\.)?google\.(com|[a-z]{2})\/maps\/.+|https:\/\/maps\.app\.goo\.gl\/.+)/,
+            message: "Please enter a valid Google Maps URL!",
+          },
+        ]}
+        name="reportingAddress"
+        label="Reporting Address"
+      >
         <TextArea placeholder="Location (Google map link)"></TextArea>
       </Form.Item>
-      <Form.Item rules={[{ required: true }]} label="Drop Address">
+      <Form.Item
+        name="dropAddress"
+        rules={[
+          { required: true, message: "Please provide a Google Maps link!" },
+          {
+            pattern:
+              /^(https:\/\/(www\.)?google\.(com|[a-z]{2})\/maps\/.+|https:\/\/maps\.app\.goo\.gl\/.+)/,
+            message: "Please enter a valid Google Maps URL!",
+          },
+        ]}
+        label="Drop Address"
+      >
         <TextArea placeholder="Location (Google map link)"></TextArea>
       </Form.Item>
       <Form.Item
