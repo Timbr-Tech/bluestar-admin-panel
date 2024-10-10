@@ -257,3 +257,14 @@ th {
   background-color: #fff; /* Customize the indeterminate dash color */
   height: 2px;
 }
+
+.available-header {
+  padding: 16px 24px !important;
+  min-width: 188px !important;
+}
+
+.available-date {
+  padding: 10px 0;
+  min-width: 156px;
+  max-width: 156px;
+}

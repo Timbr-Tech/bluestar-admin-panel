@@ -1,6 +1,7 @@
 /* eslint-disable */
 import cn from "classnames";
 import { Input, DatePicker } from "antd";
+import AvailablityTable from "../../components/AvailablityTable";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import styles from "./index.module.scss";
 
@@ -33,6 +34,9 @@ const Availability = () => {
             <RangePicker />
             <button className={styles.clearText}>Clear</button>
           </div>
+        </div>
+        <div className={styles.tableContainer}>
+          <AvailablityTable />
         </div>
       </div>
     </div>

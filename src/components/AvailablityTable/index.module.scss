@@ -1,0 +1,70 @@
+.vehicle {
+  display: flex;
+  flex-direction: column;
+  .name {
+    color: #101828;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+
+  .licensePlate {
+    color: #475467;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+}
+
+.bookingConatiner {
+  display: flex;
+  flex-direction: column;
+  min-height: 26px;
+  max-height: 52px;
+
+  &[aria-describedby="0"] {
+    border-radius: 4px;
+    border: 1px solid #b9e6fe;
+    background-color: #f0f9ff;
+  }
+  &[aria-describedby="1"] {
+    border-radius: 4px;
+    border: 1px solid #abefc6;
+    background-color: #ecfdf3;
+  }
+
+  &.connect {
+    
+  }
+
+  .booking {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+
+    .hash {
+      font-weight: 600;
+      font-size: 14px;
+      &[aria-describedby="0"] {
+        color: #0086c9;
+      }
+      &[aria-describedby="1"] {
+        color: #079455;
+      }
+    }
+    .bookingText {
+      color: #344054;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 18px;
+    }
+  }
+
+  .text {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+  }
+}
