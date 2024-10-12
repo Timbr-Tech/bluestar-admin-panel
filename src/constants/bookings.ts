@@ -18,6 +18,8 @@ export const BOOKINGS_STATUS = {
   completed: "completed",
   billed: "billed",
   cancelled: "cancelled",
+  dispatched: "dispatched",
+  allotted: "allotted",
 };
 
 export const BOOKINGS_DUTY_TABS = [

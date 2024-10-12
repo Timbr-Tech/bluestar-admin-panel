@@ -12,7 +12,6 @@ import {
 } from "antd";
 import { ReactComponent as DeleteIconRed } from "../../icons/trash-red.svg";
 import styles from "./index.module.scss";
-import { BOOKINGS_STATUS } from "../../constants/bookings";
 import {
   CheckCircleTwoTone,
   DeleteOutlined,

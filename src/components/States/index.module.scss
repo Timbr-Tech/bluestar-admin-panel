@@ -36,6 +36,18 @@
     width: 81px;
   }
 
+  &.dispatched {
+    border: 1px solid #b2ddff;
+    background: #eff8ff;
+    width: 92px;
+  }
+
+  &.allotted {
+    border: 1px solid #fedf89;
+    background: #fffaeb;
+    width: 72px;
+  }
+
   .dot {
     width: 6px;
     height: 6px;
@@ -57,6 +69,12 @@
     &.on-going {
       background-color: #2e90fa;
     }
+    &.dispatched {
+      background-color: #2e90fa;
+    }
+    &.allotted {
+      background-color: #f79009;
+    }
   }
 
   .text {
@@ -71,13 +89,19 @@
       color: #344054;
     }
     &.cancelled {
-      color: #B42318;
+      color: #b42318;
     }
     &.completed {
       color: #067647;
     }
     &.on-going {
       color: #175cd3;
+    }
+    &.dispatched {
+      color: #2e90fa;
+    }
+    &.allotted {
+      color: #b54708;
     }
   }
 }

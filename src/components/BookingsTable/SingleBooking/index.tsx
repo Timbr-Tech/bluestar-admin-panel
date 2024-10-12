@@ -11,7 +11,8 @@ import {
 } from "antd";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import styles from "../index.module.scss";
-
+import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
+import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import {
   CarTwoTone,
   CheckCircleTwoTone,
@@ -153,20 +154,20 @@ const SingleBookingsTable = () => {
       dataIndex: "dutiesDate",
       key: "dutiesDate",
     },
-    {
-      title: "Custom booking Id",
-      dataIndex: "customBookingId",
-      key: "customBookingId",
-      render: (data, each) => {
-        return <a href={`${RouteName.BOOKINGS}/${each.id}`}>{data}</a>;
-      },
-    },
-    {
-      title: "Alternate option",
-      dataIndex: "assignAlternateVehicles",
-      key: "assignAlternateVehicles",
-      render: (each: any) => (each === false ? "No" : "Yes"),
-    },
+    // {
+    //   title: "Custom booking Id",
+    //   dataIndex: "customBookingId",
+    //   key: "customBookingId",
+    //   render: (data, each) => {
+    //     return <a href={`${RouteName.BOOKINGS}/${each.id}`}>{data}</a>;
+    //   },
+    // },
+    // {
+    //   title: "Alternate option",
+    //   dataIndex: "assignAlternateVehicles",
+    //   key: "assignAlternateVehicles",
+    //   render: (each: any) => (each === false ? "No" : "Yes"),
+    // },
     {
       title: "Customer",
       dataIndex: "customerId",
@@ -175,27 +176,27 @@ const SingleBookingsTable = () => {
         return <span>{each.name}</span>;
       },
     },
-    {
-      title: "Booked By",
-      dataIndex: "bookedBy",
-      key: "bookedBy",
-      width: "200px",
-      render: (each: any) => {
-        return (
-          <div>
-            <p>
-              <UserOutlined /> {each.name}
-            </p>
-            <p>
-              <PhoneOutlined /> {each.phoneNumber}
-            </p>
-            <p>
-              <MailOutlined /> {each.email}
-            </p>
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: "Booked By",
+    //   dataIndex: "bookedBy",
+    //   key: "bookedBy",
+    //   width: "200px",
+    //   render: (each: any) => {
+    //     return (
+    //       <div>
+    //         <p>
+    //           <UserOutlined /> {each.name}
+    //         </p>
+    //         <p>
+    //           <PhoneOutlined /> {each.phoneNumber}
+    //         </p>
+    //         <p>
+    //           <MailOutlined /> {each.email}
+    //         </p>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Passenger",
       dataIndex: "passergers",
@@ -240,9 +241,9 @@ const SingleBookingsTable = () => {
       },
     },
     {
-      title: "Vehicle group",
-      dataIndex: "vehicleGroup",
-      key: "vehicleGroup",
+      title: "Vehicle",
+      dataIndex: "vehicle",
+      key: "vehicle",
     },
     {
       title: "Duty type",
@@ -253,81 +254,84 @@ const SingleBookingsTable = () => {
       },
     },
     {
-      title: "Duties",
-      dataIndex: "duties",
-      key: "duties",
+      title: "Driver",
+      dataIndex: "driver",
+      key: "driver",
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      render: (data) => {
-        return (
-          <>
-            <a href={data?.dropAddress} target="_blank">
-              <PushpinOutlined /> Drop address
-            </a>
-            <br />
-            <a href={data?.reportingAddress} target="_blank">
-              <PushpinOutlined /> Reporting address
-            </a>
-          </>
-        );
-      },
+      title: "Rep. Time",
+      dataIndex: "repTime",
+      key: "repTime",
     },
-    {
-      title: "Airport Booking",
-      dataIndex: "isAirportBooking",
-      key: "isAirportBooking",
-      render: (each: any) => (each === false ? "No" : "yes"),
-    },
-    {
-      title: "Confirmed Status",
-      dataIndex: "isUnconfirmed",
-      key: "isUnconfirmed",
-      render: (each: any) => (each === false ? "Yes" : "No"),
-    },
+    // {
+    //   title: "Duties",
+    //   dataIndex: "duties",
+    //   key: "duties",
+    // },
+    // {
+    //   title: "Address",
+    //   dataIndex: "address",
+    //   key: "address",
+    //   render: (data) => {
+    //     return (
+    //       <>
+    //         <a href={data?.dropAddress} target="_blank">
+    //           <PushpinOutlined /> Drop address
+    //         </a>
+    //         <br />
+    //         <a href={data?.reportingAddress} target="_blank">
+    //           <PushpinOutlined /> Reporting address
+    //         </a>
+    //       </>
+    //     );
+    //   },
+    // },
+    // {
+    //   title: "Airport Booking",
+    //   dataIndex: "isAirportBooking",
+    //   key: "isAirportBooking",
+    //   render: (each: any) => (each === false ? "No" : "yes"),
+    // },
+    // {
+    //   title: "Confirmed Status",
+    //   dataIndex: "isUnconfirmed",
+    //   key: "isUnconfirmed",
+    //   render: (each: any) => (each === false ? "Yes" : "No"),
+    // },
     {
       title: "Status",
       dataIndex: "bookingStatus",
       key: "bookingStatus",
       render: (data: any) => {
         return <BookingsStates status={data.toLowerCase()} />;
-        // if (data.toLowerCase() === BOOKINGS_STATUS.booked) {
-        //   return <Tag color="">{data}</Tag>;
-        // }
-        // if (data.toLowerCase() === BOOKINGS_STATUS.billed) {
-        //   return <Tag color="success">{data}</Tag>;
-        // }
-        // if (data.toLowerCase() === BOOKINGS_STATUS.cancelled) {
-        //   return <Tag color="">{data}</Tag>;
-        // }
-        // if (data.toLowerCase() === BOOKINGS_STATUS.completed) {
-        //   return <Tag color="success">{data}</Tag>;
-        // }
-        // if (data.toLowerCase() === BOOKINGS_STATUS["on-going"]) {
-        //   return <Tag color="blue">{data}</Tag>;
-        // }
       },
     },
     {
-      title: "Action",
+      title: "",
       dataIndex: "action",
       key: "action",
       fixed: "right",
       width: 100,
       render: (data: any, row: any) => {
         return (
-          <div className={styles.columnsAction}>
-            <DeleteOutlined
-              onClick={() => {
+          <div
+            className={styles.editButton}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
                 setDeleteModal(true);
                 dispatch(setCurrentSelectedBooking(row));
               }}
-              className={styles.deleteIcon}
-            />
-            <Dropdown menu={{ items: returnItems(row) }}>
-              <MoreOutlined />
+              className={styles.deleteBtn}
+            >
+              <DeleteIcon />
+            </button>
+            <Dropdown menu={{ items: returnItems(row) }} trigger={["click"]}>
+              <button className={styles.button}>
+                <DotsHorizontal />
+              </button>
             </Dropdown>
           </div>
         );
@@ -421,11 +425,8 @@ const SingleBookingsTable = () => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete booking</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this booking? This action cannot
-              be undone.
+              {`Are you sure you want to delete this booking? Booking ID: ${currentSelectedBooking?.id}`}
             </div>
-            <div>customer:{currentSelectedBooking?.customer}</div>
-            <div>Vehicle Group:{currentSelectedBooking?.vehicleGroup}</div>
           </div>
           <div className={styles.bottomBtns}>
             <button className={styles.cancelBtn} onClick={handleCloseModal}>

@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import { BOOKINGS_STATUS } from "../../constants/bookings";
 import cn from "classnames";
 import styles from "./index.module.scss";
@@ -52,6 +51,24 @@ const BookingsStates = ({ status }: IBookingsStates) => {
                 <div className={cn(styles.dot, styles["on-going"])}></div>
                 <div className={cn(styles.text, styles["on-going"])}>
                   {"On-going"}
+                </div>
+              </div>
+            );
+          case BOOKINGS_STATUS.dispatched:
+            return (
+              <div className={cn(styles.container, styles.dispatched)}>
+                <div className={cn(styles.dot, styles.dispatched)}></div>
+                <div className={cn(styles.text, styles.dispatched)}>
+                  {"Dispatched"}
+                </div>
+              </div>
+            );
+          case BOOKINGS_STATUS.allotted:
+            return (
+              <div className={cn(styles.container, styles.allotted)}>
+                <div className={cn(styles.dot, styles.allotted)}></div>
+                <div className={cn(styles.text, styles.allotted)}>
+                  {"Allotted"}
                 </div>
               </div>
             );
