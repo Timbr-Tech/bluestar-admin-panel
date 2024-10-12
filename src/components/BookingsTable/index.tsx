@@ -381,6 +381,7 @@ const BookingsTable = () => {
 
   function handleCloseModal() {
     setDeleteModal(false);
+    dispatch(setCurrentSelectedBooking({}));
   }
   function handleCloseBookingModal() {
     setConformedBookingModal(false);
