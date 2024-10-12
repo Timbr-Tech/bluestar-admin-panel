@@ -12,16 +12,12 @@ import AddNewBookingForm from "../../components/Bookings/AddNewBooking/AddNewBoo
 import {
   setIsAddEditDrawerClose,
   setIsAddEditDrawerOpen,
-  getBookings,
   setBookingFilter,
   setIsEditingBooking,
 } from "../../redux/slices/bookingSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 import { useAppDispatch } from "../../hooks/store";
-import useDebounce from "../../hooks/common/useDebounce";
-import { values } from "lodash";
-import { addNewBooking } from "../../apis/booking";
 
 const { RangePicker } = DatePicker;
 

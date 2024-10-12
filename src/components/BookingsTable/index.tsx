@@ -43,6 +43,7 @@ import CustomPagination from "../Common/Pagination";
 import row from "antd/es/row";
 import { each } from "lodash";
 import { title } from "process";
+import { RouteName } from "../../constants/routes";
 
 const BookingsTable = () => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -163,6 +164,9 @@ const BookingsTable = () => {
       title: "Custom booking Id",
       dataIndex: "customBookingId",
       key: "customBookingId",
+      render: (data, each) => {
+        return <a href={`${RouteName.BOOKINGS}/${each.id}`}>{data}</a>;
+      },
     },
     {
       title: "Alternate option",
@@ -346,6 +350,7 @@ const BookingsTable = () => {
           dropAddress: each?.dropAddress,
           reportingAddress: each?.reportingAddress,
         },
+        id: each._id,
         action: "",
       };
     });
