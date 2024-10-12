@@ -112,3 +112,43 @@
     }
   }
 }
+
+.status {
+  border-radius: 9999px;
+  height: 22px;
+  width: 75px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px 2px 6px;
+  border: 1px solid #fecdca;
+  background: #fef3f2;
+
+  &.enabled {
+    border: 1px solid #abefc6;
+    background: #ecfdf3;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    margin: 1px;
+    border-radius: 9999px;
+    background-color: #f04438;
+
+    &.enabled {
+      background-color: #17b26a;
+    }
+  }
+
+  .text {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+
+    &.enabled {
+      color: #067647;
+    }
+  }
+}

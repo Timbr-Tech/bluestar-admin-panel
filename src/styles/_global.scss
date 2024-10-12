@@ -179,6 +179,11 @@ th {
   width: 108px !important;
 }
 
+.status-column {
+  width: 108px !important;
+  padding: 16px 24px !important;
+}
+
 .custom-search {
   min-width: 400px;
   width: 100%;
@@ -322,4 +327,19 @@ textarea {
 
 button {
   font-family: "Inter", sans-serif !important;
+}
+
+.rate {
+  .text {
+    color: #101828;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .perDay {
+    color: #475467;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
 }

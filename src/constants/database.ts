@@ -221,6 +221,7 @@ export const TAXES_TABLE = [
 export const ALLOWANCES_TABLE = [
   { title: "Name", dataIndex: "allowanceType", className: "custom-header" },
   { title: "Rate", dataIndex: "rate" },
+  { title: "Status", dataIndex: "status", className: "status-column" },
 ];
 
 export const FASTTAG_TABLE = [

@@ -13,6 +13,7 @@ import {
   deleteAllowance,
   setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import cn from "classnames";
 import Modal from "../../Modal";
 import React, { useState, useEffect } from "react";
 import styles from "./index.module.scss";
@@ -23,6 +24,7 @@ interface IAllowanceData {
   key: string;
   _id: string;
   allowanceType: string;
+  status: any;
   rate: number;
 }
 
@@ -142,7 +144,33 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
         columns={columns}
         dataSource={allowancesList?.data?.map((data: any) => ({
           ...data,
+          rate: (
+            <div className={styles.rate}>
+              <div className={styles.text}>{`₹${data?.rate}`}</div>
+              <div className={styles.perDay}>{"per day"}</div>
+            </div>
+          ),
           key: data?._id,
+          status: (
+            <div
+              className={cn(styles.status, {
+                [styles.enabled]: true,
+              })}
+            >
+              <div
+                className={cn(styles.dot, {
+                  [styles.enabled]: true,
+                })}
+              ></div>
+              <div
+                className={cn(styles.text, {
+                  [styles.enabled]: true,
+                })}
+              >
+                {"Enabled"}
+              </div>
+            </div>
+          ),
         }))}
         loading={allowanceStates?.loading || deleteAllowancesStates?.loading}
         pagination={false}
