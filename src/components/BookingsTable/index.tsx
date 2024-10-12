@@ -67,8 +67,9 @@ const BookingsTable = () => {
         key: "1",
         label: (
           <div
-            onClick={() => {
+            onClick={(e) => {
               // setCurrentSelectedBooking(row);
+              e.stopPropagation();
               dispatch(setCurrentSelectedBooking(row));
               setConformedBookingModal(true);
             }}
@@ -87,7 +88,8 @@ const BookingsTable = () => {
         key: "2",
         label: (
           <div
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               dispatch(setCurrentSelectedBooking(row));
               dispatch(setIsAddEditDrawerOpen());
               dispatch(setIsEditingBooking(false));
@@ -107,7 +109,8 @@ const BookingsTable = () => {
         key: "3",
         label: (
           <div
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               dispatch(setCurrentSelectedBooking(row));
               dispatch(setIsAddEditDrawerOpen());
               dispatch(setIsEditingBooking(true));
@@ -143,6 +146,11 @@ const BookingsTable = () => {
           <div
             style={{
               color: "#F04438",
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteModal(true);
+              dispatch(setCurrentSelectedBooking(row));
             }}
           >
             <Space>
