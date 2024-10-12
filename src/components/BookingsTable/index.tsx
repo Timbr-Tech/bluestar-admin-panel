@@ -373,7 +373,6 @@ const BookingsTable = () => {
 
   function handleCloseModal() {
     setDeleteModal(false);
-    dispatch(deleteBooking({ id: currentSelectedBooking._id }));
   }
   function handleCloseBookingModal() {
     setConformedBookingModal(false);
@@ -445,6 +444,7 @@ const BookingsTable = () => {
             <button
               className={styles.deleteBtn}
               onClick={() => {
+                dispatch(deleteBooking({ id: currentSelectedBooking._id }));
                 handleCloseModal();
               }}
             >
