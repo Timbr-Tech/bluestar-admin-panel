@@ -20,6 +20,7 @@ const SearchComponent = ({
   return (
     <Input
       value={value}
+      defaultValue={value}
       prefix={<SearchIcon />}
       suffix={<></>}
       onChange={onChange}
