@@ -8,7 +8,6 @@ import { Radio, Input, DatePicker } from "antd";
 import { ChangeEvent } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-
 import PrimaryBtn from "../../../components/PrimaryBtn";
 import SecondaryBtn from "../../../components/SecondaryBtn";
 import { useAppDispatch } from "../../../hooks/store";
@@ -19,46 +18,29 @@ import {
 import { RootState } from "../../../types/store";
 import styles from "../index.module.scss";
 import classNames from "classnames";
+import { BOOKINGS_DUTY_TABS } from "../../../constants/bookings";
 import SingleBookingsTable from "../../../components/BookingsTable/SingleBooking";
+
 const { RangePicker } = DatePicker;
+
 const BookingsTabs = () => {
-  // const [filter, setFilter] = useState("");
   const dispatch = useAppDispatch();
   const { filters } = useSelector((state: RootState) => state.booking);
 
   return (
-    <div>
-      <Radio.Group
-        value={filters.status}
-        onChange={(e) => {
-          //   dispatch(setBookingFilter({ status: e.target.value }));
-        }}
-      >
-        {[
-          {
-            id: 1,
-            name: "All",
-            type: "all",
-          },
-          { id: 2, name: "Booked", type: "booked" },
-          { id: 2, name: "Alloted", type: "alloted" },
-          { id: 2, name: "Dispatched", type: "dispatched" },
-          { id: 3, name: "On-Going", type: "on-going" },
-          { id: 4, name: "Completed", type: "completed" },
-          { id: 5, name: "Billed", type: "billed" },
-          { id: 6, name: "Cancelled", type: "cancelled" },
-        ]?.map((item) => (
-          <Radio.Button
-            onClick={() => {
-              dispatch(setBookingFilter({ status: item.type }));
-            }}
-            key={item.type}
-            value={item.type}
-          >
-            {item.name}
-          </Radio.Button>
-        ))}
-      </Radio.Group>
+    <div className={styles.tabsContainer}>
+      {BOOKINGS_DUTY_TABS?.map((item) => (
+        <button
+          className={classNames(styles.tab, {
+            [styles.selected]: item.type === filters.status,
+          })}
+          onClick={() => {
+            dispatch(setBookingFilter({ status: item.type }));
+          }}
+        >
+          {item.name}
+        </button>
+      ))}
     </div>
   );
 };
