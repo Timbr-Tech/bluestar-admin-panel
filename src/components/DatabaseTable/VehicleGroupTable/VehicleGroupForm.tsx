@@ -152,7 +152,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
                 rules={[
                   {
                     required: true,
-                    message: "description is required",
+                    message: "Vehicle group is required",
                   },
                 ]}
                 label="Name"
@@ -172,7 +172,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
                 rules={[
                   {
                     required: true,
-                    message: "description is required",
+                    message: "Description is required",
                   },
                 ]}
               >
@@ -219,7 +219,7 @@ const VehicleGroupForm = ({ handleCloseSidePanel }: IVehicleGroupForm) => {
                 rules={[
                   {
                     required: true,
-                    message: "Seating Capacity is required",
+                    message: "Luggage count is required",
                   },
                 ]}
               >
