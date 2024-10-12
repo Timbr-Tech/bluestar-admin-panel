@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../utils/configureAxios";
-import { addNewBooking } from "../../apis/booking";
 import { notification } from "antd";
 
 const initialState = {
@@ -37,7 +36,8 @@ export const getSingleBookings = createAsyncThunk(
 );
 export const deleteBooking = createAsyncThunk(
   "booking/deleteBooking",
-  async (params: any, { dispatch }) => {
+  async (params: any, { dispatch, getState }: any) => {
+    const { booking } = getState();
     const response = await apiClient.delete(`/booking/${params.id}`);
     if (response.status === 200) {
       dispatch(setCurrentSelectedBooking({}));
@@ -46,13 +46,32 @@ export const deleteBooking = createAsyncThunk(
         description: "Booking deleted successfully",
       });
       const payload = {
-        id: params.id,
+        bookings: booking?.bookings?.filter(
+          (each: any) => each._id !== params.id
+        ),
       };
+
       dispatch(setBookings(payload));
     }
   }
 );
-
+export const addNewBooking = createAsyncThunk(
+  "booking/addNewBooking",
+  async (body: any, { dispatch }: any) => {
+    const response = await apiClient.post("/booking", body);
+    if (response.status === 201) {
+      dispatch(setCurrentSelectedBooking({}));
+      notification.success({
+        message: "Success",
+        description: "New Booking added successfully",
+      });
+      console.log("CLOSE");
+      dispatch(setIsAddEditDrawerClose());
+      dispatch(getBookings({ page: 1, search: "", limit: 10 }));
+      return response.data;
+    }
+  }
+);
 export const bookingSlice = createSlice({
   name: "booking",
   initialState,
@@ -66,9 +85,7 @@ export const bookingSlice = createSlice({
     setBookings: (state, action: PayloadAction<any | {}>) => {
       return {
         ...state,
-        bookings: state.bookings.filter(
-          (each: any) => each._id !== action.payload.id
-        ),
+        bookings: action?.payload?.bookings,
       };
     },
     setIsAddEditDrawerOpen: (state) => {
@@ -107,6 +124,7 @@ export const bookingSlice = createSlice({
         state.bookingStates.loading = false;
         state.bookingStates.error = "Error";
       })
+      // single booking
       .addCase(getSingleBookings.pending, (state) => {
         state.bookingStates.status = "loading";
         state.bookingStates.loading = true;
