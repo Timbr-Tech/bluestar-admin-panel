@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import cn from "classnames";
 import { useState, ChangeEvent, useEffect } from "react";
 import { BOOKINGS_TABS } from "../../constants/bookings";
