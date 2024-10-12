@@ -156,7 +156,13 @@ const AddNewBookingForm = ({
             <Form.Item
               name={["bookedBy", "phoneNumber"]}
               label="Phone Number"
-              rules={[{ required: true }]}
+              rules={[
+                { required: true, message: "Please enter your phone number." },
+                {
+                  pattern: /^(\+91)?[6-9][0-9]{9}$/,
+                  message: "Please enter a valid Indian phone number",
+                },
+              ]}
             >
               <Input />
             </Form.Item>

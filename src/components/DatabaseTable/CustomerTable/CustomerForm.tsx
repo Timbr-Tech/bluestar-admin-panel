@@ -324,7 +324,11 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
               rules={[
                 {
                   required: true,
-                  // type: "number",
+                  message: "Please enter your phone number.",
+                },
+                {
+                  pattern: /^(\+91)?[6-9][0-9]{9}$/,
+                  message: "Please enter a valid Indian phone number",
                 },
               ]}
               name="phoneNumber"

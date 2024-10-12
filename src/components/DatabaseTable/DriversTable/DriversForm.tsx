@@ -218,6 +218,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               rules={[
                 {
                   required: true,
+                  message: "Please enter your phone number.",
                 },
                 {
                   pattern: /^(\+91)?[6-9][0-9]{9}$/,
