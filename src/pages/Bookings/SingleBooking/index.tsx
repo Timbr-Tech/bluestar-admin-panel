@@ -1,9 +1,5 @@
 /* eslint-disable */
-import {
-  ArrowLeftOutlined,
-  EditFilled,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { EditFilled, SearchOutlined } from "@ant-design/icons";
 import { Radio, Input, DatePicker } from "antd";
 import { ChangeEvent } from "react";
 import { useSelector } from "react-redux";
@@ -17,6 +13,7 @@ import {
 } from "../../../redux/slices/bookingSlice";
 import { RootState } from "../../../types/store";
 import styles from "../index.module.scss";
+import { ReactComponent as ArrowLeftOutlined } from "../../../icons/arrow-left-blue.svg";
 import classNames from "classnames";
 import { BOOKINGS_DUTY_TABS } from "../../../constants/bookings";
 import SingleBookingsTable from "../../../components/BookingsTable/SingleBooking";
@@ -60,13 +57,12 @@ const SingleBookings = () => {
     <div className={classNames("container", styles.container)}>
       <div className={styles.headingContainer}>
         <div>
-          <small>
-            <a href="/bookings">
-              <ArrowLeftOutlined />
-              Back to all bookings
-            </a>
-          </small>
-          <div className={styles.heading}>Bookings :{bookingId}</div>
+          <a href="/bookings">
+            <ArrowLeftOutlined />
+            Back to all bookings
+          </a>
+
+          <div className={styles.heading}>{`Booking ID: ${bookingId}`}</div>
           <div className={styles.text}>12/06/2024 to 18/06/2024</div>
         </div>
         <div className={styles.btnContainer}>

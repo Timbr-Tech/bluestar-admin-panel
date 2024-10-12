@@ -2,6 +2,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Tooltip } from "antd";
 import cn from "classnames";
+import { ReactComponent as FileIcon } from "../../icons/file.svg";
 import { ReactComponent as Dashboard } from "../../icons/homeLine.svg";
 import { ReactComponent as Database } from "../../icons/database.svg";
 import { ReactComponent as Drivers } from "../../icons/drivers.svg";
@@ -23,7 +24,7 @@ const Sidebar = () => {
         </div>
       </Link>
       <div className={styles.iconsContainer}>
-        <Tooltip placement="right" title={"Dashboard"}>
+        {/* <Tooltip placement="right" title={"Dashboard"}>
           <Link to={RouteName.DASHBOARD}>
             <div
               className={cn(styles.icon, {
@@ -41,7 +42,7 @@ const Sidebar = () => {
               />
             </div>
           </Link>
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip placement="right" title={"Bookings"}>
           <Link to={RouteName.BOOKINGS}>
             <div
@@ -52,6 +53,19 @@ const Sidebar = () => {
               })}
             >
               <BookingsIcon className={styles.svgIcon} />
+            </div>
+          </Link>
+        </Tooltip>
+        <Tooltip placement="right" title={"Billing"}>
+          <Link to={RouteName.BILLINGS}>
+            <div
+              className={cn(styles.icon, {
+                [styles.selected]: location.pathname.startsWith(
+                  RouteName.BILLINGS
+                ),
+              })}
+            >
+              <FileIcon className={styles.svgIcon} />
             </div>
           </Link>
         </Tooltip>
