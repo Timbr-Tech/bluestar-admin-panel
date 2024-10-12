@@ -27,6 +27,13 @@ export const getBookings = createAsyncThunk(
     return response.data;
   }
 );
+export const getSingleBookings = createAsyncThunk(
+  "booking/getSingleBookings",
+  async (params: any) => {
+    const response = await apiClient.get("/booking", { params });
+    return response.data;
+  }
+);
 
 export const bookingSlice = createSlice({
   name: "booking",
@@ -70,6 +77,26 @@ export const bookingSlice = createSlice({
         };
       })
       .addCase(getBookings.rejected, (state) => {
+        state.bookingStates.status = "failed";
+        state.bookingStates.loading = false;
+        state.bookingStates.error = "Error";
+      })
+      .addCase(getSingleBookings.pending, (state) => {
+        state.bookingStates.status = "loading";
+        state.bookingStates.loading = true;
+      })
+      .addCase(getSingleBookings.fulfilled, (state, action) => {
+        state.bookingStates.status = "succeeded";
+        state.bookingStates.loading = false;
+        state.bookingStates.error = "";
+        state.bookings = action.payload?.data as any;
+        state.pagination = {
+          total: action.payload.total,
+          page: action.payload.page,
+          limit: action.payload.limit,
+        };
+      })
+      .addCase(getSingleBookings.rejected, (state) => {
         state.bookingStates.status = "failed";
         state.bookingStates.loading = false;
         state.bookingStates.error = "Error";
