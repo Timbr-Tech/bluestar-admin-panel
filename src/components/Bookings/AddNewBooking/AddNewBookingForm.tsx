@@ -138,7 +138,6 @@ const AddNewBookingForm = ({
       </Form.Item>
 
       <Card className={styles.BookedByCardContainer}>
-        {/* <p>Booked By</p> */}
         <Form.Item
           name="bookedBy"
           id="bookedBy"
@@ -203,13 +202,13 @@ const AddNewBookingForm = ({
         </Radio>
       </Card>
       {/*  passenger detail */}
-      <div className={styles.PassengerCardContainer}>
+      <Card className={styles.PassengerCardContainer}>
         <p>Passenger Details</p>
         <Form.List name="passergers">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }, index) => (
-                <Card key={key} className="PassengerCard">
+                <Card key={key} className={styles.PassengerCard}>
                   <Form.Item
                     {...restField}
                     name={[name, "name"]}
@@ -235,7 +234,7 @@ const AddNewBookingForm = ({
                       shape="circle"
                       icon={<DeleteOutlined />}
                       onClick={() => remove(name)}
-                      className="deletePassengerButton"
+                      className={styles.deletePassengerButton}
                     />
                   )}
                 </Card>
@@ -243,9 +242,9 @@ const AddNewBookingForm = ({
 
               <Form.Item>
                 <Button
-                  type="dashed"
+                  className={styles.addPassengerButton}
+                  type="text"
                   onClick={() => add()}
-                  block
                   icon={<PlusOutlined />}
                 >
                   Add Passenger
@@ -254,7 +253,7 @@ const AddNewBookingForm = ({
             </>
           )}
         </Form.List>
-      </div>
+      </Card>
       <Form.Item
         name="dutyTypeId"
         rules={[{ required: true }]}
@@ -361,11 +360,7 @@ const AddNewBookingForm = ({
         <Checkbox>This is an airport booking</Checkbox>
       </Form.Item>
 
-      <Card
-        style={{
-          margin: "1rem 0rem",
-        }}
-      >
+      <Card className={styles.durationDetailsCard}>
         <b>Duration Details </b>
         <Input.Group>
           <Row gutter={16}>
@@ -454,7 +449,7 @@ const AddNewBookingForm = ({
           </Row>
         </Input.Group>
       </Card>
-      <Card>
+      <Card className={styles.pricingDetailsCard}>
         <div className={styles.pricingDetails}>
           <b>Pricing Details</b>
           <span>
