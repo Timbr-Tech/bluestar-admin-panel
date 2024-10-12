@@ -13,6 +13,7 @@ import {
   deleteAllowance,
   setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import cn from "classnames";
 import Modal from "../../Modal";
 import React, { useState, useEffect } from "react";
@@ -58,6 +59,11 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
       label: "Edit allowance",
       key: "1",
       icon: <EditIcon />,
+    },
+    {
+      label: "Disable",
+      key: "2",
+      icon: <Clipboard />,
     },
   ];
 

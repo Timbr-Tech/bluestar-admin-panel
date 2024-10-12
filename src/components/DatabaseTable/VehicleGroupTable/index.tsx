@@ -5,7 +5,6 @@ import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import Modal from "../../Modal";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
-import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import type { MenuProps } from "antd";
@@ -91,13 +90,6 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
       label: "Edit Vehicle Group",
       key: "1",
       icon: <EditIcon />,
-    },
-    {
-      label: (
-        <>{currentVehicleGroup?.isActive ? "Mark inactive" : "Mark Active"}</>
-      ),
-      key: "2",
-      icon: <Clipboard />,
     },
   ];
 
