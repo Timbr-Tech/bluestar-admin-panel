@@ -1,6 +1,8 @@
 /* eslint-disable */
 
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { ReactComponent as CheckIcon } from "../../../src/icons/check-circle.svg";
+import { SmileOutlined } from "@ant-design/icons"; // Import any Ant Design icon
 import apiClient from "../../utils/configureAxios";
 import { notification } from "antd";
 
@@ -688,6 +690,7 @@ export const addVehicleGroup = createAsyncThunk(
       notification.success({
         message: "Success",
         description: "Vehicle group added successfully",
+        duration: 0
       });
       dispatch(getVehicleGroup({ page: "1", search: "", limit: 10 }));
       return response.data;

@@ -27,26 +27,19 @@ const BookingsTabs = () => {
   const { filters } = useSelector((state: RootState) => state.booking);
 
   return (
-    <div>
-      <Radio.Group
-        value={filters.status}
-        onChange={(e) => {
-          // setFilter(e.target.value);
-          dispatch(setBookingFilter({ status: e.target.value }));
-        }}
-      >
-        {BOOKINGS_TABS?.map((item) => (
-          <Radio.Button
-            onClick={() => {
-              dispatch(setBookingFilter({ status: item.type }));
-            }}
-            key={item.type}
-            value={item.type}
-          >
-            {item.name}
-          </Radio.Button>
-        ))}
-      </Radio.Group>
+    <div className={styles.tabsContainer}>
+      {BOOKINGS_TABS?.map((item) => (
+        <button
+          className={cn(styles.tab, {
+            [styles.selected]: item.type === filters.status,
+          })}
+          onClick={() => {
+            dispatch(setBookingFilter({ status: item.type }));
+          }}
+        >
+          {item.name}
+        </button>
+      ))}
     </div>
   );
 };
