@@ -21,7 +21,7 @@
   &.cancelled {
     border: 1px solid #fecdca;
     background: #fef3f2;
-    width: 84px;
+    width: 88px;
   }
 
   &.completed {
@@ -46,6 +46,24 @@
     border: 1px solid #fedf89;
     background: #fffaeb;
     width: 72px;
+  }
+
+  &.paid {
+    border: 1px solid #abefc6;
+    background: #ecfdf3;
+    width: 55px;
+  }
+
+  &.generated {
+    border: 1px solid #b2ddff;
+    background: #eff8ff;
+    width: 90px;
+  }
+
+  &.confirmed {
+    border: 1px solid #abefc6;
+    background: #ecfdf3;
+    width: 87px;
   }
 
   .dot {
@@ -75,6 +93,15 @@
     &.allotted {
       background-color: #f79009;
     }
+    &.paid {
+      background-color: #17b26a;
+    }
+    &.generated {
+      background-color: #2e90fa;
+    }
+    &.confirmed {
+      background-color: #17b26a;
+    }
   }
 
   .text {
@@ -102,6 +129,15 @@
     }
     &.allotted {
       color: #b54708;
+    }
+    &.paid {
+      color: #067647;
+    }
+    &.generated {
+      color: #175cd3;
+    }
+    &.confirmed {
+      color: #067647;
     }
   }
 }

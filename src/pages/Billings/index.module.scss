@@ -46,7 +46,7 @@
 .tableContainer {
   padding: 0 30px 40px 30px;
   margin-top: 28px;
-  
+
   .tableHeader {
     display: flex;
     justify-content: space-between;
@@ -86,6 +86,10 @@
       }
     }
   }
+}
+
+.table {
+  margin-top: 24px;
 }
 
 .headerBtn {
