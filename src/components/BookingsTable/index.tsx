@@ -34,6 +34,7 @@ import {
   setCurrentSelectedBooking,
   getBookings,
   setIsEditingBooking,
+  deleteBooking,
 } from "../../redux/slices/bookingSlice";
 import BookingsStates from "../States/BookingsStates";
 import { useSelector } from "react-redux";
@@ -66,8 +67,9 @@ const BookingsTable = () => {
         key: "1",
         label: (
           <div
-            onClick={() => {
+            onClick={(e) => {
               // setCurrentSelectedBooking(row);
+              e.stopPropagation();
               dispatch(setCurrentSelectedBooking(row));
               setConformedBookingModal(true);
             }}
@@ -86,7 +88,8 @@ const BookingsTable = () => {
         key: "2",
         label: (
           <div
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               dispatch(setCurrentSelectedBooking(row));
               dispatch(setIsAddEditDrawerOpen());
               dispatch(setIsEditingBooking(false));
@@ -106,7 +109,8 @@ const BookingsTable = () => {
         key: "3",
         label: (
           <div
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               dispatch(setCurrentSelectedBooking(row));
               dispatch(setIsAddEditDrawerOpen());
               dispatch(setIsEditingBooking(true));
@@ -142,6 +146,11 @@ const BookingsTable = () => {
           <div
             style={{
               color: "#F04438",
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setDeleteModal(true);
+              dispatch(setCurrentSelectedBooking(row));
             }}
           >
             <Space>
@@ -325,7 +334,8 @@ const BookingsTable = () => {
         return (
           <div className={styles.columnsAction}>
             <DeleteOutlined
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setDeleteModal(true);
                 dispatch(setCurrentSelectedBooking(row));
               }}
@@ -443,6 +453,7 @@ const BookingsTable = () => {
             <button
               className={styles.deleteBtn}
               onClick={() => {
+                dispatch(deleteBooking({ id: currentSelectedBooking._id }));
                 handleCloseModal();
               }}
             >

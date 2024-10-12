@@ -1,9 +1,12 @@
 .form {
   .BookedByCardContainer {
     margin: 1rem 0rem;
+    background-color: #f9fafb;
   }
   .PassengerCardContainer {
     margin: 1rem 0rem;
+
+    background-color: #f9fafb;
     .PassengerCard {
       position: relative;
       margin: 1rem 0rem;
@@ -13,6 +16,9 @@
         right: 1rem;
         color: red;
       }
+    }
+    .addPassengerButton {
+      color: #7f56d9;
     }
   }
   .bookingType {
@@ -29,20 +35,29 @@
       align-items: flex-start;
     }
   }
-  .pricingDetails {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 
-    b {
-      font-weight: bold;
-    }
-
-    span {
+  .durationDetailsCard {
+    margin: 1rem 0rem;
+    background: #f9fafb;
+  }
+  .pricingDetailsCard {
+    margin: 1rem 0rem;
+    background: #f9fafb;
+    .pricingDetails {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
-      color: #7f56d9;
+
+      b {
+        font-weight: bold;
+      }
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #7f56d9;
+      }
     }
   }
 }
