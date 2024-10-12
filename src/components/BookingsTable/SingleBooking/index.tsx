@@ -8,45 +8,37 @@ import {
   Space,
   Table,
   TableColumnsType,
-  Tag,
 } from "antd";
-import { ReactComponent as DeleteIconRed } from "../../icons/trash-red.svg";
-import styles from "./index.module.scss";
-import { BOOKINGS_STATUS } from "../../constants/bookings";
+import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
+import styles from "../index.module.scss";
+
 import {
+  CarTwoTone,
   CheckCircleTwoTone,
   DeleteOutlined,
-  EditOutlined,
   EyeOutlined,
-  FilePdfOutlined,
-  HeatMapOutlined,
   MailOutlined,
   MoreOutlined,
   PhoneOutlined,
   PushpinOutlined,
+  RedoOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import Modal from "../Modal";
-import { useAppDispatch } from "../../hooks/store";
-import {
-  setIsAddEditDrawerOpen,
-  setCurrentSelectedBooking,
-  getBookings,
-  setIsEditingBooking,
-} from "../../redux/slices/bookingSlice";
-import BookingsStates from "../States/BookingsStates";
 import { useSelector } from "react-redux";
-import { RootState } from "../../types/store";
 
-import CustomPagination from "../Common/Pagination";
-import row from "antd/es/row";
-import { each } from "lodash";
-import { title } from "process";
-import { RouteName } from "../../constants/routes";
-import { useNavigate } from "react-router-dom";
+import { RouteName } from "../../../constants/routes";
+import { RootState } from "../../../types/store";
+import CustomPagination from "../../Common/Pagination";
+import { useAppDispatch } from "../../../hooks/store";
+import BookingsStates from "../../States/BookingsStates";
+import {
+  setCurrentSelectedBooking,
+  getSingleBookings,
+} from "../../../redux/slices/bookingSlice";
+import Modal from "../../Modal";
 
-const BookingsTable = () => {
+const SingleBookingsTable = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [conformedBookingModal, setConformedBookingModal] = useState(false);
   const {
@@ -68,13 +60,13 @@ const BookingsTable = () => {
           <div
             onClick={() => {
               // setCurrentSelectedBooking(row);
-              dispatch(setCurrentSelectedBooking(row));
-              setConformedBookingModal(true);
+              //   dispatch(setCurrentSelectedBooking(row));
+              //   setConformedBookingModal(true);
             }}
           >
             <Space>
               <CheckCircleTwoTone twoToneColor="#52c41a" />
-              Confirm booking
+              View Duty
             </Space>
           </div>
         ),
@@ -87,14 +79,14 @@ const BookingsTable = () => {
         label: (
           <div
             onClick={() => {
-              dispatch(setCurrentSelectedBooking(row));
-              dispatch(setIsAddEditDrawerOpen());
-              dispatch(setIsEditingBooking(false));
+              //   dispatch(setCurrentSelectedBooking(row));
+              //   dispatch(setIsAddEditDrawerOpen());
+              //   dispatch(setIsEditingBooking(false));
             }}
           >
             <Space>
               <EyeOutlined twoToneColor="#52c41a" />
-              View booking
+              Edit Duty
             </Space>
           </div>
         ),
@@ -107,14 +99,14 @@ const BookingsTable = () => {
         label: (
           <div
             onClick={() => {
-              dispatch(setCurrentSelectedBooking(row));
-              dispatch(setIsAddEditDrawerOpen());
-              dispatch(setIsEditingBooking(true));
+              //   dispatch(setCurrentSelectedBooking(row));
+              //   dispatch(setIsAddEditDrawerOpen());
+              //   dispatch(setIsEditingBooking(true));
             }}
           >
             <Space>
-              <EditOutlined twoToneColor="#52c41a" />
-              Edit booking
+              <CarTwoTone twoToneColor="#52c41a" />
+              Allot vehicle and driver
             </Space>
           </div>
         ),
@@ -127,8 +119,8 @@ const BookingsTable = () => {
         label: (
           <div>
             <Space>
-              <FilePdfOutlined twoToneColor="#52c41a" />
-              Generate invoice
+              <RedoOutlined twoToneColor="#52c41a" />
+              Unconfirm Duty
             </Space>
           </div>
         ),
@@ -146,7 +138,7 @@ const BookingsTable = () => {
           >
             <Space>
               <DeleteOutlined />
-              Delete Booking
+              Cancel Duty
             </Space>
           </div>
         ),
@@ -157,14 +149,17 @@ const BookingsTable = () => {
 
   const columns: TableColumnsType<any> = [
     {
-      title: "Start date",
-      dataIndex: "startDate",
-      key: "startDate",
+      title: "Duties date",
+      dataIndex: "dutiesDate",
+      key: "dutiesDate",
     },
     {
       title: "Custom booking Id",
       dataIndex: "customBookingId",
       key: "customBookingId",
+      render: (data, each) => {
+        return <a href={`${RouteName.BOOKINGS}/${each.id}`}>{data}</a>;
+      },
     },
     {
       title: "Alternate option",
@@ -268,7 +263,7 @@ const BookingsTable = () => {
       key: "address",
       render: (data) => {
         return (
-          <div onClick={(event) => event.stopPropagation()}>
+          <>
             <a href={data?.dropAddress} target="_blank">
               <PushpinOutlined /> Drop address
             </a>
@@ -276,7 +271,7 @@ const BookingsTable = () => {
             <a href={data?.reportingAddress} target="_blank">
               <PushpinOutlined /> Reporting address
             </a>
-          </div>
+          </>
         );
       },
     },
@@ -344,6 +339,10 @@ const BookingsTable = () => {
     return bookings?.map((each: any) => {
       return {
         ...each,
+        dutiesDate: each.startDate ?? "28/10/2024",
+        customerId: each.customerId ?? "Pratham",
+        driver: each.driver ?? "John Dukes",
+        repTime: each.repRime ?? "16:00",
         address: {
           dropAddress: each?.dropAddress,
           reportingAddress: each?.reportingAddress,
@@ -379,9 +378,8 @@ const BookingsTable = () => {
   }
 
   useEffect(() => {
-    dispatch(getBookings({ ...filters }));
+    dispatch(getSingleBookings({ ...filters }));
   }, [filters.search, filters.status]);
-  let navigate = useNavigate();
 
   return (
     <>
@@ -390,13 +388,6 @@ const BookingsTable = () => {
           rowSelection={{
             type: "checkbox",
             ...rowSelection,
-          }}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: (event) => {
-                navigate(`${RouteName.BOOKINGS}/${record._id}`);
-              },
-            };
           }}
           bordered
           loading={bookingStates.loading}
@@ -411,7 +402,7 @@ const BookingsTable = () => {
               pageSize={pagination.limit ?? 10}
               onPageChange={(page: number) => {
                 dispatch(
-                  getBookings({
+                  getSingleBookings({
                     search: filters.search,
                     page: page,
                   })
@@ -485,32 +476,32 @@ const BookingsTable = () => {
         </div>
       </Modal>
       {/* <Drawer
-        destroyOnClose
-        size="large"
-        mask
-        title={
+          destroyOnClose
+          size="large"
+          mask
+          title={
+            <div>
+              <div>View Booking</div>
+              <small>See your booking details here</small>
+            </div>
+          }
+          onClose={() => {
+            // setOpenAddDrawer(false);
+            dispatch(setIsAddEditDrawerClose());
+          }}
+          open={isAddEditDrawerOpen}
+        >
           <div>
-            <div>View Booking</div>
-            <small>See your booking details here</small>
+            <AddNewBookingForm
+              initialData={{
+                bookingId: "123",
+              }}
+              isEditable={true}
+            />
           </div>
-        }
-        onClose={() => {
-          // setOpenAddDrawer(false);
-          dispatch(setIsAddEditDrawerClose());
-        }}
-        open={isAddEditDrawerOpen}
-      >
-        <div>
-          <AddNewBookingForm
-            initialData={{
-              bookingId: "123",
-            }}
-            isEditable={true}
-          />
-        </div>
-      </Drawer> */}
+        </Drawer> */}
     </>
   );
 };
 
-export default BookingsTable;
+export default SingleBookingsTable;

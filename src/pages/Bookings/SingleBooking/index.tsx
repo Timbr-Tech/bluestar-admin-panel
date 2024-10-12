@@ -1,13 +1,16 @@
 /* eslint-disable */
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Radio, Input, Form, DatePicker } from "antd";
-import { ChangeEvent, useState } from "react";
+import {
+  ArrowLeftOutlined,
+  EditFilled,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Radio, Input, DatePicker } from "antd";
+import { ChangeEvent } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import BookingsTable from "../../../components/BookingsTable";
+
 import PrimaryBtn from "../../../components/PrimaryBtn";
 import SecondaryBtn from "../../../components/SecondaryBtn";
-import { BOOKINGS_TABS } from "../../../constants/bookings";
 import { useAppDispatch } from "../../../hooks/store";
 import {
   setBookingFilter,
@@ -16,6 +19,7 @@ import {
 import { RootState } from "../../../types/store";
 import styles from "../index.module.scss";
 import classNames from "classnames";
+import SingleBookingsTable from "../../../components/BookingsTable/SingleBooking";
 const { RangePicker } = DatePicker;
 const BookingsTabs = () => {
   // const [filter, setFilter] = useState("");
@@ -27,8 +31,7 @@ const BookingsTabs = () => {
       <Radio.Group
         value={filters.status}
         onChange={(e) => {
-          // setFilter(e.target.value);
-          dispatch(setBookingFilter({ status: e.target.value }));
+          //   dispatch(setBookingFilter({ status: e.target.value }));
         }}
       >
         {[
@@ -75,15 +78,19 @@ const SingleBookings = () => {
     <div className={classNames("container", styles.container)}>
       <div className={styles.headingContainer}>
         <div>
+          <small>
+            <a href="/bookings">
+              <ArrowLeftOutlined />
+              Back to all bookings
+            </a>
+          </small>
           <div className={styles.heading}>Bookings :{bookingId}</div>
-          <div className={styles.text}>
-            Create and manage your bookings from here
-          </div>
+          <div className={styles.text}>12/06/2024 to 18/06/2024</div>
         </div>
         <div className={styles.btnContainer}>
           <SecondaryBtn onClick={() => {}} btnText="Add Duty" />
           <PrimaryBtn
-            LeadingIcon={PlusOutlined}
+            LeadingIcon={EditFilled}
             onClick={() => {
               dispatch(setIsAddEditDrawerOpen());
             }}
@@ -113,8 +120,7 @@ const SingleBookings = () => {
             <p>clear</p>
           </div>
         </div>
-        {/* <Divider /> */}
-        <BookingsTable />
+        <SingleBookingsTable />
       </div>
     </div>
   );
