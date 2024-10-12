@@ -2,6 +2,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../utils/configureAxios";
 import { addNewBooking } from "../../apis/booking";
+import { notification } from "antd";
 
 const initialState = {
   isAddEditDrawerOpen: false,
@@ -34,6 +35,23 @@ export const getSingleBookings = createAsyncThunk(
     return response.data;
   }
 );
+export const deleteBooking = createAsyncThunk(
+  "booking/deleteBooking",
+  async (params: any, { dispatch }) => {
+    const response = await apiClient.delete(`/booking/${params.id}`);
+    if (response.status === 200) {
+      dispatch(setCurrentSelectedBooking({}));
+      notification.success({
+        message: "Success",
+        description: "Booking deleted successfully",
+      });
+      const payload = {
+        id: params.id,
+      };
+      dispatch(setBookings(payload));
+    }
+  }
+);
 
 export const bookingSlice = createSlice({
   name: "booking",
@@ -43,6 +61,14 @@ export const bookingSlice = createSlice({
       state.filters = {
         ...state.filters,
         ...action.payload,
+      };
+    },
+    setBookings: (state, action: PayloadAction<any | {}>) => {
+      return {
+        ...state,
+        bookings: state.bookings.filter(
+          (each: any) => each._id !== action.payload.id
+        ),
       };
     },
     setIsAddEditDrawerOpen: (state) => {
@@ -126,6 +152,7 @@ export const {
   setIsAddEditDrawerClose,
   setCurrentSelectedBooking,
   setBookingFilter,
+  setBookings,
   setIsEditingBooking,
 } = actions;
 export default bookingSlice.reducer;

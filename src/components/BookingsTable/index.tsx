@@ -34,6 +34,7 @@ import {
   setCurrentSelectedBooking,
   getBookings,
   setIsEditingBooking,
+  deleteBooking,
 } from "../../redux/slices/bookingSlice";
 import BookingsStates from "../States/BookingsStates";
 import { useSelector } from "react-redux";
@@ -325,7 +326,8 @@ const BookingsTable = () => {
         return (
           <div className={styles.columnsAction}>
             <DeleteOutlined
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 setDeleteModal(true);
                 dispatch(setCurrentSelectedBooking(row));
               }}
@@ -371,7 +373,7 @@ const BookingsTable = () => {
 
   function handleCloseModal() {
     setDeleteModal(false);
-    dispatch(setCurrentSelectedBooking({}));
+    dispatch(deleteBooking({ id: currentSelectedBooking._id }));
   }
   function handleCloseBookingModal() {
     setConformedBookingModal(false);
