@@ -57,7 +57,11 @@ const Billings = () => {
                 value={""}
                 onChange={() => {}}
                 LeadingIcon={SearchIcon}
-                placeholder={`Search by customer, booked by, passenger`}
+                placeholder={
+                  tab === "invoice"
+                    ? `Search by customer, booked by, passenger`
+                    : `Search by customer name, group, allowance`
+                }
               />
             </div>
             <PrimaryBtn
