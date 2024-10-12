@@ -17,7 +17,7 @@ import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
 import { ADDRESS_TYPE } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import {
   addBankAccount,
   addNewDriver,
@@ -28,7 +28,17 @@ import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { useEffect } from "react";
 import { RootState } from "../../../types/store";
+import durationPlugin from "dayjs/plugin/duration";
 
+// Extend dayjs with the duration plugin
+dayjs.extend(durationPlugin);
+
+// Declare the module augmentation for TypeScript
+declare module "dayjs" {
+  interface Dayjs {
+    duration: typeof durationPlugin;
+  }
+}
 interface IDriverForm {
   handleCloseSidePanel: () => void;
 }
@@ -137,6 +147,38 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
       });
     }
   }, [selectedDriver]);
+
+  const formatTime = (timeString: string): string => {
+    return dayjs(timeString).format("h : mm A"); // Changed format here
+  };
+  const disabledEndTime = (now: any) => {
+    // const startTime = form.getFieldValue(["timing", "start"]) as Dayjs;
+    const startTime = new Date(form.getFieldValue(["timing", "start"]));
+    if (!startTime) {
+      return {};
+    }
+
+    return {
+      disabledHours: () =>
+        Array.from({ length: startTime.getHours() }, (_, i) => i),
+      disabledMinutes: (selectedHour: any) => {
+        if (selectedHour === startTime.getHours()) {
+          return Array.from({ length: startTime.getMinutes() }, (_, i) => i);
+        }
+        return [];
+      },
+    };
+  };
+
+  const calculateDuration = (start: any, end: any) => {
+    const startTime = dayjs(start);
+    const endTime = dayjs(end);
+    const diff = endTime.diff(startTime);
+    const durationObj = dayjs.duration(diff);
+    const hours = Math.floor(durationObj.asHours());
+    const minutes = durationObj.minutes();
+    return `${hours}h ${minutes}m`;
+  };
   return (
     <div className={styles.formContainer}>
       {contextHolder}
@@ -403,15 +445,6 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                       return { value: undefined };
                     }
                   }}
-                  // getValueFromEvent={(time) => {
-                  //   if (!time) return undefined;
-                  //   try {
-                  //     return time.format("h:mm A");
-                  //   } catch (error) {
-                  //     console.error("Error formatting time:", error);
-                  //     return undefined;
-                  //   }
-                  // }}
                   getValueFromEvent={(time) => {
                     if (!time) return undefined;
 
@@ -460,15 +493,6 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                       return { value: undefined };
                     }
                   }}
-                  // getValueFromEvent={(time) => {
-                  //   if (!time) return undefined;
-                  //   try {
-                  //     return time.format("h:mm A");
-                  //   } catch (error) {
-                  //     console.error("Error formatting time:", error);
-                  //     return undefined;
-                  //   }
-                  // }}
                   getValueFromEvent={(time) => {
                     if (!time) return undefined;
 
@@ -492,12 +516,30 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                     style={{
                       width: "100%",
                     }}
+                    disabledTime={disabledEndTime}
                     use12Hours
                     format="h:mm A"
                   />
                 </Form.Item>
               </div>
-              <div className={styles.totalText}>{"Total working hour: 8"}</div>
+
+              <div className={styles.totalText}>
+                <Form.Item noStyle shouldUpdate>
+                  {() => {
+                    const start = form.getFieldValue(["timing", "start"]);
+                    const end = form.getFieldValue(["timing", "end"]);
+                    if (start && end) {
+                      return (
+                        <>
+                          Total working hour: {formatTime(start)} -{" "}
+                          {formatTime(end)}({calculateDuration(start, end)})
+                        </>
+                      );
+                    }
+                    return "Total working hour: Not set";
+                  }}
+                </Form.Item>
+              </div>
             </Input.Group>
           </Form.Item>
           <div className={styles.typeContainer}>

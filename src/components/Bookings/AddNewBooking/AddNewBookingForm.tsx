@@ -21,12 +21,12 @@ import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import CustomDatePicker from "../../Common/CustomDatePicker";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
 import { RootState } from "../../../types/store";
-import { addNewBooking } from "../../../apis/booking";
 import {
   getAllDutyTypes,
   getCustomer,
   getVehicleGroup,
 } from "../../../redux/slices/databaseSlice";
+import { addNewBooking } from "../../../redux/slices/bookingSlice";
 
 const { TextArea } = Input;
 interface AddNewBookingForm {
