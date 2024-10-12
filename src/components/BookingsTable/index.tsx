@@ -26,6 +26,8 @@ import {
   PushpinOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { ReactComponent as DotsHorizontal } from "../../icons/dots-horizontal.svg";
+import { ReactComponent as DeleteIcon } from "../../icons/trash.svg";
 import { useEffect, useState } from "react";
 import Modal from "../Modal";
 import { useAppDispatch } from "../../hooks/store";
@@ -170,17 +172,17 @@ const BookingsTable = () => {
       dataIndex: "startDate",
       key: "startDate",
     },
-    {
-      title: "Custom booking Id",
-      dataIndex: "customBookingId",
-      key: "customBookingId",
-    },
-    {
-      title: "Alternate option",
-      dataIndex: "assignAlternateVehicles",
-      key: "assignAlternateVehicles",
-      render: (each: any) => (each === false ? "No" : "Yes"),
-    },
+    // {
+    //   title: "Custom booking Id",
+    //   dataIndex: "customBookingId",
+    //   key: "customBookingId",
+    // },
+    // {
+    //   title: "Alternate option",
+    //   dataIndex: "assignAlternateVehicles",
+    //   key: "assignAlternateVehicles",
+    //   render: (each: any) => (each === false ? "No" : "Yes"),
+    // },
     {
       title: "Customer",
       dataIndex: "customerId",
@@ -189,27 +191,27 @@ const BookingsTable = () => {
         return <span>{each.name}</span>;
       },
     },
-    {
-      title: "Booked By",
-      dataIndex: "bookedBy",
-      key: "bookedBy",
-      width: "200px",
-      render: (each: any) => {
-        return (
-          <div>
-            <p>
-              <UserOutlined /> {each.name}
-            </p>
-            <p>
-              <PhoneOutlined /> {each.phoneNumber}
-            </p>
-            <p>
-              <MailOutlined /> {each.email}
-            </p>
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: "Booked By",
+    //   dataIndex: "bookedBy",
+    //   key: "bookedBy",
+    //   width: "200px",
+    //   render: (each: any) => {
+    //     return (
+    //       <div>
+    //         <p>
+    //           <UserOutlined /> {each.name}
+    //         </p>
+    //         <p>
+    //           <PhoneOutlined /> {each.phoneNumber}
+    //         </p>
+    //         <p>
+    //           <MailOutlined /> {each.email}
+    //         </p>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Passenger",
       dataIndex: "passergers",
@@ -271,80 +273,86 @@ const BookingsTable = () => {
       dataIndex: "duties",
       key: "duties",
     },
-    {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      render: (data) => {
-        return (
-          <div onClick={(event) => event.stopPropagation()}>
-            <a href={data?.dropAddress} target="_blank">
-              <PushpinOutlined /> Drop address
-            </a>
-            <br />
-            <a href={data?.reportingAddress} target="_blank">
-              <PushpinOutlined /> Reporting address
-            </a>
-          </div>
-        );
-      },
-    },
-    {
-      title: "Airport Booking",
-      dataIndex: "isAirportBooking",
-      key: "isAirportBooking",
-      render: (each: any) => (each === false ? "No" : "yes"),
-    },
-    {
-      title: "Confirmed Status",
-      dataIndex: "isUnconfirmed",
-      key: "isUnconfirmed",
-      render: (each: any) => (each === false ? "Yes" : "No"),
-    },
+    // {
+    //   title: "Address",
+    //   dataIndex: "address",
+    //   key: "address",
+    //   render: (data) => {
+    //     return (
+    //       <div onClick={(event) => event.stopPropagation()}>
+    //         <a href={data?.dropAddress} target="_blank">
+    //           <PushpinOutlined /> Drop address
+    //         </a>
+    //         <br />
+    //         <a href={data?.reportingAddress} target="_blank">
+    //           <PushpinOutlined /> Reporting address
+    //         </a>
+    //       </div>
+    //     );
+    //   },
+    // },
+    // {
+    //   title: "Airport Booking",
+    //   dataIndex: "isAirportBooking",
+    //   key: "isAirportBooking",
+    //   render: (each: any) => (each === false ? "No" : "yes"),
+    // },
+    // {
+    //   title: "Confirmed Status",
+    //   dataIndex: "isUnconfirmed",
+    //   key: "isUnconfirmed",
+    //   render: (each: any) => (each === false ? "Yes" : "No"),
+    // },
     {
       title: "Status",
       dataIndex: "bookingStatus",
       key: "bookingStatus",
       render: (data: any) => {
         return <BookingsStates status={data.toLowerCase()} />;
-        // if (data.toLowerCase() === BOOKINGS_STATUS.booked) {
-        //   return <Tag color="">{data}</Tag>;
-        // }
-        // if (data.toLowerCase() === BOOKINGS_STATUS.billed) {
-        //   return <Tag color="success">{data}</Tag>;
-        // }
-        // if (data.toLowerCase() === BOOKINGS_STATUS.cancelled) {
-        //   return <Tag color="">{data}</Tag>;
-        // }
-        // if (data.toLowerCase() === BOOKINGS_STATUS.completed) {
-        //   return <Tag color="success">{data}</Tag>;
-        // }
-        // if (data.toLowerCase() === BOOKINGS_STATUS["on-going"]) {
-        //   return <Tag color="blue">{data}</Tag>;
-        // }
       },
     },
     {
-      title: "Action",
+      title: "",
       dataIndex: "action",
       key: "action",
-      fixed: "right",
-      width: 100,
+      className: "custom-column",
       render: (data: any, row: any) => {
         return (
-          <div className={styles.columnsAction}>
-            <DeleteOutlined
+          <div
+            className={styles.editButton}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 setDeleteModal(true);
                 dispatch(setCurrentSelectedBooking(row));
               }}
-              className={styles.deleteIcon}
-            />
-            <Dropdown menu={{ items: returnItems(row) }}>
-              <MoreOutlined />
+              className={styles.deleteBtn}
+            >
+              <DeleteIcon />
+            </button>
+            <Dropdown menu={{ items: returnItems(row) }} trigger={["click"]}>
+              <button className={styles.button}>
+                <DotsHorizontal />
+              </button>
             </Dropdown>
           </div>
+
+          // <div className={styles.columnsAction}>
+          //   <DeleteOutlined
+          //     onClick={(e) => {
+          // console.log(row, "row");
+          // e.stopPropagation();
+          // setDeleteModal(true);
+          // dispatch(setCurrentSelectedBooking(row));
+          //     }}
+          //     className={styles.deleteIcon}
+          //   />
+          //   <Dropdown menu={{ items: returnItems(row) }}>
+          //     <MoreOutlined />
+          //   </Dropdown>
+          // </div>
         );
       },
     },
@@ -393,6 +401,8 @@ const BookingsTable = () => {
   }, [filters.search, filters.status]);
   let navigate = useNavigate();
 
+  console.log(currentSelectedBooking, "currentSelectedBooking");
+
   return (
     <>
       <div className={styles.container}>
@@ -440,11 +450,8 @@ const BookingsTable = () => {
           <div className={styles.textContainer}>
             <div className={styles.primaryText}>Delete booking</div>
             <div className={styles.secondaryText}>
-              Are you sure you want to delete this booking? This action cannot
-              be undone.
+              {`Are you sure you want to delete this booking? Booking ID: ${currentSelectedBooking?.id}`}
             </div>
-            <div>customer:{currentSelectedBooking?.customer}</div>
-            <div>Vehicle Group:{currentSelectedBooking?.vehicleGroup}</div>
           </div>
           <div className={styles.bottomBtns}>
             <button className={styles.cancelBtn} onClick={handleCloseModal}>
