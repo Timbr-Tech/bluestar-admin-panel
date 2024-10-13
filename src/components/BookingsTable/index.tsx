@@ -213,8 +213,8 @@ const BookingsTable = () => {
     // },
     {
       title: "Passenger",
-      dataIndex: "passergers",
-      key: "passergers",
+      dataIndex: "passengers",
+      key: "passengers",
       render: (data: any) => {
         if (Array.isArray(data)) {
           if (data.length <= 0) {

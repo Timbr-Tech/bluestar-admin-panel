@@ -81,7 +81,7 @@ const AddNewBookingForm = ({
         customBookingId: initialData?.customBookingId,
         customerId: initialData?.customerId,
         bookedBy: initialData?.bookedBy,
-        passergers: initialData?.passergers,
+        passengers: initialData?.passengers,
         dutyTypeId: initialData?.dutyTypeId,
         assignAlternateVehicles: initialData?.assignAlternateVehicles,
         reportingAddress: initialData?.reportingAddress,
@@ -180,11 +180,11 @@ const AddNewBookingForm = ({
           checked={useThisPassenger}
           onClick={() => {
             if (!useThisPassenger) {
-              const currentPassengers = form.getFieldValue("passergers") || [];
+              const currentPassengers = form.getFieldValue("passengers") || [];
               const bookedBy = form.getFieldValue("bookedBy") || [];
-              // Set the new passergers array with the new data
+              // Set the new passengers array with the new data
               form.setFieldsValue({
-                passergers: [
+                passengers: [
                   {
                     name: bookedBy.name,
                     phoneNumber: bookedBy.phoneNumber,
@@ -204,7 +204,7 @@ const AddNewBookingForm = ({
       {/*  passenger detail */}
       <Card className={styles.PassengerCardContainer}>
         <p>Passenger Details</p>
-        <Form.List name="passergers">
+        <Form.List name="passengers">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }, index) => (
