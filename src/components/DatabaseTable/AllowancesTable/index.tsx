@@ -181,11 +181,6 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
               })}
             >
               <div
-                className={cn(styles.dot, {
-                  [styles.enabled]: data?.isActive,
-                })}
-              />
-              <div
                 className={cn(styles.text, {
                   [styles.enabled]: data?.isActive,
                 })}

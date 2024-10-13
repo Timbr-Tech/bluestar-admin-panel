@@ -116,8 +116,9 @@
 .status {
   border-radius: 9999px;
   height: 22px;
-  width: 80px;
+  width: 68px;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 4px;
   padding: 2px 8px 2px 6px;
@@ -125,21 +126,9 @@
   background: #fef3f2;
 
   &.enabled {
-    width: 75px;
+    width: 65px;
     border: 1px solid #abefc6;
     background: #ecfdf3;
-  }
-
-  .dot {
-    width: 6px;
-    height: 6px;
-    margin: 1px;
-    border-radius: 9999px;
-    background-color: #f04438;
-
-    &.enabled {
-      background-color: #17b26a;
-    }
   }
 
   .text {
@@ -147,6 +136,7 @@
     font-size: 12px;
     font-weight: 500;
     line-height: 18px;
+    color: #B42318;
 
     &.enabled {
       color: #067647;
