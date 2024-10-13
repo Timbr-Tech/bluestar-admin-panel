@@ -119,7 +119,7 @@ export const addDutyType = createAsyncThunk(
         message: "Success",
         description: "New Duty type added successfully",
       });
-      dispatch(getAllDutyTypes({ page: "1", limit: 7, search: "" }));
+      dispatch(getAllDutyTypes({ page: "1", limit: "10", search: "" }));
       return response.data;
     }
   }
@@ -132,8 +132,9 @@ export const getAllDutyTypes = createAsyncThunk(
 
     // const response = await apiClient.get(
     //   `/database/duty-type?page=${page}&limit=${limit}&search=${search}`
-    // );
+    // );    
     const response = await apiClient.get(`/database/duty-type`, { params });
+
     if (response.status === 200) {
       let option: Array<object> = response?.data?.data?.map((each: any) => ({
         value: each._id,

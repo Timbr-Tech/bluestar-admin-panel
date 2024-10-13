@@ -75,13 +75,6 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
     if (e.key === "1") {
       dispatch(getVehicleGroupById({ id: deleteVehicleGroupId }));
       handleOpenSidePanel();
-    } else if (e.key === "2") {
-      dispatch(
-        updateVehicleGroup({
-          payload: { isActive: currentVehicleGroup?.isActive ? false : true },
-          id: currentVehicleGroup?._id,
-        })
-      );
     }
   };
 
@@ -186,20 +179,6 @@ const VehicleGroupTable = ({ handleOpenSidePanel }: IVehicleGroupTable) => {
           return {
             ...data,
             key: data?._id,
-            // status: (
-            //   <div
-            //     className={cn(styles.status, {
-            //       [styles.active]: data?.isActive,
-            //     })}
-            //   >
-            //     <div
-            //       className={cn(styles.dot, {
-            //         [styles.active]: data?.isActive,
-            //       })}
-            //     />
-            //     {data?.isActive ? "Active" : "Inactive"}
-            //   </div>
-            // ),
           };
         })}
         loading={

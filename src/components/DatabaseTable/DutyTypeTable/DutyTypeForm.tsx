@@ -3,7 +3,7 @@ import { Select, Radio, Spin, Button } from "antd";
 import { useAppSelector, useAppDispatch } from "../../../hooks/store";
 import type { RadioChangeEvent } from "antd";
 import {
-  getVehicleGroup,
+  getVehicleGroupOptions,
   updateDutyType,
   addDutyType,
   setViewContentDatabase,
@@ -15,7 +15,7 @@ import { omit } from "lodash";
 import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { DUTY_TYPES_TYPE } from "../../../constants/database";
 import { ReactComponent as HelpCircle } from "../../../icons/help-circle.svg";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./index.module.scss";
 
 interface IDutyForm {
@@ -53,17 +53,17 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   const [dutyType, setDutyType] = useState("");
   const [name, setName] = useState("");
   const {
-    vehicleGroupStates,
     selectedDutyType,
     updatedDutyTypeStates,
     dutyTypeStates,
-    vehicleGroupData,
+    vehicleGroupOption,
+    vehicleGroupOptionStates,
     viewContentDatabase,
   } = useAppSelector((state) => state.database);
   const [vehicleGroupDataArray, setVehicleGroupDataArray] = useState<any[]>([]);
 
   useEffect(() => {
-    dispatch(getVehicleGroup({ page: "1", size: "10" }));
+    dispatch(getVehicleGroupOptions({ page: "1", size: "10" }));
   }, []);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
       setName(selectedDutyType?.data?.name);
       setValue(selectedDutyType?.data?.secondaryType);
     } else {
-      const tempArr = vehicleGroupData?.data?.map((data: any) => {
+      const tempArr = vehicleGroupOption?.data?.map((data: any) => {
         return {
           name: data?.name,
           vehicleGroupId: data?._id,
@@ -93,11 +93,9 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
         };
       });
 
-      console.log(tempArr, "tempArr");
-
       setVehicleGroupDataArray(tempArr);
     }
-  }, [vehicleGroupData, selectedDutyType]);
+  }, [vehicleGroupOption, selectedDutyType]);
 
   const handleSelectChange = (value: any) => {
     setDutyType(value);
@@ -202,7 +200,7 @@ const DutyTypeForm = ({ handleCloseSidePanel }: IDutyForm) => {
   return (
     <div className={styles.formContainer}>
       {contextHolder}
-      {(vehicleGroupStates.loading || dutyTypeStates.loading) && (
+      {(vehicleGroupOptionStates.loading || dutyTypeStates.loading) && (
         <div
           style={{
             position: "absolute",

@@ -57,7 +57,7 @@ const SingleBookings = () => {
     <div className={classNames("container", styles.container)}>
       <div className={styles.headingContainer}>
         <div>
-          <a href="/bookings">
+          <a href="/bookings" className={styles.backBtn}>
             <ArrowLeftOutlined />
             Back to all bookings
           </a>

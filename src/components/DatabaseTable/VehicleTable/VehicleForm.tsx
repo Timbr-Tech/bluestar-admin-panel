@@ -20,7 +20,9 @@ import {
   getVehicleGroup,
   updateVehicle,
   setViewContentDatabase,
+  getVehicleGroupOptions,
 } from "../../../redux/slices/databaseSlice";
+import { debounce } from "lodash";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
@@ -54,6 +56,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
     vehicleGroupSelectOption,
     selectedVehicle,
     viewContentDatabase,
+    vehicleGroupOption,
   } = useAppSelector((state: RootState) => state.database);
   const [isActive, setIsActive] = useState(false); // Track checkbox value in state
 
@@ -100,7 +103,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
       );
     }
   };
-  const getVehicleGroupValue = (searchText: string) => {
+  const getVehicleGroupValue = debounce((searchText: string) => {
     if (searchText) {
       dispatch(
         getVehicleGroup({
@@ -108,7 +111,8 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
         })
       );
     }
-  };
+  }, 200);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -128,7 +132,14 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   }, [selectedVehicle]);
 
   useEffect(() => {
-    dispatch(getVehicleGroup({ page: "1", search: "", limit: 10 }));
+    dispatch(getVehicleGroupOptions({ page: "1", size: 10 }));
+    dispatch(
+      getDrivers({
+        page: "1",
+        limit: "10",
+        search: "",
+      })
+    );
   }, []);
 
   const handleVehicleGroupChange = (value: string) => {
@@ -166,17 +177,50 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           form={form}
           onFinish={(Values) => {
             console.log(Values, "Values");
-            // if (Object.keys(selectedVehicle).length) {
-            //   dispatch(
-            //     updateVehicle({ id: selectedVehicle?._id, payload: Values })
-            //   );
-            // } else {
-            //   dispatch(addNewVehicle(Values));
-            // }
+            if (Object.keys(selectedVehicle).length) {
+              dispatch(
+                updateVehicle({ id: selectedVehicle?._id, payload: Values })
+              );
+            } else {
+              dispatch(addNewVehicle(Values));
+            }
           }}
           initialValues={{
+            modelName: "",
+            vehicleNumber: "",
+            fuelType: "",
+            vehicleGroupId: "", //Always add an ID from the vehicle-group table, the data for vehicle group is fetched from that
+            driverId: "", //Driver ID from driver collection
+            fastTagId: "",
+            registration: {
+              ownerName: "",
+              date: Date.now(),
+            },
+            insurance: {
+              companyName: "",
+              policyNumber: "",
+              issueDate: Date.now(),
+              dueDate: Date.now(),
+              premiumAmount: null,
+              coverAmount: null,
+            },
+            rto: {
+              ownerName: "",
+              date: Date.now(),
+            },
+            parts: {
+              chasisNumber: "",
+              engineNumber: "",
+            },
+            expiryDate: Date.now(),
+            notes: "",
             loan: {
-              isActive: isActive, // Your initial value for the switch
+              isActive: isActive,
+              emiAmount: null,
+              startDate: Date.now(),
+              endDate: Date.now(),
+              bankName: "",
+              emiDate: Date.now(),
             },
           }}
           onValuesChange={handleValuesChange}
@@ -223,6 +267,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             >
               <Select
                 style={{ width: "100%" }}
+                allowClear
                 placeholder="Select One"
                 dropdownRender={(menu) => <>{menu}</>}
                 options={FuelType.map((fuel) => ({
@@ -243,21 +288,19 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               name="vehicleGroupId"
               id="vehicleGroupId"
             >
-              <AutoComplete
+              <Select
                 allowClear
-                value={vehicleGroupLabel}
-                options={vehicleGroupSelectOption.map(
-                  (option: { value: any; label: any }) => ({
-                    value: option.value,
-                    label: option.label,
+                options={vehicleGroupOption?.data?.map(
+                  (option: { _id: string; name: string }) => ({
+                    value: option._id,
+                    label: option.name,
                   })
                 )}
                 onSearch={(text) => getVehicleGroupValue(text)}
                 placeholder="Search drivers"
                 fieldNames={{ label: "label", value: "value" }}
-                onChange={handleVehicleGroupChange}
-                onSelect={handleVehicleGroupSelect}
                 notFoundContent={<div>No search result</div>}
+                filterOption={false}
               />
             </Form.Item>
           </div>
@@ -272,12 +315,17 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               name="driverId"
               id="driverId"
             >
-              <AutoComplete
+              <Select
+                showSearch
                 allowClear
-                options={options}
+                options={options.map((option: { value: any; label: any }) => ({
+                  value: option.value,
+                  label: option.label,
+                }))}
                 onSearch={(text) => getPanelValue(text)}
                 placeholder="Search drivers"
                 fieldNames={{ label: "label", value: "value" }}
+                filterOption={false}
                 notFoundContent={<div>No search result</div>}
               />
             </Form.Item>
@@ -546,7 +594,6 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               rules={[
                 {
                   required: false,
-                  message: "Expiry date is required",
                 },
               ]}
             >
@@ -717,6 +764,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               <Input.TextArea
                 className={styles.textarea}
                 placeholder="Add a note...."
+                defaultValue={""}
               />
             </Form.Item>
           </div>
