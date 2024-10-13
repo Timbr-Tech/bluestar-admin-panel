@@ -6,8 +6,10 @@ import {
   deleteVehicle,
   getVehicleById,
   setViewContentDatabase,
+  updateVehicle,
 } from "../../../redux/slices/databaseSlice";
 import { VEHICLES } from "../../../constants/database";
+import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
 import { ReactComponent as DeleteIconRed } from "../../../icons/trash-red.svg";
 import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
 import { ReactComponent as EditIcon } from "../../../icons/edit-02.svg";
@@ -15,6 +17,7 @@ import Modal from "../../Modal";
 import type { MenuProps } from "antd";
 import { Table, TableProps, Dropdown } from "antd";
 import styles from "./index.module.scss";
+import cn from "classnames";
 import React, { useState, useEffect } from "react";
 import CustomPagination from "../../Common/Pagination";
 
@@ -25,6 +28,7 @@ interface IVehicleTable {
   group: string;
   assigned_driver: string;
   vehicleNumber: string;
+  status: any;
 }
 
 interface IVehicleTableTable {
@@ -37,6 +41,7 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
     useAppSelector((state) => state.database);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [vehicleId, setVehicleId] = useState<string>("");
+  const [currentVehicle, setCurrentVehicle] = useState<any>({});
   const [vehicleName, setVehicleName] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -49,6 +54,14 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
     if (e.key === "1") {
       dispatch(getVehicleById({ id: vehicleId }));
       handleOpenSidePanel();
+    } else if (e.key === "2") {
+      console.log(currentVehicle, "currentVehicle");
+      dispatch(
+        updateVehicle({
+          payload: { isActive: currentVehicle?.isActive ? false : true },
+          id: currentVehicle?._id,
+        })
+      );
     }
   };
 
@@ -61,6 +74,11 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
       label: "Edit vehicle",
       key: "1",
       icon: <EditIcon />,
+    },
+    {
+      label: <>{currentVehicle?.isActive ? "Mark inactive" : "Mark Active"}</>,
+      key: "2",
+      icon: <Clipboard />,
     },
   ];
 
@@ -80,7 +98,13 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
       dataIndex: "action",
       className: "action-column",
       render: (_, record) => (
-        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.editButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            setCurrentVehicle(record);
+          }}
+        >
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -136,6 +160,20 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
           key: data?._id,
           group: "Taxi",
           assigned_driver: data.registration.ownerName,
+          status: (
+            <div
+              className={cn(styles.status, {
+                [styles.active]: data?.isActive,
+              })}
+            >
+              <div
+                className={cn(styles.dot, {
+                  [styles.active]: data?.isActive,
+                })}
+              />
+              {data?.isActive ? "Active" : "Inactive"}
+            </div>
+          ),
         }))}
         loading={vehicleStates?.loading || deleteVehicleStates?.loading}
         pagination={false}

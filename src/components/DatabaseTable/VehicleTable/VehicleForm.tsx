@@ -178,8 +178,15 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           onFinish={(Values) => {
             console.log(Values, "Values");
             if (Object.keys(selectedVehicle).length) {
+              const tempValues = {
+                ...Values,
+                driverId: Values.driverId.value,
+                vehicleGroupId: Values.vehicleGroupId.value,
+              };
+
+              console.log(tempValues, "tempValues")
               dispatch(
-                updateVehicle({ id: selectedVehicle?._id, payload: Values })
+                updateVehicle({ id: selectedVehicle?._id, payload: tempValues })
               );
             } else {
               dispatch(addNewVehicle(Values));

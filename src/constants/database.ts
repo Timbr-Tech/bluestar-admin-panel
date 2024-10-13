@@ -138,6 +138,7 @@ export const DRIVERS = [
   {
     title: "Status",
     dataIndex: "status",
+    className: "status-column",
   },
 ];
 
@@ -161,6 +162,11 @@ export const VEHICLES = [
     title: "Vehicle number",
     dataIndex: "vehicleNumber",
     className: "custom-column",
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    className: "status-column",
   },
 ];
 

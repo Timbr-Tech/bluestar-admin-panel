@@ -132,7 +132,7 @@ export const getAllDutyTypes = createAsyncThunk(
 
     // const response = await apiClient.get(
     //   `/database/duty-type?page=${page}&limit=${limit}&search=${search}`
-    // );    
+    // );
     const response = await apiClient.get(`/database/duty-type`, { params });
 
     if (response.status === 200) {
@@ -557,8 +557,11 @@ export const updateVehicle = createAsyncThunk(
     const response = await apiClient.patch(`/database/vehicle/${id}`, payload);
     const { database } = getState();
     const { pagination, q } = database;
-    dispatch(getVehicle({ page: pagination.page, search: q, limit: 10 }));
-    return response.data;
+    if (response.status === 200) {
+      dispatch(setOpenSidePanel(false));
+      dispatch(getVehicle({ page: pagination.page, search: q, limit: 10 }));
+      return response.data;
+    }
   }
 );
 
@@ -645,16 +648,18 @@ export const updateDriver = createAsyncThunk(
 
     const { database } = getState();
     const { pagination } = database;
-    dispatch(setOpenSidePanel(false));
-    dispatch(
-      getDrivers({
-        page: pagination?.page,
-        search: pagination?.search,
-        limit: pagination?.limit,
-      })
-    );
+    if (response.status === 200) {
+      dispatch(setOpenSidePanel(false));
+      dispatch(
+        getDrivers({
+          page: pagination?.page,
+          search: pagination?.search,
+          limit: pagination?.limit,
+        })
+      );
 
-    return response.data;
+      return response.data;
+    }
   }
 );
 
@@ -691,7 +696,7 @@ export const addVehicleGroup = createAsyncThunk(
       notification.success({
         message: "Success",
         description: "Vehicle group added successfully",
-        duration: 0
+        duration: 0,
       });
       dispatch(getVehicleGroup({ page: "1", search: "", limit: 10 }));
       return response.data;
