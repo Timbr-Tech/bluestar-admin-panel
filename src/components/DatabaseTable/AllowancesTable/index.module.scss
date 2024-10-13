@@ -116,7 +116,7 @@
 .status {
   border-radius: 9999px;
   height: 22px;
-  width: 75px;
+  width: 80px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -125,6 +125,7 @@
   background: #fef3f2;
 
   &.enabled {
+    width: 75px;
     border: 1px solid #abefc6;
     background: #ecfdf3;
   }

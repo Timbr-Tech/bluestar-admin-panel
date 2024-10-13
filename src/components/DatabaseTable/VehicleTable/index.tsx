@@ -55,7 +55,6 @@ const VehicleTable = ({ handleOpenSidePanel }: IVehicleTableTable) => {
       dispatch(getVehicleById({ id: vehicleId }));
       handleOpenSidePanel();
     } else if (e.key === "2") {
-      console.log(currentVehicle, "currentVehicle");
       dispatch(
         updateVehicle({
           payload: { isActive: currentVehicle?.isActive ? false : true },

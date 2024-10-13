@@ -184,7 +184,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                 vehicleGroupId: Values.vehicleGroupId.value,
               };
 
-              console.log(tempValues, "tempValues")
+              console.log(tempValues, "tempValues");
               dispatch(
                 updateVehicle({ id: selectedVehicle?._id, payload: tempValues })
               );
@@ -609,12 +609,19 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
           </div>
           {/* TODO- LOAN */}
 
-          <Form.Item name="loan" label="loan">
-            <Input.Group className={styles.secondaryContainer}>
+          <Form.Item name="loan" label="">
+            <Input.Group
+              className={styles.secondaryContainer}
+              style={{
+                marginTop: "10px",
+              }}
+            >
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
+                  alignItems: "center",
+                  height: "25px"
                 }}
               >
                 <div className={styles.text}>Loan</div>

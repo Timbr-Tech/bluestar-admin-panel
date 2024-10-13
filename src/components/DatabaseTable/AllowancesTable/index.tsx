@@ -11,6 +11,7 @@ import {
   getAllowances,
   getAllowanceById,
   deleteAllowance,
+  updateAllowance,
   setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
 import { ReactComponent as Clipboard } from "../../../icons/clipboard-x.svg";
@@ -44,6 +45,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
   const dispatch = useAppDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [allowanceId, setAllowanceId] = useState("");
+  const [allowance, setAllowance] = useState<any>({});
   const [allowanceName, setAllowanceName] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -51,8 +53,17 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
     if (e.key === "1") {
       dispatch(getAllowanceById({ id: allowanceId }));
       handleOpenSidePanel();
+    } else if (e.key === "2") {
+      dispatch(
+        updateAllowance({
+          payload: { isActive: allowance?.isActive ? false : true },
+          id: allowance?._id,
+        })
+      );
     }
   };
+
+  console.log(allowance, "allowance");
 
   const items: MenuProps["items"] = [
     {
@@ -61,7 +72,7 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
       icon: <EditIcon />,
     },
     {
-      label: "Disable",
+      label: <>{allowance?.isActive ? "Disable" : "Enable"}</>,
       key: "2",
       icon: <Clipboard />,
     },
@@ -79,7 +90,13 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
       dataIndex: "action",
       className: "action-column",
       render: (_, record) => (
-        <div className={styles.editButton} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.editButton}
+          onClick={(e) => {
+            e.stopPropagation();
+            setAllowance(record);
+          }}
+        >
           <button
             onClick={() => {
               setOpenDeleteModal(true);
@@ -160,20 +177,20 @@ const AllowancesTable = ({ handleOpenSidePanel }: IAllowanceTable) => {
           status: (
             <div
               className={cn(styles.status, {
-                [styles.enabled]: true,
+                [styles.enabled]: data?.isActive,
               })}
             >
               <div
                 className={cn(styles.dot, {
-                  [styles.enabled]: true,
+                  [styles.enabled]: data?.isActive,
                 })}
-              ></div>
+              />
               <div
                 className={cn(styles.text, {
-                  [styles.enabled]: true,
+                  [styles.enabled]: data?.isActive,
                 })}
               >
-                {"Enabled"}
+                {data?.isActive ? "Enabled" : "Disabled"}
               </div>
             </div>
           ),
