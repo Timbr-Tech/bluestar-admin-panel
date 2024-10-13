@@ -149,7 +149,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
   }, [selectedDriver]);
 
   const formatTime = (timeString: string): string => {
-    return dayjs(timeString).format("h : mm A"); // Changed format here
+    return dayjs(timeString).format("h:mm A"); // Changed format here
   };
   const disabledEndTime = (now: any) => {
     // const startTime = form.getFieldValue(["timing", "start"]) as Dayjs;
@@ -531,12 +531,12 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                     if (start && end) {
                       return (
                         <>
-                          Total working hour: {formatTime(start)} -{" "}
-                          {formatTime(end)}({calculateDuration(start, end)})
+                          Total working hours: {formatTime(start)} -{" "}
+                          {formatTime(end)}{" "}({calculateDuration(start, end)})
                         </>
                       );
                     }
-                    return "Total working hour: Not set";
+                    return "Total working hours: Not set";
                   }}
                 </Form.Item>
               </div>
