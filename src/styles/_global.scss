@@ -350,3 +350,16 @@ button {
     line-height: 20px;
   }
 }
+
+input {
+  font-size: 14px;
+  height: 40px;
+}
+
+.ant-select-single {
+  height: 40px;
+}
+
+.ant-picker {
+  min-height: 40px !important;
+}
