@@ -12,9 +12,9 @@ import {
 import styles from "../index.module.scss";
 
 import {
-  CarTwoTone,
-  CheckCircleTwoTone,
+  CarOutlined,
   DeleteOutlined,
+  EditOutlined,
   EyeOutlined,
   MailOutlined,
   MoreOutlined,
@@ -46,15 +46,9 @@ const SingleBookingsTable = () => {
       {
         key: "1",
         label: (
-          <div
-            onClick={() => {
-              // setCurrentSelectedBooking(row);
-              //   dispatch(setCurrentSelectedBooking(row));
-              //   setConformedBookingModal(true);
-            }}
-          >
+          <div onClick={() => {}}>
             <Space>
-              <CheckCircleTwoTone twoToneColor="#52c41a" />
+              <EyeOutlined />
               View Duty
             </Space>
           </div>
@@ -66,15 +60,9 @@ const SingleBookingsTable = () => {
       {
         key: "2",
         label: (
-          <div
-            onClick={() => {
-              //   dispatch(setCurrentSelectedBooking(row));
-              //   dispatch(setIsAddEditDrawerOpen());
-              //   dispatch(setIsEditingBooking(false));
-            }}
-          >
+          <div onClick={() => {}}>
             <Space>
-              <EyeOutlined twoToneColor="#52c41a" />
+              <EditOutlined twoToneColor="#52c41a" />
               Edit Duty
             </Space>
           </div>
@@ -86,15 +74,9 @@ const SingleBookingsTable = () => {
       {
         key: "3",
         label: (
-          <div
-            onClick={() => {
-              //   dispatch(setCurrentSelectedBooking(row));
-              //   dispatch(setIsAddEditDrawerOpen());
-              //   dispatch(setIsEditingBooking(true));
-            }}
-          >
+          <div onClick={() => {}}>
             <Space>
-              <CarTwoTone twoToneColor="#52c41a" />
+              <CarOutlined />
               Allot vehicle and driver
             </Space>
           </div>
@@ -108,8 +90,8 @@ const SingleBookingsTable = () => {
         label: (
           <div>
             <Space>
-              <RedoOutlined twoToneColor="#52c41a" />
-              Unconfirm Duty
+              <RedoOutlined />
+              Un confirm Duty
             </Space>
           </div>
         ),
