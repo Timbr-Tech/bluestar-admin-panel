@@ -387,3 +387,9 @@ export const FuelType = [
   { value: "Petrol", label: "Petrol" },
   { value: "Diesel", label: "Diesel" },
 ];
+
+export interface IFile {
+  fileSize: number;
+  fileType: string;
+  fileUrl: string;
+}

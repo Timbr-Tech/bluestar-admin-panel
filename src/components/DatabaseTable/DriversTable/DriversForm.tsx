@@ -6,15 +6,11 @@ import {
   Input,
   Select,
   TimePicker,
-  Upload,
-  message,
   notification,
 } from "antd";
 import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
-import type { UploadProps } from "antd";
-import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
-import { ADDRESS_TYPE } from "../../../constants/database";
+import { ADDRESS_TYPE, IFile } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import dayjs, { Dayjs } from "dayjs";
@@ -24,9 +20,10 @@ import {
   updateDriver,
   setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import UploadComponent from "../../Upload";
 import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { useAppDispatch, useAppSelector } from "../../../hooks/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RootState } from "../../../types/store";
 import durationPlugin from "dayjs/plugin/duration";
 
@@ -66,37 +63,12 @@ const convertIsoToDayjsObject = (isoString: string) => {
 type NotificationType = "success" | "info" | "warning" | "error";
 
 const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
-  const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
   const { selectedDriver, viewContentDatabase } = useAppSelector(
     (state: RootState) => state.database
   );
-  const props: UploadProps = {
-    name: "file",
-    multiple: true,
-    action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
-  };
+  const [filesArr, setFilesArr] = useState<IFile[]>([]);
 
-  const openNotificationWithIcon = (type: NotificationType) => {
-    api[type]({
-      message: "Driver added",
-      description: "Driver added to the database",
-    });
-  };
   const dispatch = useAppDispatch();
 
   const [form] = Form.useForm();
@@ -120,7 +92,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
   useEffect(() => {
     if (selectedDriver.data && Object.keys(selectedDriver?.data).length > 0) {
       const valuesToMaped = selectedDriver?.data;
-      console.log("valuesToMaped", valuesToMaped);
+      setFilesArr(valuesToMaped?.files || []);
       form.setFieldsValue({
         address: {
           type: valuesToMaped.address.type,
@@ -144,9 +116,15 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
         },
         offDay: valuesToMaped.offDay,
         notes: valuesToMaped.notes,
+        files: valuesToMaped?.files || [],
       });
     }
   }, [selectedDriver]);
+
+  const handleUploadUrl = (file: IFile) => {
+    const tempFilesArr = [...filesArr, file];
+    setFilesArr(tempFilesArr);
+  };
 
   const formatTime = (timeString: string): string => {
     return dayjs(timeString).format("h:mm A"); // Changed format here
@@ -208,6 +186,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
             // passed validation
             const valuesToSubmit = {
               ...values,
+              files: filesArr,
               monthlySalary: Number(values?.monthlySalary),
               dailySalary: Number(values?.dailySalary),
               phoneNumber: values?.phoneNumber.startsWith("+91")
@@ -218,7 +197,6 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
               //   end: parseTime(values.timing.end),
               // },
             };
-            console.log("values", valuesToSubmit);
             onSubmit(valuesToSubmit);
           }}
           requiredMark={CustomizeRequiredMark}
@@ -532,7 +510,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
                       return (
                         <>
                           Total working hours: {formatTime(start)} -{" "}
-                          {formatTime(end)}{" "}({calculateDuration(start, end)})
+                          {formatTime(end)} ({calculateDuration(start, end)})
                         </>
                       );
                     }
@@ -571,19 +549,7 @@ const DriversForm = ({ handleCloseSidePanel }: IDriverForm) => {
             <div className={styles.text}>
               <p>Attach Files</p>
             </div>
-            <Dragger {...props} className="custom-upload">
-              <div className={styles.uploadIconContainer}>
-                <div className={styles.uploadIcon}>
-                  <UploadIcon />
-                </div>
-              </div>
-              <div className={styles.uploadText}>
-                <p>Click to upload</p> or drag and drop
-              </div>
-              <p className={styles.uploadSubtext}>
-                JPG, PNG, DOC or PDF (max. 20MB)
-              </p>
-            </Dragger>
+            <UploadComponent handleUploadUrl={handleUploadUrl} isMultiple />
           </div>
           <div className={styles.typeContainer}>
             <Form.Item label="Notes" id="notes" name="notes">

@@ -27,11 +27,12 @@ import SecondaryBtn from "../../SecondaryBtn";
 import PrimaryBtn from "../../PrimaryBtn";
 import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
-import { FuelType } from "../../../constants/database";
+import { FuelType, IFile } from "../../../constants/database";
 import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
 import dayjs from "dayjs";
 import { RootState } from "../../../types/store";
+import UploadComponent from "../../Upload";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import weekday from "dayjs/plugin/weekday";
 import localeData from "dayjs/plugin/localeData";
@@ -49,6 +50,32 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   const { Dragger } = Upload;
   const [api, contextHolder] = notification.useNotification();
   const [vehicleGroupLabel, setVehicleGroupLabel] = useState<string>("");
+  const [registrationDocument, setRegistrationDocument] = useState<IFile>();
+  const [insuranceDocument, setInsuranceDocument] = useState<IFile>();
+  const [rtoDocument, setRtoDocument] = useState<IFile>();
+  const [vehicleDocuments, setVehicleDocuments] = useState<IFile[]>([]);
+  const [loanDocument, setLoanDocument] = useState<IFile>();
+
+  const handleRegistrationDocs = (file: IFile) => {
+    setRegistrationDocument(file);
+  };
+
+  const handleInsuranceDocs = (file: IFile) => {
+    setInsuranceDocument(file);
+  };
+
+  const handleRTODoc = (file: IFile) => {
+    setRtoDocument(file);
+  };
+
+  const handleVehicleDocuments = (file: IFile) => {
+    const tempFilesArr = [...vehicleDocuments, file];
+    setVehicleDocuments(tempFilesArr);
+  };
+
+  const handleLoanDocument = (file: IFile) => {
+    setLoanDocument(file);
+  };
 
   const dispatch = useAppDispatch();
   const {
@@ -118,6 +145,14 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
   useEffect(() => {
     if (Object.keys(selectedVehicle).length) {
       const values = selectedVehicle;
+      setRegistrationDocument(
+        values?.registration?.registrationDocument || null
+      );
+      setInsuranceDocument(values?.insurance?.insuranceDocument || null);
+      setRtoDocument(values?.rto?.registrationDocument || null);
+      setVehicleDocuments(values?.vehicleDocuments || []);
+      setLoanDocument(values?.loan?.loanDocument || null);
+
       form.setFieldsValue(values);
       form.setFieldValue("vehicleGroupId", {
         value: selectedVehicle?.vehicleGroupId?._id,
@@ -202,6 +237,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             registration: {
               ownerName: "",
               date: Date.now(),
+              registrationDocument,
             },
             insurance: {
               companyName: "",
@@ -210,16 +246,19 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               dueDate: Date.now(),
               premiumAmount: null,
               coverAmount: null,
+              insuranceDocument,
             },
             rto: {
               ownerName: "",
               date: Date.now(),
+              registrationDocument: rtoDocument,
             },
             parts: {
               chasisNumber: "",
               engineNumber: "",
             },
             expiryDate: Date.now(),
+            vehicleDocuments,
             notes: "",
             loan: {
               isActive: isActive,
@@ -228,6 +267,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
               endDate: Date.now(),
               bankName: "",
               emiDate: Date.now(),
+              loanDocument,
             },
           }}
           onValuesChange={handleValuesChange}
@@ -376,19 +416,10 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   name={["registration", "registrationDocument"]}
                   // rules={[{ required: true, message: "File is required" }]}
                 >
-                  <Dragger {...props} className="custom-upload">
-                    <div className={styles.uploadIconContainer}>
-                      <div className={styles.uploadIcon}>
-                        <UploadIcon />
-                      </div>
-                    </div>
-                    <div className={styles.uploadText}>
-                      <p>Click to upload</p> or drag and drop
-                    </div>
-                    <p className={styles.uploadSubtext}>
-                      JPG, PNG, DOC or PDF (max. 20MB)
-                    </p>
-                  </Dragger>
+                  <UploadComponent
+                    handleUploadUrl={handleRegistrationDocs}
+                    isMultiple={false}
+                  />
                 </Form.Item>
               </Input.Group>
             </Form.Item>
@@ -481,19 +512,10 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                     },
                   ]}
                 >
-                  <Dragger {...props} className="custom-upload">
-                    <div className={styles.uploadIconContainer}>
-                      <div className={styles.uploadIcon}>
-                        <UploadIcon />
-                      </div>
-                    </div>
-                    <div className={styles.uploadText}>
-                      <p>Click to upload</p> or drag and drop
-                    </div>
-                    <p className={styles.uploadSubtext}>
-                      JPG, PNG, DOC or PDF (max. 10MB)
-                    </p>
-                  </Dragger>
+                  <UploadComponent
+                    handleUploadUrl={handleInsuranceDocs}
+                    isMultiple={false}
+                  />
                 </Form.Item>
               </div>
             </Input.Group>
@@ -536,19 +558,10 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                     },
                   ]}
                 >
-                  <Dragger {...props} className="custom-upload">
-                    <div className={styles.uploadIconContainer}>
-                      <div className={styles.uploadIcon}>
-                        <UploadIcon />
-                      </div>
-                    </div>
-                    <div className={styles.uploadText}>
-                      <p>Click to upload</p> or drag and drop
-                    </div>
-                    <p className={styles.uploadSubtext}>
-                      JPG, PNG, DOC or PDF (max. 10MB)
-                    </p>
-                  </Dragger>
+                  <UploadComponent
+                    handleUploadUrl={handleRTODoc}
+                    isMultiple={false}
+                  />
                 </Form.Item>
               </div>
             </Input.Group>
@@ -621,7 +634,7 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  height: "25px"
+                  height: "25px",
                 }}
               >
                 <div className={styles.text}>Loan</div>
@@ -725,19 +738,10 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
                         },
                       ]}
                     >
-                      <Dragger {...props} className="custom-upload">
-                        <div className={styles.uploadIconContainer}>
-                          <div className={styles.uploadIcon}>
-                            <UploadIcon />
-                          </div>
-                        </div>
-                        <div className={styles.uploadText}>
-                          <p>Click to upload</p> or drag and drop
-                        </div>
-                        <p className={styles.uploadSubtext}>
-                          JPG, PNG, DOC or PDF (max. 10MB)
-                        </p>
-                      </Dragger>
+                      <UploadComponent
+                        handleUploadUrl={handleVehicleDocuments}
+                        isMultiple
+                      />
                     </Form.Item>
                   </div>
                 </Fragment>
@@ -749,19 +753,10 @@ const VehicleForm = ({ handleCloseSidePanel }: IVehicleForm) => {
             <div className={styles.text}>
               <p>Attach Files</p>
             </div>
-            <Dragger {...props} className="custom-upload">
-              <div className={styles.uploadIconContainer}>
-                <div className={styles.uploadIcon}>
-                  <UploadIcon />
-                </div>
-              </div>
-              <div className={styles.uploadText}>
-                <p>Click to upload</p> or drag and drop
-              </div>
-              <p className={styles.uploadSubtext}>
-                JPG, PNG, DOC or PDF (max. 10MB)
-              </p>
-            </Dragger>
+            <UploadComponent
+              handleUploadUrl={handleLoanDocument}
+              isMultiple={false}
+            />
           </div>
           <div className={styles.typeContainer}>
             <Form.Item

@@ -1,0 +1,48 @@
+.uploadIconContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 12px;
+
+  .uploadIcon {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    border: 1px solid #e4e7ec;
+    background: #fff;
+    box-shadow:
+      0px 0px 0px 1px rgba(16, 24, 40, 0.18) inset,
+      0px -2px 0px 0px rgba(16, 24, 40, 0.05) inset,
+      0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  }
+}
+
+.uploadText {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  color: #475467;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+
+  p {
+    color: #6941c6;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+}
+
+.uploadSubtext {
+  color: #475467;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+}

@@ -1,7 +1,6 @@
 /* eslint-disable */
 import {
   Select,
-  message,
   Upload,
   notification,
   Form,
@@ -19,9 +18,10 @@ import {
   updateCustomer,
   setViewContentDatabase,
 } from "../../../redux/slices/databaseSlice";
+import UploadComponent from "../../Upload";
 import { ReactComponent as EditIcon } from "../../../icons/edit-icon.svg";
 import { ReactComponent as UploadIcon } from "../../../icons/uploadCloud.svg";
-import { STATES, CUSTOMER_TAX_TYPES } from "../../../constants/database";
+import { STATES, CUSTOMER_TAX_TYPES, IFile } from "../../../constants/database";
 import { useState, useEffect } from "react";
 import styles from "../DutyTypeTable/index.module.scss";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
@@ -61,38 +61,16 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
       billingAddress: "",
     },
   });
+  const [filesArr, setFilesArr] = useState<IFile[]>([]);
 
-  // const onChange = (e: { target: { name: string; value: any } }) => {
-  //   setCustomerPayload({
-  //     ...customerPaylod,
-  //     [e.target.name]: e.target.value,
-  //   });
-  // };
+  const handleUploadUrl = (file: IFile) => {
+    const tempFilesArr = [...filesArr, file];
+    setFilesArr(tempFilesArr);
+  };
 
   const handleSelectChange = (value: string) => {
     setCustomerPayload({ ...customerPaylod, state: value });
   };
-
-  const props: UploadProps = {
-    name: "file",
-    multiple: true,
-    action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
-  };
-
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
       message: "Customer added",
@@ -135,10 +113,9 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
   };
   const [form] = Form.useForm();
 
-  console.log(selectedCustomer, "selectedCustomer");
-
   useEffect(() => {
     if (Object.keys(selectedCustomer).length) {
+      setFilesArr(selectedCustomer?.data?.files || []);
       form.setFieldsValue({
         customerCode: selectedCustomer?.data?.customerCode,
         name: selectedCustomer?.data?.name,
@@ -204,7 +181,6 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
           form={form}
           className={styles.form}
           onFinish={(values) => {
-            console.log("values", values);
             const valuesToSend = {
               customerCode: values.customerCode,
               name: values.name,
@@ -222,14 +198,7 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
                 gstNumber: values.gstNumber,
                 billingAddress: values.billingAddress,
               },
-              files: [
-                {
-                  fileUrl:
-                    "https://firebasestorage.googleapis.com/v0/b/bluestar-970ae.appspot.com/o/1725113067505-ArunavaModakCV2024-v2.pdf?alt=media",
-                  fileType: "application/pdf",
-                  fileSize: 201818,
-                },
-              ],
+              files: filesArr,
             };
             handleSubmit(valuesToSend);
           }}
@@ -460,19 +429,11 @@ const CustomerForm = ({ handleCloseSidePanel }: ICustomerForm) => {
             <div className={styles.text}>
               <p>Attach Files</p>
             </div>
-            <Dragger {...props} className="custom-upload">
-              <div className={styles.uploadIconContainer}>
-                <div className={styles.uploadIcon}>
-                  <UploadIcon />
-                </div>
-              </div>
-              <div className={styles.uploadText}>
-                <p>Click to upload</p> or drag and drop
-              </div>
-              <p className={styles.uploadSubtext}>
-                JPG, PNG, DOC or PDF (max. 20MB)
-              </p>
-            </Dragger>
+            <UploadComponent
+              handleUploadUrl={handleUploadUrl}
+              isMultiple
+              files={filesArr}
+            />
           </div>
           <div className={styles.typeContainer}>
             <div className={styles.text}>
