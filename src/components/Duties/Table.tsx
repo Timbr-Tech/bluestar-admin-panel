@@ -25,18 +25,20 @@ import {
 } from "@ant-design/icons";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../hooks/store";
+import { RootState } from "../../types/store";
+import { RouteName } from "../../constants/routes";
+import {
+  setCurrentSelectedBooking,
+  getSingleBookings,
+} from "../../redux/slices/bookingSlice";
+import CustomPagination from "../Common/Pagination";
+import BookingsStates from "../States/BookingsStates";
+import Modal from "../Modal";
 
-import { RouteName } from "../../../constants/routes";
-import { RootState } from "../../../types/store";
-import CustomPagination from "../../Common/Pagination";
-import { useAppDispatch } from "../../../hooks/store";
-import BookingsStates from "../../States/BookingsStates";
-import { getSingleBookings } from "../../../redux/slices/bookingSlice";
-import { getDuties } from "../../../redux/slices/duties";
-
-const SingleBookingsTable = () => {
-  const { duties, dutiesState, pagination, filters } = useSelector(
-    (state: RootState) => state.duties
+const DutiesTable = () => {
+  const { bookings, bookingStates, pagination, filters } = useSelector(
+    (state: RootState) => state.booking
   );
 
   const dispatch = useAppDispatch();
@@ -187,12 +189,12 @@ const SingleBookingsTable = () => {
     },
     {
       title: "Passenger",
-      dataIndex: "passengers",
-      key: "passengers",
+      dataIndex: "passergers",
+      key: "passergers",
       render: (data: any) => {
         if (Array.isArray(data)) {
           if (data.length <= 0) {
-            return "No passengers data";
+            return "No passenger data";
           }
           if (data.length == 1) {
             return data[0].name;
@@ -303,7 +305,7 @@ const SingleBookingsTable = () => {
   ];
 
   function formateData() {
-    return duties?.map((each: any) => {
+    return bookings?.map((each: any) => {
       return {
         ...each,
         dutiesDate: each.startDate ?? "28/10/2024",
@@ -336,7 +338,7 @@ const SingleBookingsTable = () => {
   };
 
   useEffect(() => {
-    dispatch(getDuties({ ...filters }));
+    dispatch(getSingleBookings({ ...filters }));
   }, [filters.search, filters.status]);
 
   return (
@@ -348,7 +350,7 @@ const SingleBookingsTable = () => {
             ...rowSelection,
           }}
           bordered
-          loading={dutiesState.loading}
+          loading={bookingStates.loading}
           dataSource={formateData()}
           columns={columns}
           pagination={false}
@@ -374,4 +376,4 @@ const SingleBookingsTable = () => {
   );
 };
 
-export default SingleBookingsTable;
+export default DutiesTable;

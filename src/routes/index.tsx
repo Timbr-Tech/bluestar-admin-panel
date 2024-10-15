@@ -11,6 +11,7 @@ import Database from "../pages/Database";
 import Bookings from "../pages/Bookings";
 import VehicleExpense from "../pages/VehicleExpense";
 import SingleBookings from "../pages/Bookings/SingleBooking";
+import AllDuties from "../pages/Duties";
 
 const AppRoutes = () => {
   return (
@@ -23,6 +24,11 @@ const AppRoutes = () => {
         path={`${RouteName.BOOKINGS}/:bookingId`}
         element={<SingleBookings />}
       />
+      <Route
+        path={`${RouteName.DUTIES}/:bookingId`}
+        element={<SingleBookings />}
+      />
+      <Route path={`${RouteName.DUTIES}`} element={<AllDuties />} />
       <Route path={RouteName.AVAILABILITY} element={<Availability />} />
       <Route path={RouteName.VEHICLE_EXPENSE} element={<VehicleExpense />} />
       <Route path={RouteName.DRIVERS} element={<DriversAttendancePayroll />} />
