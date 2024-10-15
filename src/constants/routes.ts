@@ -5,6 +5,7 @@ export const RouteName = {
   BOOKINGS: "/bookings",
   BILLINGS: "/billings",
   CREATE_BOOKINGS: "/billings/create",
+  DUTIES: "/duties",
   DATABASE: "/database",
   DRIVERS: "/drivers-attendance",
   VEHICLE_EXPENSE: "/vehicle-expense",

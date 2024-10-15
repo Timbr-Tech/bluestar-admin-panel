@@ -1,11 +1,11 @@
 /* eslint-disable */
 import cn from "classnames";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { BOOKINGS_TABS } from "../../constants/bookings";
 import styles from "./index.module.scss";
 import SecondaryBtn from "../../components/SecondaryBtn";
 import PrimaryBtn from "../../components/PrimaryBtn";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { MoreOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import BookingsTable from "../../components/BookingsTable";
 import { Button, DatePicker, Drawer, Form, Input, Radio } from "antd";
 import AddNewBookingForm from "../../components/Bookings/AddNewBooking/AddNewBookingForm";
@@ -18,8 +18,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 import { useAppDispatch } from "../../hooks/store";
-import { RouteName } from "../../constants/routes";
-import { useNavigate } from "react-router-dom";
+import SingleBookingsTable from "../../components/BookingsTable/SingleBooking";
 
 const { RangePicker } = DatePicker;
 
@@ -46,9 +45,7 @@ const BookingsTabs = () => {
   );
 };
 
-const Bookings = () => {
-  // const [searchTerm, setSearchTerm] = useState<string>("");
-  // const debouncedSearch = useDebounce(searchTerm, 300);
+const AllDuties = () => {
   const dispatch = useAppDispatch();
 
   const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -66,30 +63,16 @@ const Bookings = () => {
 
   const [form] = Form.useForm();
   const [formStep, setFormSetp] = useState(0);
-  const navigate = useNavigate();
+
   return (
     <div className={cn("container", styles.container)}>
       <div className={styles.headingContainer}>
         <div>
-          <div className={styles.heading}>Bookings</div>
-          <div className={styles.text}>
-            Create and manage your bookings from here
-          </div>
+          <div className={styles.heading}>All Duties</div>
+          <div className={styles.text}>Manage all duties from here </div>
         </div>
         <div className={styles.btnContainer}>
-          <SecondaryBtn
-            onClick={() => {
-              navigate(RouteName.DUTIES);
-            }}
-            btnText="All Duties"
-          />
-          <PrimaryBtn
-            LeadingIcon={PlusOutlined}
-            onClick={() => {
-              dispatch(setIsAddEditDrawerOpen());
-            }}
-            btnText="Add bookings"
-          />
+          <MoreOutlined />
         </div>
       </div>
       <div className={styles.mainContainer}>
@@ -115,7 +98,7 @@ const Bookings = () => {
           </div>
         </div>
         {/* <Divider /> */}
-        <BookingsTable />
+        <SingleBookingsTable />
       </div>
       <Drawer
         destroyOnClose
@@ -153,6 +136,9 @@ const Bookings = () => {
           {formStep == 0 && (
             <AddNewBookingForm
               form={form}
+              // handleFormSubmit={(value) => {
+              //   // console.log("value", value);
+              // }}
               isEditable={isEditingBooking}
               initialData={currentSelectedBooking}
             />
@@ -164,4 +150,4 @@ const Bookings = () => {
   );
 };
 
-export default Bookings;
+export default AllDuties;

@@ -10,12 +10,11 @@ import {
   TableColumnsType,
 } from "antd";
 import styles from "../index.module.scss";
-import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
-import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
+
 import {
-  CarOutlined,
+  CarTwoTone,
+  CheckCircleTwoTone,
   DeleteOutlined,
-  EditOutlined,
   EyeOutlined,
   MailOutlined,
   MoreOutlined,
@@ -26,18 +25,20 @@ import {
 } from "@ant-design/icons";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../hooks/store";
+import { RootState } from "../../types/store";
+import { RouteName } from "../../constants/routes";
+import {
+  setCurrentSelectedBooking,
+  getSingleBookings,
+} from "../../redux/slices/bookingSlice";
+import CustomPagination from "../Common/Pagination";
+import BookingsStates from "../States/BookingsStates";
+import Modal from "../Modal";
 
-import { RouteName } from "../../../constants/routes";
-import { RootState } from "../../../types/store";
-import CustomPagination from "../../Common/Pagination";
-import { useAppDispatch } from "../../../hooks/store";
-import BookingsStates from "../../States/BookingsStates";
-import { getSingleBookings } from "../../../redux/slices/bookingSlice";
-import { getDuties } from "../../../redux/slices/duties";
-
-const SingleBookingsTable = () => {
-  const { duties, dutiesState, pagination, filters } = useSelector(
-    (state: RootState) => state.duties
+const DutiesTable = () => {
+  const { bookings, bookingStates, pagination, filters } = useSelector(
+    (state: RootState) => state.booking
   );
 
   const dispatch = useAppDispatch();
@@ -47,9 +48,15 @@ const SingleBookingsTable = () => {
       {
         key: "1",
         label: (
-          <div onClick={() => {}}>
+          <div
+            onClick={() => {
+              // setCurrentSelectedBooking(row);
+              //   dispatch(setCurrentSelectedBooking(row));
+              //   setConformedBookingModal(true);
+            }}
+          >
             <Space>
-              <EyeOutlined />
+              <CheckCircleTwoTone twoToneColor="#52c41a" />
               View Duty
             </Space>
           </div>
@@ -61,9 +68,15 @@ const SingleBookingsTable = () => {
       {
         key: "2",
         label: (
-          <div onClick={() => {}}>
+          <div
+            onClick={() => {
+              //   dispatch(setCurrentSelectedBooking(row));
+              //   dispatch(setIsAddEditDrawerOpen());
+              //   dispatch(setIsEditingBooking(false));
+            }}
+          >
             <Space>
-              <EditOutlined twoToneColor="#52c41a" />
+              <EyeOutlined twoToneColor="#52c41a" />
               Edit Duty
             </Space>
           </div>
@@ -75,9 +88,15 @@ const SingleBookingsTable = () => {
       {
         key: "3",
         label: (
-          <div onClick={() => {}}>
+          <div
+            onClick={() => {
+              //   dispatch(setCurrentSelectedBooking(row));
+              //   dispatch(setIsAddEditDrawerOpen());
+              //   dispatch(setIsEditingBooking(true));
+            }}
+          >
             <Space>
-              <CarOutlined />
+              <CarTwoTone twoToneColor="#52c41a" />
               Allot vehicle and driver
             </Space>
           </div>
@@ -91,8 +110,8 @@ const SingleBookingsTable = () => {
         label: (
           <div>
             <Space>
-              <RedoOutlined />
-              Un confirm Duty
+              <RedoOutlined twoToneColor="#52c41a" />
+              Unconfirm Duty
             </Space>
           </div>
         ),
@@ -125,20 +144,20 @@ const SingleBookingsTable = () => {
       dataIndex: "dutiesDate",
       key: "dutiesDate",
     },
-    // {
-    //   title: "Custom booking Id",
-    //   dataIndex: "customBookingId",
-    //   key: "customBookingId",
-    //   render: (data, each) => {
-    //     return <a href={`${RouteName.BOOKINGS}/${each.id}`}>{data}</a>;
-    //   },
-    // },
-    // {
-    //   title: "Alternate option",
-    //   dataIndex: "assignAlternateVehicles",
-    //   key: "assignAlternateVehicles",
-    //   render: (each: any) => (each === false ? "No" : "Yes"),
-    // },
+    {
+      title: "Custom booking Id",
+      dataIndex: "customBookingId",
+      key: "customBookingId",
+      render: (data, each) => {
+        return <a href={`${RouteName.BOOKINGS}/${each.id}`}>{data}</a>;
+      },
+    },
+    {
+      title: "Alternate option",
+      dataIndex: "assignAlternateVehicles",
+      key: "assignAlternateVehicles",
+      render: (each: any) => (each === false ? "No" : "Yes"),
+    },
     {
       title: "Customer",
       dataIndex: "customerId",
@@ -147,35 +166,35 @@ const SingleBookingsTable = () => {
         return <span>{each.name}</span>;
       },
     },
-    // {
-    //   title: "Booked By",
-    //   dataIndex: "bookedBy",
-    //   key: "bookedBy",
-    //   width: "200px",
-    //   render: (each: any) => {
-    //     return (
-    //       <div>
-    //         <p>
-    //           <UserOutlined /> {each.name}
-    //         </p>
-    //         <p>
-    //           <PhoneOutlined /> {each.phoneNumber}
-    //         </p>
-    //         <p>
-    //           <MailOutlined /> {each.email}
-    //         </p>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      title: "Booked By",
+      dataIndex: "bookedBy",
+      key: "bookedBy",
+      width: "200px",
+      render: (each: any) => {
+        return (
+          <div>
+            <p>
+              <UserOutlined /> {each.name}
+            </p>
+            <p>
+              <PhoneOutlined /> {each.phoneNumber}
+            </p>
+            <p>
+              <MailOutlined /> {each.email}
+            </p>
+          </div>
+        );
+      },
+    },
     {
       title: "Passenger",
-      dataIndex: "passengers",
-      key: "passengers",
+      dataIndex: "passergers",
+      key: "passergers",
       render: (data: any) => {
         if (Array.isArray(data)) {
           if (data.length <= 0) {
-            return "No passengers data";
+            return "No passenger data";
           }
           if (data.length == 1) {
             return data[0].name;
@@ -212,9 +231,9 @@ const SingleBookingsTable = () => {
       },
     },
     {
-      title: "Vehicle",
-      dataIndex: "vehicle",
-      key: "vehicle",
+      title: "Vehicle group",
+      dataIndex: "vehicleGroup",
+      key: "vehicleGroup",
     },
     {
       title: "Duty type",
@@ -225,50 +244,40 @@ const SingleBookingsTable = () => {
       },
     },
     {
-      title: "Driver",
-      dataIndex: "driver",
-      key: "driver",
+      title: "Duties",
+      dataIndex: "duties",
+      key: "duties",
     },
     {
-      title: "Rep. Time",
-      dataIndex: "repTime",
-      key: "repTime",
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      render: (data) => {
+        return (
+          <>
+            <a href={data?.dropAddress} target="_blank">
+              <PushpinOutlined /> Drop address
+            </a>
+            <br />
+            <a href={data?.reportingAddress} target="_blank">
+              <PushpinOutlined /> Reporting address
+            </a>
+          </>
+        );
+      },
     },
-    // {
-    //   title: "Duties",
-    //   dataIndex: "duties",
-    //   key: "duties",
-    // },
-    // {
-    //   title: "Address",
-    //   dataIndex: "address",
-    //   key: "address",
-    //   render: (data) => {
-    //     return (
-    //       <>
-    //         <a href={data?.dropAddress} target="_blank">
-    //           <PushpinOutlined /> Drop address
-    //         </a>
-    //         <br />
-    //         <a href={data?.reportingAddress} target="_blank">
-    //           <PushpinOutlined /> Reporting address
-    //         </a>
-    //       </>
-    //     );
-    //   },
-    // },
-    // {
-    //   title: "Airport Booking",
-    //   dataIndex: "isAirportBooking",
-    //   key: "isAirportBooking",
-    //   render: (each: any) => (each === false ? "No" : "yes"),
-    // },
-    // {
-    //   title: "Confirmed Status",
-    //   dataIndex: "isUnconfirmed",
-    //   key: "isUnconfirmed",
-    //   render: (each: any) => (each === false ? "Yes" : "No"),
-    // },
+    {
+      title: "Airport Booking",
+      dataIndex: "isAirportBooking",
+      key: "isAirportBooking",
+      render: (each: any) => (each === false ? "No" : "yes"),
+    },
+    {
+      title: "Confirmed Status",
+      dataIndex: "isUnconfirmed",
+      key: "isUnconfirmed",
+      render: (each: any) => (each === false ? "Yes" : "No"),
+    },
     {
       title: "Status",
       dataIndex: "bookingStatus",
@@ -278,7 +287,7 @@ const SingleBookingsTable = () => {
       },
     },
     {
-      title: "",
+      title: "Action",
       dataIndex: "action",
       key: "action",
       fixed: "right",
@@ -296,7 +305,7 @@ const SingleBookingsTable = () => {
   ];
 
   function formateData() {
-    return duties?.map((each: any) => {
+    return bookings?.map((each: any) => {
       return {
         ...each,
         dutiesDate: each.startDate ?? "28/10/2024",
@@ -329,7 +338,7 @@ const SingleBookingsTable = () => {
   };
 
   useEffect(() => {
-    dispatch(getDuties({ ...filters }));
+    dispatch(getSingleBookings({ ...filters }));
   }, [filters.search, filters.status]);
 
   return (
@@ -341,7 +350,7 @@ const SingleBookingsTable = () => {
             ...rowSelection,
           }}
           bordered
-          loading={dutiesState.loading}
+          loading={bookingStates.loading}
           dataSource={formateData()}
           columns={columns}
           pagination={false}
@@ -367,4 +376,4 @@ const SingleBookingsTable = () => {
   );
 };
 
-export default SingleBookingsTable;
+export default DutiesTable;

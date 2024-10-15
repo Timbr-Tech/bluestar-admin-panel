@@ -218,7 +218,7 @@ const BookingsTable = () => {
       render: (data: any) => {
         if (Array.isArray(data)) {
           if (data.length <= 0) {
-            return "No passenger data";
+            return "No passengers data";
           }
           if (data.length == 1) {
             return data[0].name;

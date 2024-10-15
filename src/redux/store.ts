@@ -4,6 +4,7 @@ import authSlice from "./slices/authSlice";
 import bookingSlice from "./slices/bookingSlice";
 import databaseSlice from "./slices/databaseSlice";
 import { configureStore } from "@reduxjs/toolkit";
+import dutiesSlice from "./slices/duties";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     database: databaseSlice,
     booking: bookingSlice,
     attendance: attendanceSlice,
+    duties: dutiesSlice,
   },
 });
 
