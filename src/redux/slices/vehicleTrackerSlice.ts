@@ -1,6 +1,11 @@
 /* eslint-disable */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getExpenseData, getFuelsData, getLoansData } from "../../testData";
+import {
+  getAverageData,
+  getExpenseData,
+  getFuelsData,
+  getLoansData,
+} from "../../testData";
 
 const initialState = {
   isViewDrawerOpen: false,
@@ -60,6 +65,20 @@ export const getLoans = createAsyncThunk(
       page: 1,
       limit: 10,
       data: getLoansData,
+    };
+  }
+);
+export const getAverage = createAsyncThunk(
+  "vehicleTracker/getAverage",
+  async (params: any) => {
+    // const response = await apiClient.get("/auth/admin/login", { params });
+    // return response.data;
+
+    return {
+      total: 10,
+      page: 1,
+      limit: 10,
+      data: getAverageData,
     };
   }
 );
@@ -143,6 +162,27 @@ export const vehicleTrackerSlice = createSlice({
         };
       })
       .addCase(getLoans.rejected, (state) => {
+        state.vehicleTrackerState.status = "failed";
+        state.vehicleTrackerState.loading = false;
+        state.vehicleTrackerState.error = "Error";
+      })
+      // getAverage
+      .addCase(getAverage.pending, (state) => {
+        state.vehicleTrackerState.status = "loading";
+        state.vehicleTrackerState.loading = true;
+      })
+      .addCase(getAverage.fulfilled, (state, action) => {
+        state.vehicleTrackerState.status = "succeeded";
+        state.vehicleTrackerState.loading = false;
+        state.vehicleTrackerState.error = "";
+        state.averages = action.payload.data as any;
+        state.pagination = {
+          total: action.payload.total,
+          page: action.payload.page,
+          limit: action.payload.limit,
+        };
+      })
+      .addCase(getAverage.rejected, (state) => {
         state.vehicleTrackerState.status = "failed";
         state.vehicleTrackerState.loading = false;
         state.vehicleTrackerState.error = "Error";

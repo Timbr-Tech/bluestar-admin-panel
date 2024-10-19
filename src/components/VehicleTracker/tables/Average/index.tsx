@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { useAppDispatch, useAppSelector } from "../../../../hooks/store";
-import { Dropdown, Space, Table } from "antd";
+import { Avatar, Dropdown, Space, Table, Tooltip } from "antd";
 import { ReactComponent as DeleteIconRed } from "../../../../icons/trash-red.svg";
 import { ReactComponent as Edit02 } from "../../../../icons/edit-02.svg";
 import { ReactComponent as Eye } from "../../../../icons/eye.svg";
@@ -13,16 +13,16 @@ import styles from "./index.module.scss";
 
 import CustomPagination from "../../../Common/Pagination";
 
-import { getExpenses } from "../../../../redux/slices/vehicleTrackerSlice";
+import { getAverage } from "../../../../redux/slices/vehicleTrackerSlice";
 
 import { MoreOutlined } from "@ant-design/icons";
 
-interface IExpenseTable {
+interface IAverageTable {
   handleOpenSidePanel: () => void;
 }
 
-const ExpenseTable = ({ handleOpenSidePanel }: IExpenseTable) => {
-  const { expenses, filters, pagination, vehicleTrackerState } = useAppSelector(
+const AverageTable = ({ handleOpenSidePanel }: IAverageTable) => {
+  const { averages, filters, pagination, vehicleTrackerState } = useAppSelector(
     (state) => state.vehicleTracker
   );
   const dispatch = useAppDispatch();
@@ -99,25 +99,43 @@ const ExpenseTable = ({ handleOpenSidePanel }: IExpenseTable) => {
       key: "vehicleNumber",
     },
     {
-      title: "Expense Number",
-      dataIndex: "expenseNumber",
-      key: "expenseNumber",
+      title: "Active Days/Total Days",
+      dataIndex: "activeDays",
+      key: "activeDays",
     },
     {
-      title: "Expense Type",
-      dataIndex: "expenseType",
-      key: "expenseType",
+      title: "Driver(s)",
+      dataIndex: "drivers",
+      key: "drivers",
+      render: (drivers) => (
+        <Avatar.Group>
+          {drivers.map((driver) => (
+            <Tooltip title={driver.name} placement="top">
+              <Avatar style={{ backgroundColor: "#6941C6" }}>
+                {driver.name[0]}
+              </Avatar>
+            </Tooltip>
+          ))}
+        </Avatar.Group>
+      ),
     },
     {
-      title: "Payment Mode",
-      dataIndex: "paymentMode",
-      key: "paymentMode",
+      title: "Distance Travelled (km)",
+      dataIndex: "distanceTravelled",
+      key: "distanceTravelled",
+      render: (text) => `${text} km`,
     },
     {
-      title: "Amount",
-      dataIndex: "amount",
-      key: "amount",
-      render: (text: any) => `₹${text}`, // Format amount with currency symbol
+      title: "Fuel Consumed (L)",
+      dataIndex: "fuelConsumed",
+      key: "fuelConsumed",
+      render: (text) => `${text} L`,
+    },
+    {
+      title: "Vehicle Average (km/L)",
+      dataIndex: "vehicleAverage",
+      key: "vehicleAverage",
+      render: (text) => `${text} km/L`,
     },
     {
       title: "Action",
@@ -148,7 +166,7 @@ const ExpenseTable = ({ handleOpenSidePanel }: IExpenseTable) => {
 
   useEffect(() => {
     dispatch(
-      getExpenses({
+      getAverage({
         search: filters.search,
       })
     );
@@ -156,7 +174,7 @@ const ExpenseTable = ({ handleOpenSidePanel }: IExpenseTable) => {
 
   const onChange = (
     selectedRowKeys: React.Key[],
-    selectedRows: IExpenseTable[]
+    selectedRows: IAverageTable[]
   ) => {
     console.log(selectedRowKeys, "selectedRowKeys");
     // setSelectedRowKeys(selectedRowKeys);
@@ -177,7 +195,7 @@ const ExpenseTable = ({ handleOpenSidePanel }: IExpenseTable) => {
           onChange: onChange,
         }}
         columns={columns}
-        dataSource={expenses}
+        dataSource={averages}
         loading={vehicleTrackerState?.loading}
         pagination={false}
         scroll={{
@@ -190,7 +208,7 @@ const ExpenseTable = ({ handleOpenSidePanel }: IExpenseTable) => {
             pageSize={pagination.limit ?? 10}
             onPageChange={(page: number) => {
               dispatch(
-                getExpenses({
+                getAverage({
                   search: filters.search,
                   page,
                 })
@@ -230,4 +248,4 @@ const ExpenseTable = ({ handleOpenSidePanel }: IExpenseTable) => {
   );
 };
 
-export default ExpenseTable;
+export default AverageTable;

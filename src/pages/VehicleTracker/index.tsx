@@ -16,6 +16,7 @@ import {
 import ExpenseTable from "../../components/VehicleTracker/tables/Expense";
 import FuelsTable from "../../components/VehicleTracker/tables/Fuels";
 import LoansTable from "../../components/VehicleTracker/tables/Loans";
+import AverageTable from "../../components/VehicleTracker/tables/Average";
 
 const tab = [
   {
@@ -128,7 +129,7 @@ const VehicleTrackerPage = () => {
           <LoansTable handleOpenSidePanel={() => {}} />
         )}
         {filters.currentTab === "average" && (
-          <FuelsTable handleOpenSidePanel={() => {}} />
+          <AverageTable handleOpenSidePanel={() => {}} />
         )}
       </div>
       <Drawer
