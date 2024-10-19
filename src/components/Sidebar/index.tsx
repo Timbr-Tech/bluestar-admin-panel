@@ -96,11 +96,11 @@ const Sidebar = () => {
           </Link>
         </Tooltip>
         <Tooltip placement="right" title={"Vehicle Expense"}>
-          <Link to={RouteName.VEHICLE_EXPENSE}>
+          <Link to={RouteName.VEHICLE_TRACKER}>
             <div
               className={cn(styles.icon, {
                 [styles.selected]: location.pathname.startsWith(
-                  RouteName.VEHICLE_EXPENSE
+                  RouteName.VEHICLE_TRACKER
                 ),
               })}
             >
