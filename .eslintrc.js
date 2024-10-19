@@ -43,6 +43,7 @@ module.exports = {
         tsx: "never",
       },
     ],
+    "prettier/prettier": ["warning", { singleQuote: false }],
     // "@typescript-eslint/no-unused-vars": ["error"],
     // "@typescript-eslint/explicit-module-boundary-types": "off",
     // "prettier/prettier": "error",

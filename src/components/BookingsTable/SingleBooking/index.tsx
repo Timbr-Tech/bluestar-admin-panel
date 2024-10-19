@@ -33,7 +33,7 @@ import CustomPagination from "../../Common/Pagination";
 import { useAppDispatch } from "../../../hooks/store";
 import BookingsStates from "../../States/BookingsStates";
 import { getSingleBookings } from "../../../redux/slices/bookingSlice";
-import { getDuties } from "../../../redux/slices/duties";
+import { getDuties } from "../../../redux/slices/dutiesSlice";
 
 const SingleBookingsTable = () => {
   const { duties, dutiesState, pagination, filters } = useSelector(

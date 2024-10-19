@@ -14,6 +14,7 @@ import CreateBilling from "../pages/Billings/Create";
 import VehicleExpense from "../pages/VehicleExpense";
 import SingleBookings from "../pages/Bookings/SingleBooking";
 import AllDuties from "../pages/Duties";
+import VehicleTrackerPage from "../pages/VehicleTracker";
 
 const AppRoutes = () => {
   return (
@@ -33,6 +34,10 @@ const AppRoutes = () => {
         element={<SingleBookings />}
       />
       <Route path={`${RouteName.DUTIES}`} element={<AllDuties />} />
+      <Route
+        path={`${RouteName.VEHICLE_TRACKER}`}
+        element={<VehicleTrackerPage />}
+      />
       <Route path={RouteName.AVAILABILITY} element={<Availability />} />
       <Route path={RouteName.VEHICLE_EXPENSE} element={<VehicleExpense />} />
       <Route path={RouteName.DRIVERS} element={<DriversAttendancePayroll />} />

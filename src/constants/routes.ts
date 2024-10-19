@@ -10,4 +10,5 @@ export const RouteName = {
   DRIVERS: "/drivers-attendance",
   VEHICLE_EXPENSE: "/vehicle-expense",
   AVAILABILITY: "/availability",
+  VEHICLE_TRACKER: "/vehicle-tracker",
 };

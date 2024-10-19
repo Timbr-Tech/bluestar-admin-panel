@@ -4,7 +4,8 @@ import authSlice from "./slices/authSlice";
 import bookingSlice from "./slices/bookingSlice";
 import databaseSlice from "./slices/databaseSlice";
 import { configureStore } from "@reduxjs/toolkit";
-import dutiesSlice from "./slices/duties";
+import dutiesSlice from "./slices/dutiesSlice";
+import vehicleTrackerSlice from "./slices/vehicleTrackerSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     booking: bookingSlice,
     attendance: attendanceSlice,
     duties: dutiesSlice,
+    vehicleTracker: vehicleTrackerSlice,
   },
 });
 

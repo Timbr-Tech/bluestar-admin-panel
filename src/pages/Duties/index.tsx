@@ -133,17 +133,14 @@ const AllDuties = () => {
         open={isAddEditDrawerOpen}
       >
         <div>
-          {formStep == 0 && (
-            <AddNewBookingForm
-              form={form}
-              // handleFormSubmit={(value) => {
-              //   // console.log("value", value);
-              // }}
-              isEditable={isEditingBooking}
-              initialData={currentSelectedBooking}
-            />
-          )}
-          {formStep == 1 && <h1>step 1</h1>}
+          <AddNewBookingForm
+            form={form}
+            // handleFormSubmit={(value) => {
+            //   // console.log("value", value);
+            // }}
+            isEditable={isEditingBooking}
+            initialData={currentSelectedBooking}
+          />
         </div>
       </Drawer>
     </div>

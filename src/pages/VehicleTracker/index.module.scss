@@ -1,0 +1,113 @@
+@import "../../styles/index.scss";
+.container {
+  position: relative;
+
+  .headingContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    position: sticky;
+    top: 0px;
+    padding: 2.5rem 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #e4e7ec;
+    z-index: 99;
+    background-color: white;
+
+    .heading {
+      color: $primary;
+      font-size: 30px;
+      font-weight: 600;
+      line-height: 38px;
+    }
+
+    .text {
+      color: #475467;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px;
+    }
+    .btnContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .mainContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 1rem;
+    gap: 24px;
+
+    .tabsContainer {
+      .tab {
+        height: 40px;
+        min-width: 50px;
+        border-top: 1px solid #d0d5dd;
+        border-bottom: 1px solid #d0d5dd;
+        border-left: 1px solid #d0d5dd;
+        border-right: none;
+        background-color: #fff;
+        cursor: pointer;
+        padding: 8px 16px;
+        font-weight: 600;
+        color: #344054;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+
+        &:first-child {
+          border-top-left-radius: 8px;
+          border-left: 1px solid #d0d5dd;
+          border-bottom-left-radius: 8px;
+        }
+
+        &:last-child {
+          border-left: 1px solid #d0d5dd;
+          border-right: 1px solid #d0d5dd;
+          border-top-right-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
+
+        &:hover {
+          background: #f9fafb;
+        }
+
+        &.selected {
+          background: #f9fafb;
+        }
+      }
+    }
+
+    .searchContainer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e4e7ec;
+      .TabHeading {
+        font-size: 24px;
+        text-transform: capitalize;
+      }
+      .inputContainer {
+        max-width: 25rem;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+    }
+  }
+}
+.drawerFooter {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  gap: 10px; // Adds space between the buttons
+}
