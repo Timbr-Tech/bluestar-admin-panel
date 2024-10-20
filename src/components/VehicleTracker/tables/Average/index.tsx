@@ -109,7 +109,7 @@ const AverageTable = ({ handleOpenSidePanel }: IAverageTable) => {
       key: "drivers",
       render: (drivers) => (
         <Avatar.Group>
-          {drivers.map((driver) => (
+          {drivers.map((driver: any) => (
             <Tooltip title={driver.name} placement="top">
               <Avatar style={{ backgroundColor: "#6941C6" }}>
                 {driver.name[0]}
