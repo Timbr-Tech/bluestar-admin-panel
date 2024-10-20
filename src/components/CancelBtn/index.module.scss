@@ -1,0 +1,24 @@
+.container {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #d6bbfb;
+  background: #fff;
+  box-shadow:
+    0px 0px 0px 1px rgba(16, 24, 40, 0.18) inset,
+    0px -2px 0px 0px rgba(16, 24, 40, 0.05) inset,
+    0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  cursor: pointer;
+
+  &:hover {
+    background: #f9f5ff;
+    .text {
+      color: #53389e;
+    }
+  }
+  .text {
+    color: #6941c6;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+}

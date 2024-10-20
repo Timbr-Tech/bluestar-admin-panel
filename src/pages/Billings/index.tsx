@@ -1,17 +1,24 @@
 /* eslint-disable */
 import cn from "classnames";
 import { Input, DatePicker } from "antd";
+import { useNavigate } from "react-router-dom";
 import SearchComponent from "../../components/SearchComponent";
 import { ReactComponent as PlusIcon } from "../../icons/plus.svg";
 import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import InvoiceTable from "../../components/InvoiceTable";
 import ReceiptTable from "../../components/ReceiptTable";
+import { RouteName } from "../../constants/routes";
 import { useState } from "react";
 import styles from "./index.module.scss";
 
 const Billings = () => {
   const [tab, setTab] = useState("invoice");
+  const navigate = useNavigate();
+
+  const handleAdd = () => {
+    navigate(RouteName.CREATE_BILLINGS); // Navigate to a different route
+  };
 
   return (
     <div className={cn("container", styles.container)}>
@@ -65,7 +72,7 @@ const Billings = () => {
               />
             </div>
             <PrimaryBtn
-              onClick={() => {}}
+              onClick={handleAdd}
               LeadingIcon={PlusIcon}
               btnText={`Add ${tab}`}
             />

@@ -6,7 +6,6 @@ import { RouteName } from "../constants/routes";
 import Availability from "../pages/Availability";
 import Dashboard from "../pages/Dashboard";
 import DriversAttendancePayroll from "../pages/DriversAttendancePayroll";
-import Home from "../pages/Home";
 import Database from "../pages/Database";
 import Bookings from "../pages/Bookings";
 import Billings from "../pages/Billings";
@@ -28,7 +27,7 @@ const AppRoutes = () => {
         element={<SingleBookings />}
       />
       <Route path={RouteName.BILLINGS} element={<Billings />} />
-      <Route path={RouteName.CREATE_BOOKINGS} element={<CreateBilling />} />
+      <Route path={RouteName.CREATE_BILLINGS} element={<CreateBilling />} />
       <Route
         path={`${RouteName.DUTIES}/:bookingId`}
         element={<SingleBookings />}

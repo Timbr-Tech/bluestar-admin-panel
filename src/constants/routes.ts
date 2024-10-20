@@ -4,7 +4,7 @@ export const RouteName = {
   DASHBOARD: "/dashboard",
   BOOKINGS: "/bookings",
   BILLINGS: "/billings",
-  CREATE_BOOKINGS: "/billings/create",
+  CREATE_BILLINGS: "/billings/create",
   DUTIES: "/duties",
   DATABASE: "/database",
   DRIVERS: "/drivers-attendance",
