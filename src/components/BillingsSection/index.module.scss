@@ -156,6 +156,57 @@
           }
         }
       }
+
+      .bookingsContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-radius: 12px;
+        border: 1px solid #e4e7ec;
+        background: #f9fafb;
+        padding: 24px;
+
+        .bookingHeading {
+          color: #101828;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 24px;
+        }
+      }
+
+      .taxesContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-radius: 12px;
+        border: 1px solid #e4e7ec;
+        background: #f9fafb;
+        padding: 24px;
+
+        .taxesHeading {
+          color: #101828;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 24px;
+        }
+      }
+
+      .discountContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-radius: 12px;
+        border: 1px solid #e4e7ec;
+        background: #f9fafb;
+        padding: 24px;
+
+        .discountHeading {
+          color: #101828;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 24px;
+        }
+      }
     }
   }
 }
