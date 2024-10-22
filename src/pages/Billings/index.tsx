@@ -17,7 +17,9 @@ const Billings = () => {
   const navigate = useNavigate();
 
   const handleAdd = () => {
-    navigate(RouteName.CREATE_BILLINGS); // Navigate to a different route
+    if (tab === "invoice")
+      navigate(RouteName.CREATE_INVOICE);
+    else navigate(RouteName.CREATE_RECEIPT);
   };
 
   return (

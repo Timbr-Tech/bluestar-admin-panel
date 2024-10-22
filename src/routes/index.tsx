@@ -27,7 +27,8 @@ const AppRoutes = () => {
         element={<SingleBookings />}
       />
       <Route path={RouteName.BILLINGS} element={<Billings />} />
-      <Route path={RouteName.CREATE_BILLINGS} element={<CreateBilling />} />
+      <Route path={RouteName.CREATE_INVOICE} element={<CreateBilling />} />
+      <Route path={RouteName.CREATE_RECEIPT} element={<CreateBilling />} />
       <Route
         path={`${RouteName.DUTIES}/:bookingId`}
         element={<SingleBookings />}
