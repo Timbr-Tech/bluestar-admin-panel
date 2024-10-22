@@ -134,7 +134,7 @@ const BillingsSection = ({ isEdit, isInvoice }: IBillingsSection) => {
                   <Input.TextArea
                     className={styles.textarea}
                     name="billingAddress"
-                    placeholder="Parkway Centre 1  Marine Parade Central #13-03 Singapore 449408"
+                    placeholder="Parkway Centre 1 Marine Parade Central #13-03Singapore 449408"
                   />
                 </Form.Item>
               </div>
