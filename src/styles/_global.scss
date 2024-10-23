@@ -366,3 +366,17 @@ input {
 .ant-picker {
   min-height: 40px !important;
 }
+
+.ant-drawer-content {
+  padding: 0;
+  .ant-drawer-header {
+    padding: 0;
+    border-bottom: 0;
+    padding: 24px;
+  }
+
+  .ant-drawer-body {
+    padding: 24px;
+    padding-top: 0;
+  }
+}

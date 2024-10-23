@@ -15,6 +15,7 @@ import {
   setBookingFilter,
   setIsEditingBooking,
 } from "../../redux/slices/bookingSlice";
+import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 import { useAppDispatch } from "../../hooks/store";
@@ -67,6 +68,12 @@ const Bookings = () => {
   const [form] = Form.useForm();
   const [formStep, setFormSetp] = useState(0);
   const navigate = useNavigate();
+
+  const handleCloseSidePanel = () => {
+    dispatch(setIsAddEditDrawerClose());
+    dispatch(setIsEditingBooking(true));
+  };
+
   return (
     <div className={cn("container", styles.container)}>
       <div className={styles.headingContainer}>
@@ -120,11 +127,14 @@ const Bookings = () => {
       <Drawer
         destroyOnClose
         size="large"
+        closable={false} // Remove the default close button
         mask
         title={
-          <div>
-            <div>Add New Booking</div>
-            <small>Fill your booking details here</small>
+          <div className={styles.formHeader}>
+            <div className={styles.header}>Add New Booking</div>
+            <div className={styles.primaryText}>
+              Fill your booking details here
+            </div>
           </div>
         }
         footer={
@@ -143,12 +153,11 @@ const Bookings = () => {
             </Button>
           </div>
         }
-        onClose={() => {
-          dispatch(setIsAddEditDrawerClose());
-          dispatch(setIsEditingBooking(true));
-        }}
         open={isAddEditDrawerOpen}
       >
+        <button className={styles.closeBtn} onClick={handleCloseSidePanel}>
+          <CrossIcon />
+        </button>
         <div>
           {formStep == 0 && (
             <AddNewBookingForm

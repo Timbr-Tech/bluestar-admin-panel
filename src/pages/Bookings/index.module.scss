@@ -121,3 +121,34 @@
   text-decoration: none;
   margin-bottom: 10px;
 }
+
+.formHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .header {
+    color: #101828;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 30px;
+  }
+
+  .primaryText {
+    color: #475467;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+}
+
+.closeBtn {
+  all: unset;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 100;
+}
