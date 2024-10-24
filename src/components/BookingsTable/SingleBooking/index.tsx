@@ -10,34 +10,37 @@ import {
   TableColumnsType,
 } from "antd";
 import styles from "../index.module.scss";
-import { ReactComponent as DotsHorizontal } from "../../../icons/dots-horizontal.svg";
-import { ReactComponent as DeleteIcon } from "../../../icons/trash.svg";
+
 import {
   CarOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  MailOutlined,
   MoreOutlined,
   PhoneOutlined,
-  PushpinOutlined,
   RedoOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { RouteName } from "../../../constants/routes";
 import { RootState } from "../../../types/store";
 import CustomPagination from "../../Common/Pagination";
 import { useAppDispatch } from "../../../hooks/store";
-import BookingsStates from "../../States/BookingsStates";
 import { getSingleBookings } from "../../../redux/slices/bookingSlice";
-import { getDuties } from "../../../redux/slices/dutiesSlice";
+import { useParams } from "react-router-dom";
+import {
+  getBookingsDuties,
+  setCurrentSelectedBookingDuties,
+  setIsAddEditDrawerOpen,
+  setIsEditingBookingDuties,
+} from "../../../redux/slices/bookingDutiesSlice";
+import { formatDateFull } from "../../../utils/date";
 
 const SingleBookingsTable = () => {
-  const { duties, dutiesState, pagination, filters } = useSelector(
-    (state: RootState) => state.duties
+  let { bookingId } = useParams();
+  const { data, pagination, filters, bookingDutiesStates } = useSelector(
+    (state: RootState) => state.bookingDuties
   );
 
   const dispatch = useAppDispatch();
@@ -47,7 +50,13 @@ const SingleBookingsTable = () => {
       {
         key: "1",
         label: (
-          <div onClick={() => {}}>
+          <div
+            onClick={() => {
+              dispatch(setCurrentSelectedBookingDuties(row));
+              dispatch(setIsAddEditDrawerOpen());
+              dispatch(setIsEditingBookingDuties(false));
+            }}
+          >
             <Space>
               <EyeOutlined />
               View Duty
@@ -125,49 +134,6 @@ const SingleBookingsTable = () => {
       dataIndex: "dutiesDate",
       key: "dutiesDate",
     },
-    // {
-    //   title: "Custom booking Id",
-    //   dataIndex: "customBookingId",
-    //   key: "customBookingId",
-    //   render: (data, each) => {
-    //     return <a href={`${RouteName.BOOKINGS}/${each.id}`}>{data}</a>;
-    //   },
-    // },
-    // {
-    //   title: "Alternate option",
-    //   dataIndex: "assignAlternateVehicles",
-    //   key: "assignAlternateVehicles",
-    //   render: (each: any) => (each === false ? "No" : "Yes"),
-    // },
-    {
-      title: "Customer",
-      dataIndex: "customerId",
-      key: "customerId",
-      render: (each: any) => {
-        return <span>{each.name}</span>;
-      },
-    },
-    // {
-    //   title: "Booked By",
-    //   dataIndex: "bookedBy",
-    //   key: "bookedBy",
-    //   width: "200px",
-    //   render: (each: any) => {
-    //     return (
-    //       <div>
-    //         <p>
-    //           <UserOutlined /> {each.name}
-    //         </p>
-    //         <p>
-    //           <PhoneOutlined /> {each.phoneNumber}
-    //         </p>
-    //         <p>
-    //           <MailOutlined /> {each.email}
-    //         </p>
-    //       </div>
-    //     );
-    //   },
-    // },
     {
       title: "Passenger",
       dataIndex: "passengers",
@@ -213,16 +179,15 @@ const SingleBookingsTable = () => {
     },
     {
       title: "Vehicle",
-      dataIndex: "vehicle",
-      key: "vehicle",
+      dataIndex: "vehicleGroupId",
+      key: "vehicleGroupId",
+      render: (data) => data.name,
     },
     {
       title: "Duty type",
       dataIndex: "dutyTypeId",
       key: "dutyTypeId",
-      render: (each) => {
-        return <span>{each?.name}</span>;
-      },
+      render: (data) => data.name,
     },
     {
       title: "Driver",
@@ -230,51 +195,45 @@ const SingleBookingsTable = () => {
       key: "driver",
     },
     {
-      title: "Rep. Time",
-      dataIndex: "repTime",
-      key: "repTime",
+      title: "Duration",
+      dataIndex: "duration",
+      key: "duration",
+      render: (data) => (
+        <div>
+          <p>
+            {" "}
+            {formatDateFull(data.startDateTime)} -{" "}
+            {formatDateFull(data.endDateTime)}
+          </p>
+          <p> </p>
+        </div>
+      ),
     },
-    // {
-    //   title: "Duties",
-    //   dataIndex: "duties",
-    //   key: "duties",
-    // },
-    // {
-    //   title: "Address",
-    //   dataIndex: "address",
-    //   key: "address",
-    //   render: (data) => {
-    //     return (
-    //       <>
-    //         <a href={data?.dropAddress} target="_blank">
-    //           <PushpinOutlined /> Drop address
-    //         </a>
-    //         <br />
-    //         <a href={data?.reportingAddress} target="_blank">
-    //           <PushpinOutlined /> Reporting address
-    //         </a>
-    //       </>
-    //     );
-    //   },
-    // },
-    // {
-    //   title: "Airport Booking",
-    //   dataIndex: "isAirportBooking",
-    //   key: "isAirportBooking",
-    //   render: (each: any) => (each === false ? "No" : "yes"),
-    // },
-    // {
-    //   title: "Confirmed Status",
-    //   dataIndex: "isUnconfirmed",
-    //   key: "isUnconfirmed",
-    //   render: (each: any) => (each === false ? "Yes" : "No"),
-    // },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+      render: (data) => {
+        return (
+          <>
+            <a href={data?.dropAddress} target="_blank">
+              Drop address
+            </a>
+            <br />
+            <a href={data?.reportingAddress} target="_blank">
+              Reporting address
+            </a>
+          </>
+        );
+      },
+    },
+
     {
       title: "Status",
-      dataIndex: "bookingStatus",
-      key: "bookingStatus",
+      dataIndex: "dutyStatus",
+      key: "dutyStatus",
       render: (data: any) => {
-        return <BookingsStates status={data.toLowerCase()} />;
+        return data;
       },
     },
     {
@@ -296,13 +255,16 @@ const SingleBookingsTable = () => {
   ];
 
   function formateData() {
-    return duties?.map((each: any) => {
+    return data?.map((each: any) => {
       return {
         ...each,
-        dutiesDate: each.startDate ?? "28/10/2024",
-        customerId: each.customerId ?? "Pratham",
-        driver: each.driver ?? "John Dukes",
-        repTime: each.repRime ?? "16:00",
+
+        driver: each.driver,
+        passengers: each.bookingId.passengers,
+        vehicleGroupId: each?.vehicleGroupId,
+        dutyTypeId: each?.dutyTypeId,
+        dutyStatus: each.dutyStatus,
+        duration: each.duration,
         address: {
           dropAddress: each?.dropAddress,
           reportingAddress: each?.reportingAddress,
@@ -313,35 +275,26 @@ const SingleBookingsTable = () => {
     });
   }
 
-  // rowSelection object indicates the need for row selection
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
-    getCheckboxProps: (record: any) => ({
-      // disabled: record.name === "Disabled User", // Column configuration not to be checked
-      // name: record.name,
-    }),
-  };
-
   useEffect(() => {
-    dispatch(getDuties({ ...filters }));
-  }, [filters.search, filters.status]);
+    if (bookingId) {
+      dispatch(getBookingsDuties({ bookingId, ...filters }));
+    } else {
+      dispatch(getBookingsDuties({ ...filters }));
+    }
+  }, [
+    bookingId,
+    filters.status,
+    filters.search,
+    filters.startDate,
+    filters.endDate,
+  ]);
 
   return (
     <>
       <div className={styles.container}>
         <Table
-          rowSelection={{
-            type: "checkbox",
-            ...rowSelection,
-          }}
           bordered
-          loading={dutiesState.loading}
+          loading={bookingDutiesStates.loading}
           dataSource={formateData()}
           columns={columns}
           pagination={false}

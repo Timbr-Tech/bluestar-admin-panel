@@ -3,7 +3,7 @@ export const BOOKINGS_TABS = [
   {
     id: 1,
     name: "All",
-    type: "all",
+    type: undefined,
   },
   { id: 2, name: "Booked", type: "booked" },
   { id: 3, name: "On-Going", type: "on-going" },
@@ -26,15 +26,15 @@ export const BOOKINGS_DUTY_TABS = [
   {
     id: 1,
     name: "All",
-    type: "all",
+    type: "",
   },
-  { id: 2, name: "Booked", type: "booked" },
-  { id: 2, name: "Alloted", type: "alloted" },
-  { id: 2, name: "Dispatched", type: "dispatched" },
-  { id: 3, name: "On-Going", type: "on-going" },
-  { id: 4, name: "Completed", type: "completed" },
-  { id: 5, name: "Billed", type: "billed" },
-  { id: 6, name: "Cancelled", type: "cancelled" },
+  { id: 2, name: "Upcoming", type: "Upcoming" },
+  { id: 2, name: "Alloted", type: "Alloted" },
+  { id: 2, name: "Dispatched", type: "Dispatched" },
+  { id: 3, name: "Booked", type: "Booked" },
+  { id: 4, name: "Completed", type: "Completed" },
+  { id: 5, name: "Billed", type: "Billed" },
+  { id: 6, name: "Cancelled", type: "Cancelled" },
 ];
 
 export const BOOKINGS_TABLE = [

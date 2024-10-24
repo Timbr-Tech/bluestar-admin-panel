@@ -1,30 +1,26 @@
 /* eslint-disable */
-
-import {
-  ArrowLeftOutlined,
-  EditFilled,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { DatePicker, Input, Form, Drawer, Button } from "antd";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import styles from "./index.module.scss";
-import utc from "dayjs/plugin/utc";
-import { ChangeEvent } from "react";
+import { EditFilled, SearchOutlined } from "@ant-design/icons";
+import { Input, DatePicker, Button, Drawer, Form } from "antd";
+import { ChangeEvent, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import AddNewDutyToBookingForm from "../../components/Bookings/AddNewDutyToBooking";
-import SingleBookingsTable from "../../components/BookingsTable/SingleBooking";
-import PrimaryBtn from "../../components/PrimaryBtn";
-import SecondaryBtn from "../../components/SecondaryBtn";
-import { BOOKINGS_DUTY_TABS } from "../../constants/bookings";
-import { useAppDispatch } from "../../hooks/store";
-import { setBookingDutiesFilter } from "../../redux/slices/bookingDutiesSlice";
+import PrimaryBtn from "../../../components/PrimaryBtn";
+import SecondaryBtn from "../../../components/SecondaryBtn";
+import { useAppDispatch } from "../../../hooks/store";
+import { RootState } from "../../../types/store";
+import styles from "../index.module.scss";
+import { ReactComponent as ArrowLeftOutlined } from "../../../icons/arrow-left-blue.svg";
+import classNames from "classnames";
+import { BOOKINGS_DUTY_TABS } from "../../../constants/bookings";
+import SingleBookingsTable from "../../../components/BookingsTable/SingleBooking";
 import {
-  setIsAddEditDrawerOpen,
+  setBookingDutiesFilter,
   setIsAddEditDrawerClose,
-} from "../../redux/slices/bookingSlice";
-import { RootState } from "../../types/store";
+  setIsAddEditDrawerOpen,
+} from "../../../redux/slices/bookingDutiesSlice";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import AddNewDutyToBookingForm from "../../../components/Bookings/AddNewDutyToBooking";
 
 dayjs.extend(utc);
 

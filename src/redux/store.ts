@@ -6,6 +6,7 @@ import databaseSlice from "./slices/databaseSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import dutiesSlice from "./slices/dutiesSlice";
 import vehicleTrackerSlice from "./slices/vehicleTrackerSlice";
+import bookingDutiesSlice from "./slices/bookingDutiesSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     attendance: attendanceSlice,
     duties: dutiesSlice,
     vehicleTracker: vehicleTrackerSlice,
+    bookingDuties: bookingDutiesSlice,
   },
 });
 

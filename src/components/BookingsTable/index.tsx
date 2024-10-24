@@ -467,7 +467,6 @@ const BookingsTable = () => {
             </button>
           </div>
         </div>
-        {/* {JSON.stringify(currentDeleteBooking)} */}
       </Modal>
       {/* confirmed booking */}
       <Modal
@@ -501,31 +500,6 @@ const BookingsTable = () => {
           </div>
         </div>
       </Modal>
-      {/* <Drawer
-        destroyOnClose
-        size="large"
-        mask
-        title={
-          <div>
-            <div>View Booking</div>
-            <small>See your booking details here</small>
-          </div>
-        }
-        onClose={() => {
-          // setOpenAddDrawer(false);
-          dispatch(setIsAddEditDrawerClose());
-        }}
-        open={isAddEditDrawerOpen}
-      >
-        <div>
-          <AddNewBookingForm
-            initialData={{
-              bookingId: "123",
-            }}
-            isEditable={true}
-          />
-        </div>
-      </Drawer> */}
     </>
   );
 };

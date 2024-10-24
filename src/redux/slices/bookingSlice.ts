@@ -8,8 +8,8 @@ const initialState = {
   currentSelectedBooking: {} as any, // as Ibooking later
   bookings: [],
   filters: {
-    status: "all",
-    search: "",
+    status: undefined,
+    search: undefined,
   },
   isEditingBooking: true,
   bookingStates: { status: "idle", loading: false, error: "" },

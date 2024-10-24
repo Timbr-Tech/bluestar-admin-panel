@@ -11,7 +11,7 @@ import Bookings from "../pages/Bookings";
 import Billings from "../pages/Billings";
 import CreateBilling from "../pages/Billings/Create";
 import VehicleExpense from "../pages/VehicleExpense";
-import SingleBookings from "../pages/Bookings/SingleBooking";
+import SingleBookings from "../pages/Bookings/SingleBookingDuties";
 import AllDuties from "../pages/Duties";
 import VehicleTrackerPage from "../pages/VehicleTracker";
 
