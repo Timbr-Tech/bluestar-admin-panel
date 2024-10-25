@@ -39,6 +39,23 @@ export const addNewBookingDuties = createAsyncThunk(
     }
   }
 );
+export const updateBookingDuties = createAsyncThunk(
+  "bookingsDuties/updateBookingDuties",
+  async (body: any, { dispatch }: any) => {
+    const response = await apiClient.patch(`/duty/${body.id}`, body);
+    if (response.status === 200) {
+      dispatch(setCurrentSelectedBookingDuties({}));
+      notification.success({
+        message: "Success",
+        description: "update booking duties successfully",
+      });
+      console.log("CLOSE");
+      dispatch(setIsAddEditDrawerClose());
+      dispatch(getBookingsDuties({}));
+      return response.data;
+    }
+  }
+);
 export const getBookingsDuties = createAsyncThunk(
   "bookingsDuties/getBookingsDuties",
   async (params: any) => {

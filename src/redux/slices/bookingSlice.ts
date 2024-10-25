@@ -72,6 +72,22 @@ export const addNewBooking = createAsyncThunk(
     }
   }
 );
+export const updateBooking = createAsyncThunk(
+  "booking/updateBooking",
+  async (body: any, { dispatch }: any) => {
+    const response = await apiClient.patch(`/booking/${body.id}`, body);
+    if (response.status === 200) {
+      dispatch(setCurrentSelectedBooking({}));
+      notification.success({
+        message: "Success",
+        description: "Booking updated successfully",
+      });
+      dispatch(setIsAddEditDrawerClose());
+      dispatch(getBookings({}));
+      return response.data;
+    }
+  }
+);
 export const bookingSlice = createSlice({
   name: "booking",
   initialState,

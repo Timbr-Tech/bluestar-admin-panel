@@ -42,9 +42,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 
 import CustomPagination from "../Common/Pagination";
-import row from "antd/es/row";
-import { each } from "lodash";
-import { title } from "process";
 import { RouteName } from "../../constants/routes";
 import { useNavigate } from "react-router-dom";
 
@@ -256,8 +253,9 @@ const BookingsTable = () => {
     },
     {
       title: "Vehicle group",
-      dataIndex: "vehicleGroup",
-      key: "vehicleGroup",
+      dataIndex: "vehicleGroupId",
+      key: "vehicleGroupId",
+      render: (each) => <span>{each?.name}</span>,
     },
     {
       title: "Duty type",
@@ -365,6 +363,7 @@ const BookingsTable = () => {
           dropAddress: each?.dropAddress,
           reportingAddress: each?.reportingAddress,
         },
+        vehicleGroupId: each.vehicleGroupId,
         id: each._id,
         action: "",
       };

@@ -4,13 +4,12 @@ import styles from "../AddNewBooking/index.module.scss";
 import {
   Form,
   Input,
-  AutoComplete,
   Card,
   Row,
   Col,
   TimePicker,
   InputNumber,
-  Space,
+  Select,
 } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import CustomizeRequiredMark from "../../Common/CustomizeRequiredMark";
@@ -21,10 +20,12 @@ import {
   getAllDutyTypes,
   getVehicleGroup,
 } from "../../../redux/slices/databaseSlice";
-import { addNewBooking } from "../../../redux/slices/bookingSlice";
 import { useParams } from "react-router-dom";
-import { addNewBookingDuties } from "../../../redux/slices/bookingDutiesSlice";
-import { duration } from "moment";
+import {
+  addNewBookingDuties,
+  updateBookingDuties,
+} from "../../../redux/slices/bookingDutiesSlice";
+
 import dayjs from "dayjs";
 
 const { TextArea } = Input;
@@ -82,12 +83,15 @@ const AddNewDutyToBookingForm = ({
         reportingAddress: initialData?.reportingAddress,
         duration: {
           startDateTime: initialData?.duration?.startDateTime
-            ? dayjs(initialData.duration.startDateTime)
+            ? dayjs(initialData?.duration?.startDateTime)
             : null,
           endDateTime: initialData?.duration?.endDateTime
             ? dayjs(initialData.duration.endDateTime)
             : null,
-          startBefore: initialData?.duration?.startBefore || null,
+
+          startBefore: initialData?.duration?.startBefore
+            ? dayjs(initialData.duration.startBefore)
+            : null,
         },
         dropAddress: initialData?.dropAddress,
         fromLocation: initialData?.fromLocation,
@@ -110,7 +114,11 @@ const AddNewDutyToBookingForm = ({
       onFinish={(values) => {
         console.log(values);
         // handleFormSubmit(value);
-        dispatch(addNewBookingDuties({ bookingId, ...values }));
+        if (isEditable && initialData._id) {
+          dispatch(updateBookingDuties({ id: initialData._id, ...values }));
+        } else {
+          dispatch(addNewBookingDuties({ bookingId, ...values }));
+        }
       }}
       requiredMark={CustomizeRequiredMark}
       className={styles.form}
@@ -121,8 +129,9 @@ const AddNewDutyToBookingForm = ({
         rules={[{ required: true }]}
         label="Duty type"
       >
-        <AutoComplete
+        <Select
           allowClear
+          showSearch
           options={dutyTypeOption}
           value={form.getFieldValue("dutyTypeId")}
           onSearch={(text) => getDutyTypeValue(text)}
@@ -138,14 +147,15 @@ const AddNewDutyToBookingForm = ({
         rules={[{ required: true }]}
         label="Vehicle Group"
       >
-        <AutoComplete
+        <Select
           allowClear
+          showSearch
           options={vehicleGroupSelectOption}
           onSearch={(text) => getVehicleGroupValue(text)}
           placeholder="Search drivers"
           fieldNames={{ label: "label", value: "value" }}
           notFoundContent={<div>No search result</div>}
-        ></AutoComplete>
+        ></Select>
       </Form.Item>
       {/* from and to */}
       <Row gutter={12}>
@@ -237,6 +247,7 @@ const AddNewDutyToBookingForm = ({
                     showTime={true}
                     format="DD-MM-YYYY HH:mm"
                     use12Hours
+                    onChange={form.onChange}
                   />
                 </Form.Item>
               </Col>
@@ -256,6 +267,7 @@ const AddNewDutyToBookingForm = ({
                     showTime={true}
                     use12Hours
                     format="DD-MM-YYYY"
+                    onChange={form.onChange}
                   />
                 </Form.Item>
               </Col>

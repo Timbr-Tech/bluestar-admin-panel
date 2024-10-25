@@ -26,7 +26,11 @@ import {
   getCustomer,
   getVehicleGroup,
 } from "../../../redux/slices/databaseSlice";
-import { addNewBooking } from "../../../redux/slices/bookingSlice";
+import {
+  addNewBooking,
+  updateBooking,
+} from "../../../redux/slices/bookingSlice";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 interface AddNewBookingForm {
@@ -74,20 +78,49 @@ const AddNewBookingForm = ({
   };
   const [useThisPassenger, setUseThisPassenger] = useState<boolean>(false);
 
+  console.log("initialData", initialData);
   useEffect(() => {
     if (Object.keys(initialData).length) {
       form.setFieldsValue({
         _id: initialData?._id,
         customBookingId: initialData?.customBookingId,
-        customerId: initialData?.customerId,
+        bookingType: initialData?.bookingType,
+        customerId: [
+          {
+            label: initialData?.customerId?.name,
+            value: initialData?.customerId?._id,
+          },
+        ],
         bookedBy: initialData?.bookedBy,
         passengers: initialData?.passengers,
-        dutyTypeId: initialData?.dutyTypeId,
+        dutyTypeId: [
+          {
+            label: initialData?.dutyTypeId?.name,
+            value: initialData?.dutyTypeId?._id,
+          },
+        ],
+        vehicleGroupId: [
+          {
+            label: initialData?.vehicleGroupId?.name,
+            value: initialData?.vehicleGroupId?._id,
+          },
+        ],
         assignAlternateVehicles: initialData?.assignAlternateVehicles,
         reportingAddress: initialData?.reportingAddress,
         dropAddress: initialData?.dropAddress,
         isAirportBooking: initialData?.isAirportBooking,
-        // duration: initialData?.duration, // yaha fat raha h
+        duration: {
+          startTime: initialData?.duration?.startTime
+            ? dayjs(initialData?.duration?.startTime)
+            : null,
+          endTime: initialData?.duration?.endTime
+            ? dayjs(initialData.duration.endTime)
+            : null,
+
+          startBefore: initialData?.duration?.startBefore
+            ? dayjs(initialData.duration.startBefore)
+            : null,
+        },
         operatorNotes: initialData?.operatorNotes,
         driverNotes: initialData?.driverNotes,
         isUnconfirmed: initialData?.isUnconfirmed,
@@ -109,9 +142,12 @@ const AddNewBookingForm = ({
       onFinish={(values) => {
         console.log(values);
         // handleFormSubmit(value);
-        dispatch(addNewBooking(values));
+        if (isEditable && initialData._id) {
+          dispatch(updateBooking({ id: initialData._id, ...values }));
+        } else {
+          dispatch(addNewBooking(values));
+        }
       }}
-      // initialValues={initialData}
       requiredMark={CustomizeRequiredMark}
       className={styles.form}
     >
@@ -127,9 +163,10 @@ const AddNewBookingForm = ({
         rules={[{ required: true }]}
         label="Customer"
       >
-        <AutoComplete
+        <Select
           placeholder="Select customer"
           allowClear
+          showSearch
           options={customersOption}
           onSearch={(text) => getCustomerList(text)}
           fieldNames={{ label: "label", value: "value" }}
@@ -259,8 +296,9 @@ const AddNewBookingForm = ({
         rules={[{ required: true }]}
         label="Duty type"
       >
-        <AutoComplete
+        <Select
           allowClear
+          showSearch
           options={dutyTypeOption}
           onSearch={(text) => getDutyTypeValue(text)}
           placeholder="Select Duty type"
@@ -269,19 +307,19 @@ const AddNewBookingForm = ({
         />
       </Form.Item>
       <Form.Item
-        name="VehicleGroupId"
-        id="VehicleGroupId"
+        name="vehicleGroupId"
         rules={[{ required: true }]}
         label="Vehicle Group"
       >
-        <AutoComplete
+        <Select
           allowClear
+          showSearch
           options={vehicleGroupSelectOption}
           onSearch={(text) => getVehicleGroupValue(text)}
-          placeholder="Search drivers"
+          placeholder="Search vehicle group"
           fieldNames={{ label: "label", value: "value" }}
           notFoundContent={<div>No search result</div>}
-        ></AutoComplete>
+        ></Select>
       </Form.Item>
 
       <Form.Item valuePropName="checked" name="assignAlternateVehicles">

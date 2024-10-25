@@ -70,7 +70,13 @@ const SingleBookingsTable = () => {
       {
         key: "2",
         label: (
-          <div onClick={() => {}}>
+          <div
+            onClick={() => {
+              dispatch(setCurrentSelectedBookingDuties(row));
+              dispatch(setIsAddEditDrawerOpen());
+              dispatch(setIsEditingBookingDuties(true));
+            }}
+          >
             <Space>
               <EditOutlined twoToneColor="#52c41a" />
               Edit Duty
