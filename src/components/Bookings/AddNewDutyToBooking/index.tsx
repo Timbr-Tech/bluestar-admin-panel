@@ -113,11 +113,16 @@ const AddNewDutyToBookingForm = ({
       }}
       onFinish={(values) => {
         console.log(values);
-        // handleFormSubmit(value);
+        const payload = {
+          ...values,
+          dutyTypeId: values.dutyTypeId[0]?.value || values.dutyTypeId,
+          vehicleGroupId:
+            values.vehicleGroupId[0]?.value || values.vehicleGroupId,
+        };
         if (isEditable && initialData._id) {
-          dispatch(updateBookingDuties({ id: initialData._id, ...values }));
+          dispatch(updateBookingDuties({ id: initialData._id, ...payload }));
         } else {
-          dispatch(addNewBookingDuties({ bookingId, ...values }));
+          dispatch(addNewBookingDuties({ bookingId, ...payload }));
         }
       }}
       requiredMark={CustomizeRequiredMark}

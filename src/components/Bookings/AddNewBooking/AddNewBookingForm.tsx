@@ -4,7 +4,6 @@ import styles from "./index.module.scss";
 import {
   Form,
   Input,
-  AutoComplete,
   Space,
   Card,
   Radio,
@@ -78,7 +77,6 @@ const AddNewBookingForm = ({
   };
   const [useThisPassenger, setUseThisPassenger] = useState<boolean>(false);
 
-  console.log("initialData", initialData);
   useEffect(() => {
     if (Object.keys(initialData).length) {
       form.setFieldsValue({
@@ -130,6 +128,7 @@ const AddNewBookingForm = ({
       });
     }
   }, [initialData]);
+
   return (
     <Form
       layout="vertical"
@@ -140,12 +139,18 @@ const AddNewBookingForm = ({
         console.log("Failed:", errorInfo);
       }}
       onFinish={(values) => {
-        console.log(values);
-        // handleFormSubmit(value);
+        const formData = {
+          ...values,
+          customerId: values.customerId[0]?.value || values.customerId,
+          dutyTypeId: values.dutyTypeId[0]?.value || values.dutyTypeId,
+          vehicleGroupId:
+            values.vehicleGroupId[0]?.value || values.vehicleGroupId,
+        };
+        console.log("formData", formData);
         if (isEditable && initialData._id) {
-          dispatch(updateBooking({ id: initialData._id, ...values }));
+          dispatch(updateBooking({ id: initialData._id, ...formData }));
         } else {
-          dispatch(addNewBooking(values));
+          dispatch(addNewBooking(formData));
         }
       }}
       requiredMark={CustomizeRequiredMark}
