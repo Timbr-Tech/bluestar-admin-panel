@@ -44,6 +44,8 @@ import { RootState } from "../../types/store";
 import CustomPagination from "../Common/Pagination";
 import { RouteName } from "../../constants/routes";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import row from "antd/es/row";
 
 const BookingsTable = () => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -64,35 +66,33 @@ const BookingsTable = () => {
       {
         key: "1",
         label: (
-          <div
-            onClick={(e) => {
-              // setCurrentSelectedBooking(row);
-              e.stopPropagation();
-              dispatch(setCurrentSelectedBooking(row));
-              setConformedBookingModal(true);
-            }}
-          >
+          <div>
             <Space>
               <CheckCircleTwoTone twoToneColor="#52c41a" />
               Confirm booking
             </Space>
           </div>
         ),
+        onClick: (e) => {
+          // setCurrentSelectedBooking(row);
+          e.domEvent.stopPropagation();
+          dispatch(setCurrentSelectedBooking(row));
+          setConformedBookingModal(true);
+        },
       },
       {
         type: "divider",
       },
       {
         key: "2",
+        onClick: (e) => {
+          e.domEvent.stopPropagation();
+          dispatch(setCurrentSelectedBooking(row));
+          dispatch(setIsEditingBooking(false));
+          dispatch(setIsAddEditDrawerOpen());
+        },
         label: (
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              dispatch(setCurrentSelectedBooking(row));
-              dispatch(setIsAddEditDrawerOpen());
-              dispatch(setIsEditingBooking(false));
-            }}
-          >
+          <div>
             <Space>
               <EyeOutlined twoToneColor="#52c41a" />
               View booking
@@ -106,20 +106,19 @@ const BookingsTable = () => {
       {
         key: "3",
         label: (
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              dispatch(setCurrentSelectedBooking(row));
-              dispatch(setIsAddEditDrawerOpen());
-              dispatch(setIsEditingBooking(true));
-            }}
-          >
+          <div>
             <Space>
               <EditOutlined twoToneColor="#52c41a" />
               Edit booking
             </Space>
           </div>
         ),
+        onClick: (e) => {
+          e.domEvent.stopPropagation();
+          dispatch(setCurrentSelectedBooking(row));
+          dispatch(setIsEditingBooking(true));
+          dispatch(setIsAddEditDrawerOpen());
+        },
       },
       {
         type: "divider",
@@ -145,11 +144,6 @@ const BookingsTable = () => {
             style={{
               color: "#F04438",
             }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setDeleteModal(true);
-              dispatch(setCurrentSelectedBooking(row));
-            }}
           >
             <Space>
               <DeleteOutlined />
@@ -157,6 +151,11 @@ const BookingsTable = () => {
             </Space>
           </div>
         ),
+        onClick: (e) => {
+          e.domEvent.stopPropagation();
+          setDeleteModal(true);
+          dispatch(setCurrentSelectedBooking(row));
+        },
       },
     ];
     return items;
@@ -329,7 +328,13 @@ const BookingsTable = () => {
             >
               <DeleteIcon />
             </button>
-            <Dropdown menu={{ items: returnItems(row) }} trigger={["click"]}>
+            <Dropdown
+              onOpenChange={() => {}}
+              menu={{
+                items: returnItems(row),
+              }}
+              trigger={["click"]}
+            >
               <button className={styles.button}>
                 <DotsHorizontal />
               </button>
@@ -363,6 +368,7 @@ const BookingsTable = () => {
           dropAddress: each?.dropAddress,
           reportingAddress: each?.reportingAddress,
         },
+        startDate: dayjs(each.duration.startTime).format("DD,MMM YYYY hh:mm A"),
         vehicleGroupId: each.vehicleGroupId,
         id: each._id,
         action: "",

@@ -71,7 +71,7 @@ const Bookings = () => {
 
   const handleCloseSidePanel = () => {
     dispatch(setIsAddEditDrawerClose());
-    dispatch(setIsEditingBooking(true));
+    dispatch(setIsEditingBooking(false));
   };
 
   return (
@@ -94,6 +94,7 @@ const Bookings = () => {
             LeadingIcon={PlusOutlined}
             onClick={() => {
               dispatch(setIsAddEditDrawerOpen());
+              dispatch(setIsEditingBooking(false));
             }}
             btnText="Add bookings"
           />
@@ -118,7 +119,16 @@ const Bookings = () => {
             }}
           >
             <RangePicker />
-            <p>clear</p>
+            <span
+              onClick={() => {
+                dispatch(setBookingFilter({ search: undefined }));
+              }}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              clear
+            </span>
           </div>
         </div>
         {/* <Divider /> */}
@@ -131,9 +141,12 @@ const Bookings = () => {
         mask
         title={
           <div className={styles.formHeader}>
-            <div className={styles.header}>Add New Booking</div>
+            <div className={styles.header}>
+              {!isEditingBooking ? "Add New Booking" : "Edit Booking"}
+            </div>
             <div className={styles.primaryText}>
               Fill your booking details here
+              {isEditingBooking.toString()}
             </div>
           </div>
         }

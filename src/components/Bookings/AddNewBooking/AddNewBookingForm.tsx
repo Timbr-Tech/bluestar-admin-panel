@@ -130,6 +130,7 @@ const AddNewBookingForm = ({
       });
     }
   }, [initialData]);
+
   return (
     <Form
       layout="vertical"
@@ -227,6 +228,10 @@ const AddNewBookingForm = ({
                     phoneNumber: bookedBy.phoneNumber,
                   },
                 ],
+              });
+            } else {
+              form.setFieldsValue({
+                passengers: [],
               });
             }
             setUseThisPassenger(!useThisPassenger);
@@ -413,10 +418,13 @@ const AddNewBookingForm = ({
                 label="Start Date"
               >
                 <CustomDatePicker
+                  disabledDate={(current) =>
+                    current && current < dayjs().startOf("day")
+                  }
                   showHour={true}
                   showMinute={true}
                   showTime={true}
-                  format="DD-MM-YYYY"
+                  format="DD-MM-YYYY hh:mm A"
                   use12Hours
                 />
               </Form.Item>
@@ -436,7 +444,20 @@ const AddNewBookingForm = ({
                   showMinute={true}
                   showTime={true}
                   use12Hours
-                  format="DD-MM-YYYY"
+                  disabledDate={(current) => {
+                    // Get the start time from form values
+                    const startTime = form.getFieldValue([
+                      "duration",
+                      "startTime",
+                    ]);
+
+                    return (
+                      current &&
+                      (current < dayjs(startTime || undefined).startOf("day") ||
+                        current < dayjs().startOf("day"))
+                    );
+                  }}
+                  format="DD-MM-YYYY hh:mm A"
                 />
               </Form.Item>
             </Col>

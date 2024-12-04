@@ -16,6 +16,7 @@ const CustomDatePicker = ({
   value,
   onChange,
   format = "DD-MM-YYYY",
+  disabledDate,
   ...rest
 }: any) => {
   const handleChange = (date: any, dateString: any) => {
@@ -49,6 +50,7 @@ const CustomDatePicker = ({
       value={value ? dayjs(value) : dayjs()}
       onChange={handleChange}
       format={format}
+      disabledDate={disabledDate}
       style={{ width: "100%", ...rest.style }}
     />
   );

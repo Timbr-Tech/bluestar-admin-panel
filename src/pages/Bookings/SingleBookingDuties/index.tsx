@@ -58,7 +58,10 @@ const SingleBookingDuties = () => {
     isEditingBookingDuties,
   } = useSelector((state: RootState) => state.bookingDuties);
 
-  console.log("currentSelectedBookingDuties", currentSelectedBookingDuties);
+  console.log(
+    "currentSelectedBookingDuties",
+    currentSelectedBookingDuties?.duration?.startTime
+  );
 
   const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -76,7 +79,15 @@ const SingleBookingDuties = () => {
           </a>
 
           <div className={styles.heading}>{`Booking ID: ${bookingId}`}</div>
-          <div className={styles.text}>12/06/2024 to 18/06/2024</div>
+          <div className={styles.text}>
+            {dayjs(currentSelectedBookingDuties?.duration?.startTime).format(
+              "DD,MMM YYYY hh:mm A"
+            )}
+            to{" "}
+            {dayjs(currentSelectedBookingDuties?.duration?.endTime).format(
+              "DD,MMM YYYY hh:mm A"
+            )}
+          </div>
         </div>
         <div className={styles.btnContainer}>
           <SecondaryBtn
