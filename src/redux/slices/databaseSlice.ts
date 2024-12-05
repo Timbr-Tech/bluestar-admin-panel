@@ -28,7 +28,6 @@ export const addBankAccount = createAsyncThunk(
 export const getBankAccount = createAsyncThunk(
   "database/getBankAccount",
   async (params: any, { dispatch }) => {
-    console.log(params, "params");
     const response = await apiClient.get(`/database/bank-accounts/`, {
       params,
     });
