@@ -4,7 +4,7 @@ import apiClient from "../../utils/configureAxios";
 import { notification } from "antd";
 
 export const getInvoices = createAsyncThunk(
-  "invoices/getInvoices",
+  "billings/getInvoices",
   async (params: any, { dispatch }) => {
     const response = await apiClient.get(`/invoice`, {
       params,
@@ -15,7 +15,7 @@ export const getInvoices = createAsyncThunk(
 );
 
 export const getInvoiceById = createAsyncThunk(
-  "invoices/getInvoiceById",
+  "billings/getInvoiceById",
   async (params: any, { dispatch }) => {
     const { id } = params;
     const response = await apiClient.get(`/invoice/${id}`);
@@ -25,7 +25,7 @@ export const getInvoiceById = createAsyncThunk(
 );
 
 export const updateInvoiceById = createAsyncThunk(
-  "invoices/updateInvoiceById",
+  "billings/updateInvoiceById",
   async (body: any, { dispatch, getState }: any) => {
     const { id, payload } = body;
 
@@ -34,14 +34,14 @@ export const updateInvoiceById = createAsyncThunk(
 );
 
 export const addInvoice = createAsyncThunk(
-  "invoices/addInvoice",
+  "billings/addInvoice",
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/invoice", body);
   }
 );
 
 export const deleteInvoice = createAsyncThunk(
-  "invoices/deleteInvoice",
+  "billings/deleteInvoice",
   async (params: any, { dispatch, getState }: any) => {
     const { id } = params;
 
@@ -51,7 +51,7 @@ export const deleteInvoice = createAsyncThunk(
 
 //
 export const getReceipts = createAsyncThunk(
-  "invoices/getReceipts",
+  "billings/getReceipts",
   async (params: any, { dispatch }) => {
     const response = await apiClient.get(`/receipt`, {
       params,
@@ -62,7 +62,7 @@ export const getReceipts = createAsyncThunk(
 );
 
 export const getReceiptById = createAsyncThunk(
-  "invoices/getReceiptById",
+  "billings/getReceiptById",
   async (params: any, { dispatch }) => {
     const { id } = params;
     const response = await apiClient.get(`/receipt/${id}`);
@@ -72,7 +72,7 @@ export const getReceiptById = createAsyncThunk(
 );
 
 export const updateReceiptById = createAsyncThunk(
-  "invoices/updateReceiptById",
+  "billings/updateReceiptById",
   async (body: any, { dispatch, getState }: any) => {
     const { id, payload } = body;
 
@@ -81,14 +81,14 @@ export const updateReceiptById = createAsyncThunk(
 );
 
 export const addReceipt = createAsyncThunk(
-  "invoices/addReceipt",
+  "billings/addReceipt",
   async (body: any, { dispatch }) => {
     const response = await apiClient.post("/receipt", body);
   }
 );
 
 export const deleteReceipt = createAsyncThunk(
-  "invoices/deleteReceipt",
+  "billings/deleteReceipt",
   async (params: any, { dispatch, getState }: any) => {
     const { id } = params;
 
@@ -136,7 +136,7 @@ export const billingSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // get bookings
+      // get getInvoices
       .addCase(getInvoices.pending, (state) => {
         state.billingStates.status = "loading";
         state.billingStates.loading = true;
@@ -153,6 +153,27 @@ export const billingSlice = createSlice({
         };
       })
       .addCase(getInvoices.rejected, (state) => {
+        state.billingStates.status = "failed";
+        state.billingStates.loading = false;
+        state.billingStates.error = "Error";
+      })
+      // get getReceipts
+      .addCase(getReceipts.pending, (state) => {
+        state.billingStates.status = "loading";
+        state.billingStates.loading = true;
+      })
+      .addCase(getReceipts.fulfilled, (state, action) => {
+        state.billingStates.status = "succeeded";
+        state.billingStates.loading = false;
+        state.billingStates.error = "";
+        state.invoices = action.payload?.data as any;
+        state.pagination = {
+          total: action.payload.total,
+          page: action.payload.page,
+          limit: action.payload.limit,
+        };
+      })
+      .addCase(getReceipts.rejected, (state) => {
         state.billingStates.status = "failed";
         state.billingStates.loading = false;
         state.billingStates.error = "Error";
