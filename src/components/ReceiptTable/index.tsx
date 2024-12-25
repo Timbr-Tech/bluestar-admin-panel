@@ -1,9 +1,14 @@
 /* eslint-disable */
 
-import { Table, TableProps, Dropdown } from "antd";
-import { useState } from "react";
+import { Table, TableProps, Dropdown, TableColumnsType } from "antd";
+import { useEffect, useState } from "react";
 import ReceiptStates from "../States/ReceiptStates";
 import { RECEIPTS_COLUMNS } from "../../constants/billings";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
+import { RootState } from "../../types/store";
+import { formatDateFull } from "../../utils/date";
+import CustomPagination from "../Common/Pagination";
+import { getReceipts } from "../../redux/slices/billingSlice";
 
 interface ReceiptData {
   key: string;
@@ -19,82 +24,97 @@ interface ReceiptData {
 }
 const ReceiptTable = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const columns: TableProps<ReceiptData>["columns"] = [...RECEIPTS_COLUMNS];
+  const { filters, receipts, pagination } = useAppSelector(
+    (state: RootState) => state.billing
+  );
 
-  const onChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: ReceiptData[]
-  ) => {
-    console.log(selectedRowKeys, "selectedRowKeys");
-    setSelectedRowKeys(selectedRowKeys);
-    console.log("Selected Rows: ", selectedRows);
-  };
-
-  const rowData = [
+  const dispatch = useAppDispatch();
+  const columns: TableColumnsType<any> = [
     {
-      _id: "123456",
-      receiptNumber: "R-GR2425-0001",
-      entryDate: "28/10/2024",
-      customer: "Apple",
-      invoices: "GR2425-1",
-      mode: "Cash",
-      creditDate: "28/10/2024",
-      amountPaid: 2000,
-      status: "Confirmed",
+      title: "Invoice Number",
+      dataIndex: "invoiceNumber",
+      key: "invoiceNumber",
     },
     {
-      _id: "123457",
-      receiptNumber: "R-GR2425-0001",
-      entryDate: "28/10/2024",
-      customer: "Apple",
-      invoices: "GR2425-1",
-      mode: "Credit Card",
-      creditDate: "28/10/2024",
-      amountPaid: 2000,
-      status: "Confirmed",
+      title: "Invoice Date",
+      dataIndex: "date",
+      key: "date",
     },
     {
-      _id: "123458",
-      receiptNumber: "R-GR2425-0001",
-      entryDate: "28/10/2024",
-      customer: "Apple",
-      invoices: "GR2425-1",
-      mode: "PayPal",
-      creditDate: "28/10/2024",
-      amountPaid: 2000,
-      status: "Confirmed",
+      title: "Customer",
+      dataIndex: "customerName",
+      key: "customerName",
     },
     {
-      _id: "123459",
-      receiptNumber: "R-GR2425-0001",
-      entryDate: "28/10/2024",
-      customer: "Apple",
-      invoices: "GR2425-1",
-      mode: "UPI",
-      creditDate: "28/10/2024",
-      amountPaid: 2000,
-      status: "Cancelled",
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+    },
+    {
+      title: "Amount Paid",
+      dataIndex: "amountPaid",
+      key: "amountPaid",
+    },
+    {
+      title: "Amount Outstanding",
+      dataIndex: "amountOutstanding",
+      key: "amountOutstanding",
+    },
+    {
+      title: "status",
+      dataIndex: "status",
+      key: "status",
     },
   ];
 
+  const populateDate = () => {
+    return receipts?.map((data) => {
+      return {
+        ...data,
+        invoiceNumber: data?.invoiceNumber,
+        customerName: data?.customerDetails?.name,
+        amountPaid: `₹${data?.amountPaid}`,
+        amount: `₹${data?.amount}`,
+        date: `${formatDateFull(data?.date)}`,
+        amountOutstanding: `₹${data?.amountOutstanding}`,
+        status: <ReceiptStates status={data.status} />,
+        key: data?._id,
+        id: data?._id,
+      };
+    });
+  };
+
+  console.log("receipts", receipts);
+  useEffect(() => {
+    dispatch(getReceipts({ ...filters }));
+  }, [filters.search, filters.status]);
+
   return (
     <Table
-      columns={columns}
       bordered
-      dataSource={rowData?.map((data) => {
-        return {
-          ...data,
-          amountPaid: <div>{`₹${data?.amountPaid}`}</div>,
-          status: <ReceiptStates status={data?.status} />,
-          key: data?._id,
-        };
-      })}
+      columns={columns}
       rowSelection={{
         type: "checkbox",
-        onChange: onChange,
+        // onChange: onChange,
         selectedRowKeys: selectedRowKeys,
       }}
+      dataSource={populateDate()}
       pagination={false}
+      footer={() => (
+        <CustomPagination
+          total={pagination?.total ?? 0}
+          current={pagination?.page ?? 1}
+          pageSize={pagination.limit ?? 10}
+          onPageChange={(page: number) => {
+            dispatch(
+              getReceipts({
+                search: filters.search,
+                page: page,
+              })
+            );
+          }}
+        />
+      )}
     />
   );
 };

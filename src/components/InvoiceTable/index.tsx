@@ -1,92 +1,80 @@
 /* eslint-disable */
 
-import { Table, TableProps, Dropdown } from "antd";
-import { useState } from "react";
+import { Table, TableColumnsType } from "antd";
+import { useEffect, useState } from "react";
 import InvoicesStates from "../States/InvoicesStates";
-import { INVOICE_COLUMNS } from "../../constants/billings";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
+import { getInvoices } from "../../redux/slices/billingSlice";
+import { RootState } from "../../types/store";
+import { formatDateFull } from "../../utils/date";
+import CustomPagination from "../Common/Pagination";
 
-interface InvoiceData {
-  key: string;
-  _id: string;
-  number: string;
-  invoiceDate: string;
-  customer: string;
-  bookingID: string;
-  totalAmount: any;
-  amountPaid: any;
-  outstanding: any;
-  status: any;
-}
 const InvoiceTable = () => {
-  const columns: TableProps<InvoiceData>["columns"] = [...INVOICE_COLUMNS];
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const { filters, invoices, pagination } = useAppSelector(
+    (state: RootState) => state.billing
+  );
 
-  const onChange = (
-    selectedRowKeys: React.Key[],
-    selectedRows: InvoiceData[]
-  ) => {
-    console.log(selectedRowKeys, "selectedRowKeys");
-    setSelectedRowKeys(selectedRowKeys);
-    console.log("Selected Rows: ", selectedRows);
-  };
-
-  const rowData = [
+  const dispatch = useAppDispatch();
+  const columns: TableColumnsType<any> = [
     {
-      _id: "123456",
-      number: "GR2425-0001",
-      invoiceDate: "28/10/2024",
-      customer: "Apple",
-      bookingID: "1232425",
-      totalAmount: 2000,
-      amountPaid: 2000,
-      outstanding: 1000,
-      status: "Generated",
+      title: "Invoice Number",
+      dataIndex: "invoiceNumber",
+      key: "invoiceNumber",
     },
     {
-      _id: "123457",
-      number: "GR2425-0002",
-      invoiceDate: "28/10/2024",
-      customer: "Apple",
-      bookingID: "1232425",
-      totalAmount: 2000,
-      amountPaid: 2000,
-      outstanding: 1000,
-      status: "Paid",
+      title: "Invoice Date",
+      dataIndex: "date",
+      key: "date",
     },
     {
-      _id: "123458",
-      number: "GR2425-0003",
-      invoiceDate: "28/10/2024",
-      customer: "Apple",
-      bookingID: "1232425",
-      totalAmount: 2000,
-      amountPaid: 2000,
-      outstanding: 1000,
-      status: "Cancelled",
+      title: "Customer",
+      dataIndex: "customerName",
+      key: "customerName",
     },
     {
-      _id: "123459",
-      number: "GR2425-0005",
-      invoiceDate: "28/10/2024",
-      customer: "Apple",
-      bookingID: "1232425",
-      totalAmount: 2000,
-      amountPaid: 2000,
-      outstanding: 1000,
-      status: "Paid",
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
     },
     {
-      _id: "123460",
-      number: "GR2425-0004",
-      invoiceDate: "28/10/2024",
-      customer: "Apple",
-      bookingID: "1232425",
-      totalAmount: 2000,
-      amountPaid: 2000,
-      outstanding: 1000,
-      status: "Paid",
+      title: "Amount Paid",
+      dataIndex: "amountPaid",
+      key: "amountPaid",
+    },
+    {
+      title: "Amount Outstanding",
+      dataIndex: "amountOutstanding",
+      key: "amountOutstanding",
+    },
+    {
+      title: "status",
+      dataIndex: "status",
+      key: "status",
     },
   ];
+
+  const populateDate = () => {
+    return invoices?.map((data) => {
+      return {
+        ...data,
+        invoiceNumber: data?.invoiceNumber,
+        customerName: data?.customerDetails?.name,
+        amountPaid: `₹${data?.amountPaid}`,
+        amount: `₹${data?.amount}`,
+        date: `${formatDateFull(data?.date)}`,
+        amountOutstanding: `₹${data?.amountOutstanding}`,
+        status: <InvoicesStates status={data.status} />,
+        key: data?._id,
+        id: data?._id,
+      };
+    });
+  };
+
+  console.log("invoices", invoices);
+  useEffect(() => {
+    dispatch(getInvoices({ ...filters }));
+  }, [filters.search, filters.status]);
 
   return (
     <Table
@@ -94,21 +82,26 @@ const InvoiceTable = () => {
       columns={columns}
       rowSelection={{
         type: "checkbox",
-        onChange: onChange,
+        // onChange: onChange,
         selectedRowKeys: selectedRowKeys,
       }}
-      dataSource={rowData?.map((data) => {
-        return {
-          ...data,
-          totalAmount: <div>{`₹${data?.totalAmount}`}</div>,
-          amountPaid: <div>{`₹${data?.amountPaid}`}</div>,
-          outstanding: <div>{`₹${data?.outstanding}`}</div>,
-          status: <InvoicesStates status={data.status} />,
-          key: data?._id,
-        };
-      })}
+      dataSource={populateDate()}
       pagination={false}
-
+      footer={() => (
+        <CustomPagination
+          total={pagination?.total ?? 0}
+          current={pagination?.page ?? 1}
+          pageSize={pagination.limit ?? 10}
+          onPageChange={(page: number) => {
+            dispatch(
+              getInvoices({
+                search: filters.search,
+                page: page,
+              })
+            );
+          }}
+        />
+      )}
     />
   );
 };

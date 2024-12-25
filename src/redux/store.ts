@@ -7,6 +7,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import dutiesSlice from "./slices/dutiesSlice";
 import vehicleTrackerSlice from "./slices/vehicleTrackerSlice";
 import bookingDutiesSlice from "./slices/bookingDutiesSlice";
+import billingSlice from "./slices/billingSlice";
 
 const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ const store = configureStore({
     duties: dutiesSlice,
     vehicleTracker: vehicleTrackerSlice,
     bookingDuties: bookingDutiesSlice,
+    billing: billingSlice,
   },
 });
 

@@ -12,6 +12,13 @@ const InvoicesStates = ({ status }: InvoicesStates) => {
     <>
       {(() => {
         switch (status) {
+          case INVOICES_STATES.ACTIVE:
+            return (
+              <div className={cn(styles.container, styles.paid)}>
+                <div className={cn(styles.dot, styles.paid)}></div>
+                <div className={cn(styles.text, styles.paid)}>{"Active"}</div>
+              </div>
+            );
           case INVOICES_STATES.PAID:
             return (
               <div className={cn(styles.container, styles.paid)}>

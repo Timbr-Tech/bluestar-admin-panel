@@ -87,6 +87,7 @@ export const RECEIPTS_COLUMNS = [
 
 export const INVOICES_STATES = {
   GENERATED: "Generated",
+  ACTIVE: "Active",
   PAID: "Paid",
   CANCELLED: "Cancelled",
 };

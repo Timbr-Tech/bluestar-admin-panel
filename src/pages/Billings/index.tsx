@@ -2,26 +2,40 @@
 import cn from "classnames";
 import { Input, DatePicker } from "antd";
 import { useNavigate } from "react-router-dom";
-import SearchComponent from "../../components/SearchComponent";
 import { ReactComponent as PlusIcon } from "../../icons/plus.svg";
-import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
 import PrimaryBtn from "../../components/PrimaryBtn";
 import InvoiceTable from "../../components/InvoiceTable";
 import ReceiptTable from "../../components/ReceiptTable";
 import { RouteName } from "../../constants/routes";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import styles from "./index.module.scss";
+import { SearchOutlined } from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "../../hooks/store";
+import { RootState } from "../../types/store";
+import { setBillingFilter } from "../../redux/slices/billingSlice";
 
 const Billings = () => {
-  const [tab, setTab] = useState("invoice");
+  const [tab, setTab] = useState<"invoice" | "receipt">("invoice");
   const navigate = useNavigate();
+  const { filters, invoices, pagination } = useAppSelector(
+    (state: RootState) => state.billing
+  );
+
+  function handleTabChange(val: "invoice" | "receipt") {
+    dispatch(setBillingFilter({ status: undefined, search: undefined }));
+    setTab(val);
+  }
 
   const handleAdd = () => {
-    if (tab === "invoice")
-      navigate(RouteName.CREATE_INVOICE);
+    if (tab === "invoice") navigate(RouteName.CREATE_INVOICE);
     else navigate(RouteName.CREATE_RECEIPT);
   };
+  const dispatch = useAppDispatch();
 
+  const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    dispatch(setBillingFilter({ search: value }));
+  };
   return (
     <div className={cn("container", styles.container)}>
       <div className={styles.headingContainer}>
@@ -34,7 +48,7 @@ const Billings = () => {
             className={cn(styles.headerBtn, {
               [styles.selected]: tab === "invoice",
             })}
-            onClick={() => setTab("invoice")}
+            onClick={() => handleTabChange("invoice")}
           >
             Invoices
           </button>
@@ -42,7 +56,7 @@ const Billings = () => {
             className={cn(styles.headerBtn, {
               [styles.selected]: tab === "receipt",
             })}
-            onClick={() => setTab("receipt")}
+            onClick={() => handleTabChange("receipt")}
           >
             Receipts
           </button>
@@ -62,10 +76,17 @@ const Billings = () => {
           </div>
           <div className={styles.searchContainer}>
             <div className={styles.search}>
-              <SearchComponent
-                value={""}
-                onChange={() => {}}
+              {/* <SearchComponent
+                 value={filters.search}
+                 onChange={searchHandler}
                 LeadingIcon={SearchIcon}
+                
+              /> */}
+              <Input
+                prefix={<SearchOutlined />}
+                value={filters.search}
+                onChange={searchHandler}
+                className={styles.inputContainer}
                 placeholder={
                   tab === "invoice"
                     ? `Search by customer, booked by, passenger`
