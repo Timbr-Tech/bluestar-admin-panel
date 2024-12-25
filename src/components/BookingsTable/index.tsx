@@ -88,7 +88,7 @@ const BookingsTable = () => {
         onClick: (e) => {
           e.domEvent.stopPropagation();
           dispatch(setCurrentSelectedBooking(row));
-          dispatch(setIsEditingBooking(false));
+          dispatch(setIsEditingBooking(true));
           dispatch(setIsAddEditDrawerOpen());
         },
         label: (
@@ -116,7 +116,7 @@ const BookingsTable = () => {
         onClick: (e) => {
           e.domEvent.stopPropagation();
           dispatch(setCurrentSelectedBooking(row));
-          dispatch(setIsEditingBooking(true));
+          dispatch(setIsEditingBooking(false));
           dispatch(setIsAddEditDrawerOpen());
         },
       },

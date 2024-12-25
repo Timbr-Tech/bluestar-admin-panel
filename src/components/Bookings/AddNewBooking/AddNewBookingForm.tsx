@@ -136,7 +136,7 @@ const AddNewBookingForm = ({
       layout="vertical"
       form={form}
       name="control-hooks"
-      disabled={!isEditable}
+      disabled={isEditable}
       onFinishFailed={(errorInfo) => {
         console.log("Failed:", errorInfo);
       }}
