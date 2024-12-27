@@ -12,6 +12,9 @@ const { RangePicker } = DatePicker;
 const handleChange = (value: string) => {
   console.log(`Selected month: ${value}`);
 };
+const handleChangeRange = (value: string, dateStrings) => {
+  console.log(value, dateStrings);
+};
 
 const operations = (
   <div className={styles.extraTabComponent}>
@@ -22,7 +25,12 @@ const operations = (
       type="search"
       allowClear
     />
-    <RangePicker allowClear />
+    <RangePicker
+      onChange={(value: any, dateStrings) =>
+        handleChangeRange(value, dateStrings)
+      }
+      allowClear
+    />
     <DatePicker allowClear onChange={handleChange} picker="month" />
   </div>
 );

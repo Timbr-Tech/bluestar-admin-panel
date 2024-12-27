@@ -165,3 +165,33 @@ export const formatDurationFromNow = (isoDate: string): string => {
     return isoDate;
   }
 };
+
+function generateDatesBetweenTwoDate(startDate, endDate) {
+  // Convert string dates to Date objects
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  // Array to store all dates
+  const dateArray = [];
+
+  // Clone the start date to avoid modifying it
+  let currentDate = new Date(start);
+
+  // Keep adding dates until we reach the end date
+  while (currentDate <= end) {
+    // Add the current date to our array in the same format
+    dateArray.push(currentDate.toISOString());
+
+    // Move to the next day
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dateArray;
+}
+
+// Example usage:
+// const startDate = "2024-11-30T18:30:00.000Z";
+// const endDate = "2024-12-30T18:30:00.000Z";
+
+// const dates = generateDateRange(startDate, endDate);
+// console.log(dates);
