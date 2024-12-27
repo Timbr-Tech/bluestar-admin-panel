@@ -195,3 +195,35 @@ function generateDatesBetweenTwoDate(startDate, endDate) {
 
 // const dates = generateDateRange(startDate, endDate);
 // console.log(dates);
+
+export function getPastSevenDays() {
+  const dates = [];
+  const today = new Date();
+
+  // Helper function to ensure consistent formatting of single digit numbers
+  const padNumber = (num) => num.toString().padStart(2, "0");
+
+  // Helper function to format date to ISO string with timezone
+  const formatToISO = (date) => {
+    return date.toISOString();
+  };
+
+  // Generate past 7 days including today
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+    dates.push(formatToISO(date));
+  }
+
+  // Sort dates from oldest to newest
+  return dates.reverse();
+}
+
+// Generate the dates
+// const pastSevenDays = getPastSevenDays();
+
+// // Display the results
+// console.log('Past seven days from today:');
+// pastSevenDays.forEach((date, index) => {
+//   console.log(`Day ${index + 1}: ${date}`);
+// });

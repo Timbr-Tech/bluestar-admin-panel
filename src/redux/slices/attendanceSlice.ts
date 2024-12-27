@@ -22,7 +22,10 @@ const initialState = {
 export const getAttendance = createAsyncThunk(
   "attendance/getAttendance",
   async (params: any) => {
-    // const response = await apiClient.get("/auth/admin/login", { params });
+    // const { dates } = params;
+    // const response = await apiClient.get("/attendance", {
+    //   params: { dates: dates },
+    // });
     // return response.data;
 
     return {
@@ -31,13 +34,70 @@ export const getAttendance = createAsyncThunk(
       limit: 10,
       data: [
         {
-          startDate: "2024-09-18",
-          customer: "Oscar Black",
-          passenger: "Sophia Black",
-          vehicleGroup: "Sedan",
-          dutyType: "City Commute",
-          duties: "Office pickup",
-          status: "on-going",
+          date: "2024-12-21",
+          driversPresent: [
+            {
+              _id: "67137e98481dc15d450d7774",
+              name: "Jitan Sharma",
+            },
+          ],
+        },
+        {
+          date: "2024-12-22",
+          driversPresent: [
+            {
+              _id: "67137e98381dc15d450d7774",
+              name: "Neeraj Sharma",
+            },
+          ],
+        },
+        {
+          date: "2024-12-25",
+          driversPresent: [
+            {
+              _id: "67137e98381dc15d450d7774",
+              name: "Neeraj Sharma",
+            },
+            {
+              _id: "67137e92381dc15d450d7774",
+              name: "Munna Kumar",
+            },
+          ],
+        },
+        {
+          date: "2024-12-26",
+          driversPresent: [
+            {
+              _id: "67137e98381dc15d450d7774",
+              name: "Neeraj Sharma",
+            },
+          ],
+        },
+        {
+          date: "2024-12-23",
+          driversPresent: [
+            {
+              _id: "67137e98481dc15d450d7774",
+              name: "Jitan Sharma",
+            },
+            {
+              _id: "66f0380eb39aebd0d42635c9",
+              name: "Shadab Ali",
+            },
+            {
+              _id: "67137e92381dc15d450d7774",
+              name: "Munna Kumar",
+            },
+          ],
+        },
+        {
+          date: "2024-12-12",
+          driversPresent: [
+            {
+              _id: "66f0380eb39aebd0d42635c9",
+              name: "Shadab Ali",
+            },
+          ],
         },
       ],
     };
