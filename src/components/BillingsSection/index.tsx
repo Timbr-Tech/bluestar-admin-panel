@@ -6,6 +6,7 @@ import type { MenuProps } from "antd";
 import { ReactComponent as CheckIcon } from "../../icons/check.svg";
 import { ReactComponent as ArrowLeftOutlined } from "../../icons/arrow-left-blue.svg";
 import InvoiceForm from "./InvoiceForm";
+import ReceiptForm from "./ReceiptForm";
 
 import styles from "./index.module.scss";
 import { useState } from "react";
@@ -27,7 +28,7 @@ const BillingsSection = ({ isEdit, isInvoice }: IBillingsSection) => {
         </a>
         <div className={styles.headingSection}>
           <div className={styles.header}>
-            {isInvoice ? "Create invoice" : "Create receipt"}
+            {isInvoice ? "Create invoice" : "New Receipt"}
           </div>
           <div className={styles.leftHeader}>
             <div className={styles.text}>Billing as: </div>
@@ -42,7 +43,7 @@ const BillingsSection = ({ isEdit, isInvoice }: IBillingsSection) => {
           </div>
         </div>
       </div>
-      {isInvoice && <InvoiceForm />}
+      {isInvoice ? <InvoiceForm /> : <ReceiptForm />}
     </div>
   );
 };
