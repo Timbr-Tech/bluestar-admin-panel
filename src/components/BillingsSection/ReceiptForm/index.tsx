@@ -29,21 +29,14 @@ const ReceiptForm = () => {
             </div>
           </div>
         </div>
-        <div className={styles.bookingsContainer}>
-          <div className={styles.bookingHeading}>Bookings</div>
-        </div>
-        <div className={styles.taxesContainer}>
-          <div className={styles.taxesHeading}>Tax</div>
-        </div>
-        <div className={styles.discountContainer}>
-          <div className={styles.discountHeading}>Discount</div>
-        </div>
       </div>
       <div className={styles.content}>
         <div className={styles.heading}>
           <div className={styles.header}>
             <div className={styles["header_1"]}>Preview</div>
-            <div className={styles["header_2"]}>See your invoice here</div>
+            <div className={styles["header_2"]}>
+              See your generated receipt here
+            </div>
           </div>
         </div>
       </div>

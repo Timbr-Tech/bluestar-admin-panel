@@ -17,7 +17,7 @@ interface IBillingsSection {
 }
 
 const BillingsSection = ({ isEdit, isInvoice }: IBillingsSection) => {
-  const [dropdownValue, setDropdownValue] = useState("BlueStar Prime");
+  const [dropdownValue, setDropdownValue] = useState<string>("BlueStar Prime");
 
   return (
     <div className={styles.container}>
