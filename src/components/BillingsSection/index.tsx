@@ -31,12 +31,12 @@ const BillingsSection = ({ isEdit, isInvoice }: IBillingsSection) => {
             {isInvoice ? "Create invoice" : "New Receipt"}
           </div>
           <div className={styles.leftHeader}>
-            <div className={styles.text}>Billing as: </div>
-            <Select value={dropdownValue} />
-            <div className={styles.dash} />
+            {isInvoice && <div className={styles.text}>Billing as: </div>}
+            {isInvoice && <Select value={dropdownValue} />}
+            {isInvoice && <div className={styles.dash} />}
             <CancelBtn btnText="Cancel" onClick={() => {}} />
             <PrimaryBtn
-              btnText="Save Invoice"
+              btnText={isInvoice ? "Save Invoice" : "Save Receipt"}
               onClick={() => {}}
               LeadingIcon={CheckIcon}
             />
