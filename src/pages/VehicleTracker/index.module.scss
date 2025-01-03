@@ -12,7 +12,6 @@
     top: 0px;
     padding: 2.5rem 1.25rem;
     padding-bottom: 1.25rem;
-    border-bottom: 1px solid #e4e7ec;
     z-index: 99;
     background-color: white;
 
@@ -41,7 +40,7 @@
   .mainContainer {
     display: flex;
     flex-direction: column;
-    padding: 1.5rem 1rem;
+    padding: 0rem 1rem 1.5rem 1rem;
     gap: 24px;
 
     .tabsContainer {
@@ -89,15 +88,15 @@
       flex-direction: row;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 1rem;
       padding-bottom: 20px;
       border-bottom: 1px solid #e4e7ec;
+      max-width: 100%;
+
       .TabHeading {
         font-size: 24px;
         text-transform: capitalize;
       }
       .inputContainer {
-        max-width: 25rem;
         display: flex;
         gap: 1rem;
         align-items: center;
@@ -110,4 +109,30 @@
   width: 100%;
   justify-content: flex-end;
   gap: 10px; // Adds space between the buttons
+}
+
+.tabs {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e4e7ec;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .tabHeading {
+    color: #101828;
+    text-transform: capitalize;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 38px;
+  }
+
+  .descText {
+    color: #667085;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+  }
 }

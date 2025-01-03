@@ -2,13 +2,15 @@
 import cn from "classnames";
 import { ChangeEvent, useState } from "react";
 import styles from "./index.module.scss";
-
+import SearchComponent from "../../components/SearchComponent";
 import { MoreOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Divider, Drawer, Form, Input } from "antd";
-
+import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
+import { ReactComponent as PlusIcon } from "../../icons/plus.svg";
+import { Button, Drawer, Form, Input } from "antd";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 import { useAppDispatch } from "../../hooks/store";
+import PrimaryBtn from "../../components/PrimaryBtn";
 import {
   setIsViewDrawerOpen,
   setVehicleTrackerFilter,
@@ -27,17 +29,17 @@ const tab = [
   {
     name: "Fuel",
     type: "fuel",
-    desc: "Create and manage your Fuel expenses here",
+    desc: "Create and manage your vehicle fuel expenses here",
   },
   {
     name: "Loans",
     type: "loans",
-    desc: "Create and manage your loan expenses here",
+    desc: "Ongoing loans for all your vehicles",
   },
   {
     name: "Average",
     type: "average",
-    desc: "Create and manage your average expenses here",
+    desc: "Fuel average for all your vehicles",
   },
 ];
 const VehicleTabs = ({ setDescVal }: any) => {
@@ -46,7 +48,7 @@ const VehicleTabs = ({ setDescVal }: any) => {
   const { filters } = useSelector((state: RootState) => state.vehicleTracker);
 
   return (
-    <div>
+    <div className={styles.tabs}>
       {tab?.map((item) => (
         <Button
           style={{
@@ -85,6 +87,14 @@ const VehicleTrackerPage = () => {
 
   const [form] = Form.useForm();
 
+  const renderBtnText = () => {
+    if (filters.currentTab === "expense") {
+    } else if (filters.currentTab === "") {
+    }
+  };
+
+  console.log(filters.currentTab, "filters.currentTab");
+
   return (
     <div className={cn("container", styles.container)}>
       <div className={styles.headingContainer}>
@@ -94,28 +104,30 @@ const VehicleTrackerPage = () => {
             {"Manage your vehicle’s expenses and average here"}
           </div>
         </div>
-        <div className={styles.btnContainer}>
-          <MoreOutlined />
-        </div>
       </div>
       <div className={styles.mainContainer}>
         <VehicleTabs setDescVal={(val: string) => setDesc(val)} />
 
         <div className={styles.searchContainer}>
-          <div>
-            <p className={styles.TabHeading}>{filters.currentTab}</p>
-            <p>{desc}</p>
+          <div className={styles.header}>
+            <div className={styles.tabHeading}>{filters.currentTab}</div>
+            <div className={styles.descText}>{desc}</div>
           </div>
-
           <div className={styles.inputContainer}>
-            <Input
-              prefix={<SearchOutlined />}
-              value={filters.search}
+            <SearchComponent
+              value={""}
               onChange={searchHandler}
-              className={styles.input}
-              placeholder="Search by name..."
+              LeadingIcon={SearchIcon}
+              placeholder={`Search by car`}
             />
-            <Button type="primary">+ Add Expenses</Button>
+            {(filters.currentTab === "expense" ||
+              filters.currentTab === "fuel") && (
+              <PrimaryBtn
+                LeadingIcon={PlusIcon}
+                btnText={`Add ${filters.currentTab.charAt(0).toUpperCase() + filters.currentTab.slice(1)}`}
+                onClick={() => {}}
+              />
+            )}
           </div>
         </div>
 
