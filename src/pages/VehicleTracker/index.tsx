@@ -7,6 +7,7 @@ import { MoreOutlined, SearchOutlined } from "@ant-design/icons";
 import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
 import { ReactComponent as PlusIcon } from "../../icons/plus.svg";
 import { Button, Drawer, Form, Input } from "antd";
+import DriverFilter from "../../components/DriverFilter";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 import { useAppDispatch } from "../../hooks/store";
@@ -128,6 +129,7 @@ const VehicleTrackerPage = () => {
                 onClick={() => {}}
               />
             )}
+            {filters.currentTab === "average" && <DriverFilter />}
           </div>
         </div>
 
