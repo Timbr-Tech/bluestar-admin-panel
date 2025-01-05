@@ -30,6 +30,10 @@
 }
 
 .container {
-  width: 400px;
+  width: 300px;
   height: 448px;
+
+  .select {
+    width: 100%;
+  }
 }
