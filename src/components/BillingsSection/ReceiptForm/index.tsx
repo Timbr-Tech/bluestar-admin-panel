@@ -1,7 +1,76 @@
 /* eslint-disable */
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  List,
+  Radio,
+  RadioChangeEvent,
+  Row,
+  Select,
+  Table,
+} from "antd";
 import styles from "./index.module.scss";
+import { ReactComponent as InvoiceIcon } from "../../../icons/invoice.svg";
+import { SearchOutlined } from "@ant-design/icons";
+import CancelBtn from "../../CancelBtn";
+import { useState } from "react";
+import UploadComponent from "../../Upload";
+const { TextArea } = Input;
 
 const ReceiptForm = () => {
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "id",
+      render: (data: any) => {
+        return data;
+      },
+    },
+    {
+      title: "Date",
+      dataIndex: "date",
+      key: "date",
+      render: (data: any) => {
+        return data;
+      },
+    },
+    {
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      render: (data: any) => {
+        return data;
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (data: any) => {
+        return data;
+      },
+    },
+  ];
+  const data = [
+    {
+      label: "Ant Design Title 1",
+      amount: 200,
+    },
+    {
+      label: "Ant Design Title 2",
+      amount: 200,
+    },
+  ];
+  const [value, setValue] = useState(1);
+  const onChange = (e: RadioChangeEvent) => {
+    console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.content}>
@@ -15,19 +84,203 @@ const ReceiptForm = () => {
         </div>
         <div className={styles.customerContainer}>
           <div className={styles.customerHeading}>Customer details</div>
+          <Form.Item
+            name="customer"
+            rules={[{ required: true }]}
+            label="Customer"
+            layout="vertical"
+          >
+            <Select
+              allowClear
+              showSearch
+              options={[]}
+              onSearch={(text) => {}}
+              placeholder="Select customer"
+              fieldNames={{ label: "label", value: "value" }}
+              notFoundContent={<div>No search result</div>}
+            />
+          </Form.Item>
+        </div>
+        <div className={styles.invoicesContainer1}>
+          <Row gutter={8} align={"middle"}>
+            <Col className="gutter-row">
+              <InvoiceIcon />
+            </Col>
+            <Col className="gutter-row">
+              <h5>Invoices</h5>
+              <p>
+                Select from the list of available invoices to add to this
+                reciept
+              </p>
+            </Col>
+          </Row>
+          <Row gutter={8} align={"middle"}>
+            <Col span={16}>
+              <Input
+                prefix={<SearchOutlined />}
+                placeholder="Search by invoice number"
+              />
+            </Col>
+            <Col span={8}>
+              <DatePicker
+                style={{
+                  padding: "0.8rem",
+                }}
+                onChange={() => {}}
+              />
+            </Col>
+          </Row>
+
+          <Table
+            bordered
+            // loading={}
+            rowSelection={{
+              onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+                console.log(
+                  `selectedRowKeys: ${selectedRowKeys}`,
+                  "selectedRows: ",
+                  selectedRows
+                );
+              },
+              getCheckboxProps: (record: any) => ({
+                // disabled: record.name === "Disabled User", // Column configuration not to be checked
+                // name: record.name,
+              }),
+            }}
+            dataSource={[
+              {
+                id: 123,
+                date: 123,
+                amount: 234,
+                status: "generated",
+              },
+            ]}
+            columns={columns}
+            pagination={false}
+            scroll={{ x: "max-content" }}
+          />
+
+          <Row gutter={8} align={"middle"}>
+            <Col className="gutter-row">
+              <Button
+                style={{
+                  padding: "20px 14px",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  lineHeight: "20px",
+                }}
+              >
+                Choose selected invoices
+              </Button>
+            </Col>
+            <Col className="gutter-row">
+              <CancelBtn onClick={() => {}} btnText="Re-select invoices" />
+            </Col>
+          </Row>
+          {/* Invoice descriptions */}
         </div>
         <div className={styles.invoicesContainer}>
-          <div className={styles.invoiceHeading}>{`Invoice dates`}</div>
-          <div className={styles.invoice}>
-            <div className={styles.invoiceNumber}>
-              <div className={styles.primary}>{`Invoice Number`}</div>
-              <div className={styles.secondary}>{`GR2425-0005`}</div>
+          <p>Invoice descriptions</p>
+          {[1, 2].map((each) => (
+            <div key={each}>
+              <div className={styles.invoicNo}>Invoice #GR2425-0005</div>
+              <div className={styles.invoicDate}>23/20/2025</div>
+              <List
+                dataSource={data}
+                renderItem={(item) => (
+                  <List.Item key={item.label}>
+                    <p>{item.label}</p>
+                    <p>{item.amount}</p>
+                  </List.Item>
+                )}
+              />
             </div>
-            <div className={styles.invoiceNumber}>
-              <div className={styles.primary}>{`Invoice Date`}</div>
-              <div className={styles.secondary}>{`21/07/24`}</div>
-            </div>
+          ))}
+          <div>Total</div>
+          <small>2 invoices</small>
+          <List
+            dataSource={data}
+            renderItem={(item) => (
+              <List.Item key={item.label}>
+                <p>{item.label}</p>
+                <p>{item.amount}</p>
+              </List.Item>
+            )}
+          />
+        </div>
+
+        <div className={styles.invoicesContainer}>
+          <p>Payment details</p>
+          <div>
+            <small>Payment mode</small>
+            <Radio.Group
+              style={{
+                marginTop: "0.5rem",
+              }}
+              onChange={onChange}
+              value={value}
+            >
+              {[
+                { name: "Cash", value: 1 },
+                { name: "Cheque", value: 2 },
+                { name: "NEFT", value: 3 },
+                { name: "Credit Card", value: 4 },
+                { name: "Other", value: 5 },
+              ].map((each) => (
+                <Radio
+                  style={{
+                    padding: "0.5rem",
+                    border: "1px solid #E4E7EC",
+                    borderRadius: "0.5rem",
+                  }}
+                  value={each.value}
+                >
+                  {each.name}
+                </Radio>
+              ))}
+            </Radio.Group>
           </div>
+
+          <div>
+            <Form.Item
+              name="bank"
+              rules={[{ required: true }]}
+              label="Recieved in bank"
+              layout="vertical"
+            >
+              <Select
+                allowClear
+                showSearch
+                options={[]}
+                onSearch={(text) => {}}
+                placeholder="Recieved in bank"
+                fieldNames={{ label: "label", value: "value" }}
+                notFoundContent={<div>No search result</div>}
+              />
+            </Form.Item>
+            <Form.Item
+              name="bankDate"
+              rules={[{ required: true }]}
+              label="Bank Credit Date"
+              layout="vertical"
+            >
+              <DatePicker
+                style={{
+                  width: "100%",
+                }}
+                onChange={() => {}}
+              />
+            </Form.Item>
+          </div>
+          <UploadComponent handleUploadUrl={() => {}} isMultiple={false} />
+          <Form.Item
+            name="comment"
+            rules={[{ required: true }]}
+            label="Comment"
+            layout="vertical"
+          >
+            <TextArea placeholder="comment" />
+          </Form.Item>
         </div>
       </div>
       <div className={styles.content}>

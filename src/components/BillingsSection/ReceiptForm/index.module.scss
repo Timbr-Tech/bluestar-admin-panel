@@ -58,6 +58,15 @@
       }
     }
 
+    .invoicesContainer1 {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border-radius: 12px;
+      // border: 1px solid #e4e7ec;
+      // background: #f9fafb;
+      padding: 24px;
+    }
     .invoicesContainer {
       display: flex;
       flex-direction: column;
@@ -66,6 +75,15 @@
       border: 1px solid #e4e7ec;
       background: #f9fafb;
       padding: 24px;
+      .invoicNo {
+        color: #344054;
+        font-weight: 400;
+      }
+      .invoicDate {
+        color: #667085;
+        font-size: 14px;
+        font-weight: 300;
+      }
 
       .invoiceHeading {
         color: #101828;
@@ -79,14 +97,15 @@
         gap: 12px;
 
         .invoiceNumber {
-          width: 277px;
-          height: 100px;
+          width: 100%;
+          // height: 100px;
           border-radius: 12px;
           border: 1px solid #e4e7ec;
           background: #fff;
-
+          display: flex;
+          justify-content: space-between;
+          padding: 12px;
           .primary {
-            padding: 12px;
             color: #344054;
             font-size: 14px;
             font-weight: 500;
@@ -94,12 +113,10 @@
           }
 
           .secondary {
-            padding: 16px;
             color: #344054;
             font-size: 16px;
             font-weight: 600;
             line-height: 24px;
-            border-top: 1px solid #e4e7ec;
           }
         }
       }
