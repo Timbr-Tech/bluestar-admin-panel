@@ -18,6 +18,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import CancelBtn from "../../CancelBtn";
 import { useState } from "react";
 import UploadComponent from "../../Upload";
+import Preview from "../Preview";
 const { TextArea } = Input;
 
 const ReceiptForm = () => {
@@ -292,6 +293,7 @@ const ReceiptForm = () => {
             </div>
           </div>
         </div>
+        <Preview />
       </div>
     </div>
   );

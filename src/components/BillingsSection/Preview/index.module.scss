@@ -1,0 +1,118 @@
+.invoice {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+  background: white;
+  color: #333;
+}
+
+.header {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.header p {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.invoiceDetails {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.right {
+  text-align: right;
+}
+
+.right p {
+  margin-bottom: 0.25rem;
+}
+
+.invoiceTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.invoiceTable th,
+.invoiceTable td {
+  padding: 0.5rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #000;
+}
+
+.invoiceTable th {
+  font-weight: 600;
+  color: #333;
+}
+
+.invoiceTable td p {
+  margin-bottom: 0.25rem;
+}
+
+.vehicle {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.model {
+  color: #666;
+}
+
+.allowances {
+  margin-top: 0.5rem;
+}
+
+.allowances p {
+  color: #666;
+  font-size: 0.8rem;
+  margin: 0.1rem 0;
+}
+
+.totals {
+  margin-left: auto;
+  //   width: 300px;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #000;
+}
+
+.totalRow.final {
+  font-weight: 600;
+  border-top: 1px solid #000;
+  border-bottom: none;
+}
+
+.footer {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.amountWords {
+  font-style: italic;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.note {
+  color: #666;
+  font-size: 0.7rem;
+}
