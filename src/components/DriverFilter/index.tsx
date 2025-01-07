@@ -1,24 +1,20 @@
 /* eslint-disable */
 import { ReactComponent as FilterIcon } from "../../icons/filter.svg";
 import { Popover, Select } from "antd";
-import { useState, useEffect } from "react";
+import cn from "classnames";
+import { useState, useCallback } from "react";
 import styles from "./index.module.scss";
 
 const DriverFilter = () => {
   const [open, setOpen] = useState(false);
 
-  const hide = () => {
-    setOpen(false);
-  };
+  const selectOpen = () => (open ? true : false);
 
   const handleOpenChange = (newOpen: boolean) => {
-    console.log(newOpen, "newOpen");
     setOpen(newOpen);
   };
 
-  useEffect(() => {
-    console.log(open, "open");
-  }, [open]);
+  console.log(open, "open");
 
   const PopoverComponent = () => {
     return (
@@ -27,8 +23,8 @@ const DriverFilter = () => {
           mode="multiple"
           placeholder="Search driver"
           className={styles.select}
-          defaultOpen={open}
-          open={open}
+          // popupClassName={cn("menu", { ["dontShow"]: !open })}
+          // open={true}
           options={[
             { value: "jack", label: "Jack" },
             { value: "lucy", label: "Lucy" },

@@ -388,3 +388,9 @@ input {
 .cursor-pointer {
   cursor: pointer;
 }
+
+.menu {
+  &.dontShow {
+    display: none !important;
+  }
+}
