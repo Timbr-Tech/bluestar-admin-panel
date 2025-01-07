@@ -6,8 +6,9 @@ import SearchComponent from "../../components/SearchComponent";
 import { MoreOutlined, SearchOutlined } from "@ant-design/icons";
 import { ReactComponent as SearchIcon } from "../../icons/SearchIcon.svg";
 import { ReactComponent as PlusIcon } from "../../icons/plus.svg";
-import { Button, Drawer, Form, Input } from "antd";
+import { Button, Form } from "antd";
 import DriverFilter from "../../components/DriverFilter";
+import { ReactComponent as CrossIcon } from "../../icons/x.svg";
 import { useSelector } from "react-redux";
 import { RootState } from "../../types/store";
 import { useAppDispatch } from "../../hooks/store";
@@ -76,6 +77,8 @@ const VehicleTabs = ({ setDescVal }: any) => {
 const VehicleTrackerPage = () => {
   const dispatch = useAppDispatch();
   const [desc, setDesc] = useState(tab[0].desc);
+  const [openSidePanel, setOpenSidePanel] = useState(false);
+
   const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     // setSearchTerm(value);
@@ -94,7 +97,9 @@ const VehicleTrackerPage = () => {
     }
   };
 
-  console.log(filters.currentTab, "filters.currentTab");
+  const handleCloseSidePanel = () => {
+    setOpenSidePanel(false);
+  };
 
   return (
     <div className={cn("container", styles.container)}>
@@ -126,7 +131,9 @@ const VehicleTrackerPage = () => {
               <PrimaryBtn
                 LeadingIcon={PlusIcon}
                 btnText={`Add ${filters.currentTab.charAt(0).toUpperCase() + filters.currentTab.slice(1)}`}
-                onClick={() => {}}
+                onClick={() => {
+                  setOpenSidePanel(true);
+                }}
               />
             )}
             {filters.currentTab === "average" && <DriverFilter />}
@@ -146,42 +153,13 @@ const VehicleTrackerPage = () => {
           <AverageTable handleOpenSidePanel={() => {}} />
         )}
       </div>
-      <Drawer
-        destroyOnClose
-        size="large"
-        mask
-        title={
-          <div>
-            <div>Add New </div>
-            <small>Fill your booking details here</small>
-          </div>
-        }
-        footer={
-          <div className={styles.drawerFooter}>
-            <Button>Cancel</Button>
-            <Button
-              onClick={() => {
-                // handleFormSubmit();
-                // form.validateFields();
-                // if success make step2
-                form.submit();
-              }}
-              type="primary"
-            >
-              Save
-            </Button>
-          </div>
-        }
-        onClose={() => {
-          dispatch(setIsViewDrawerOpen());
-          //   dispatch(setIsEditingBooking(true));
-        }}
-        open={isViewDrawerOpen}
-      >
-        <div>
-          <h1>HI</h1>
+      {openSidePanel && (
+        <div className={cn(styles.sidebar, { [styles.open]: openSidePanel })}>
+          <button className={styles.closeBtn} onClick={handleCloseSidePanel}>
+            <CrossIcon />
+          </button>
         </div>
-      </Drawer>
+      )}
     </div>
   );
 };
